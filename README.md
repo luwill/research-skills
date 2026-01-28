@@ -58,12 +58,14 @@ A systematic workflow for writing survey papers, systematic reviews, and literat
 
 ### Files
 
-| File | Description |
+| Path | Description |
 |------|-------------|
 | `SKILL.md` | Main skill definition and quick reference |
-| `WORKFLOW.md` | Detailed 7-phase workflow guide |
-| `TEMPLATES.md` | Project file templates |
-| `DOMAINS.md` | Domain-specific method categories and datasets |
+| `references/WORKFLOW.md` | Detailed 7-phase workflow guide |
+| `references/TEMPLATES.md` | Project file templates |
+| `references/DOMAINS.md` | Domain-specific method categories and datasets |
+| `references/MCP_SETUP.md` | ArXiv, PubMed, Zotero MCP configuration |
+| `references/QUALITY_CHECKLIST.md` | Pre-submission quality checklist |
 
 ---
 
