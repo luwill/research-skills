@@ -32,6 +32,21 @@ allowed-tools:
 
 # Research Proposal Generator
 
+
+## Codex Compatibility Mode
+
+This workflow is fully portable to GPT Codex. Keep the same 5 phases and output format.
+
+### Interaction Mapping
+- `AskUserQuestion` → normal conversational checkpoint in Codex (explicit numbered questions).
+- Zotero MCP calls → any available Zotero connector with equivalent fields.
+- WebSearch/arXiv/PubMed steps remain unchanged by intent; only tool names may differ.
+
+### Portability Rule
+When an exact tool is missing, preserve the phase objective and substitute equivalent retrieval/generation commands.
+
+---
+
 Generate high-quality academic research proposals for PhD applications following Nature Reviews-style academic writing conventions.
 
 ## Overview
@@ -50,7 +65,7 @@ This skill guides the generation of research proposals through a structured 5-ph
 
 ## Phase 1: Requirements Gathering
 
-Use `AskUserQuestion` to collect the following information:
+Use an explicit user Q&A checkpoint (or `AskUserQuestion` if available) to collect the following information:
 
 ### Required Information
 
@@ -236,7 +251,7 @@ Read the reference file for domain-specific guidance:
 
 ### User Confirmation
 
-**CRITICAL**: Present the outline to the user and wait for confirmation before proceeding to content generation.
+**CRITICAL**: Present the outline to the user and wait for explicit confirmation before proceeding to content generation (via normal chat or `AskUserQuestion`).
 
 ```
 Present the generated outline and ask:

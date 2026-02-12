@@ -45,6 +45,21 @@ Write comprehensive literature reviews following a systematic 7-phase workflow.
 
 ---
 
+
+## Codex Compatibility Mode
+
+This skill can run in GPT Codex with the same 7-phase workflow.
+
+### Tool Mapping (capability-first)
+- ArXiv search/read: use any available arXiv MCP, REST API, or browser search pipeline.
+- PubMed search: use PubMed MCP when available; otherwise use E-utilities/WebSearch fallback.
+- Zotero retrieval: use Zotero MCP first; fallback to local Zotero Web API endpoints.
+
+### Execution Fallback
+If a listed tool is unavailable in the current runtime, continue with equivalent tooling and keep output schema unchanged (`CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, `manuscript_draft.md`).
+
+---
+
 ## Core Principles
 
 ### Writing Style

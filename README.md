@@ -1,8 +1,17 @@
 # Research Skills
 
-A collection of Claude Code skills for academic research workflows.
+A collection of research workflow skills for Claude Code and GPT Codex.
 
 ## Skills
+
+
+## Platform Compatibility
+
+These skills now support **Claude Code and GPT Codex** with the same core workflow.
+
+- Keep the workflow, structure, and outputs unchanged.
+- Map tool calls by capability (e.g., literature search, PDF parsing, reference retrieval) instead of provider-specific names.
+- When a platform-specific tool is unavailable, use fallback commands/APIs documented in each skill.
 
 | Skill | Description | Trigger |
 |-------|-------------|---------|
@@ -12,7 +21,7 @@ A collection of Claude Code skills for academic research workflows.
 
 ## Installation
 
-Copy the desired skill folder to your Claude Code skills directory:
+Copy the desired skill folder to your skills directory (Claude Code or Codex-compatible runtime):
 
 ```bash
 # For medical-imaging-review

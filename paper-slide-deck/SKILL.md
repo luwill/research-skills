@@ -9,6 +9,21 @@ Transform academic papers and content into professional slide deck images with a
 
 ## Usage
 
+
+## Codex Compatibility Mode
+
+This skill can run in GPT Codex without changing the slide workflow.
+
+### Interaction Mapping
+- `AskUserQuestion` steps become standard conversational confirmations in Codex.
+- Script execution remains identical (`scripts/`), run with local shell tooling.
+- Gemini API path remains optional; if unavailable, stop at outline-only mode or use extracted paper figures only.
+
+### Runtime Rule
+Prefer deterministic local scripts first (`detect-figures.ts`, `extract-figure.ts`, `merge-to-pptx.ts`, `merge-to-pdf.ts`), then optional external generation APIs.
+
+---
+
 ```bash
 /paper-slide-deck path/to/paper.pdf
 /paper-slide-deck path/to/paper.pdf --style academic-paper
@@ -223,7 +238,7 @@ Multiple sources supported: text, images, files from conversation.
 
 ### Step 3: User Confirmation
 
-**Single AskUserQuestion with all applicable options:**
+**Single user confirmation checkpoint with all applicable options (use normal chat or `AskUserQuestion`):**
 
 | Question | When to Ask |
 |----------|-------------|
@@ -251,7 +266,7 @@ If `--outline-only`, stop here.
 
 **Before generating images**, ask user to choose generation method:
 
-**Use AskUserQuestion** with options:
+**Ask the user to choose** with options (normal chat or `AskUserQuestion`):
 
 | Option | Label | Description |
 |--------|-------|-------------|
