@@ -4,11 +4,29 @@ A collection of Claude Code skills for academic research workflows.
 
 ## Skills
 
+### Single-Agent Skills
+
 | Skill | Description | Trigger |
 |-------|-------------|---------|
 | [medical-imaging-review](./medical-imaging-review/) | Write comprehensive literature reviews for medical imaging AI | `/medical-imaging-review`, "review paper", "survey", "综述" |
 | [paper-slide-deck](./paper-slide-deck/) | Generate professional slides from academic papers with auto figure extraction | `/paper-slide-deck paper.pdf` |
 | [research-proposal](./research-proposal/) | Generate PhD research proposals with Nature Reviews-style academic writing | `/research-proposal`, "research proposal", "PhD proposal", "研究计划" |
+
+### Multi-Agent Survey System (5 Agents)
+
+A collaborative system where 5 specialized AI agents work together to produce conference-quality survey papers.
+
+| Agent | Skill | Role |
+|-------|-------|------|
+| 研究主管 (Survey Director) | [survey-director](./skills/survey-director/) | Topic planning, outline design, task dispatch, final review |
+| 文献侦查员 (Literature Scout) | [literature-scout](./skills/literature-scout/) | Multi-source literature search, build literature matrix |
+| 论文分析师 (Paper Analyst) | [paper-analyst](./skills/paper-analyst/) | Deep reading, structured extraction, comparison tables |
+| 论文撰写员 (Survey Writer) | [survey-writer](./skills/survey-writer/) | Section writing following academic templates |
+| 质量编辑员 (Quality Editor) | [quality-editor](./skills/quality-editor/) | Terminology consistency, citation integrity, quality review |
+
+**Shared References**: [references/](./references/) — Workflow, domain knowledge, templates, quality checklists
+
+**Agent Configs**: [agents-config/](./agents-config/) — AGENTS.md templates for each agent
 
 ## Installation
 
