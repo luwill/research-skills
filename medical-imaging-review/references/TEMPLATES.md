@@ -1,79 +1,98 @@
 # Project File Templates
 
+Templates for `CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, and the 3 standard tables. v3 updates: Stage 4 (Methods) uses **3-axis structure**, not flat 10-subsection list. Bibliography target removed.
+
+---
+
 ## CLAUDE.md Template
 
 ```markdown
 # [Topic] Literature Review Writing Guidelines
 
+## Project info
+- **Topic**: [specific topic]
+- **Target journals**: [Tier 1: e.g., Nat Rev Cardiol] / [Tier 2: e.g., JACC Cardiovasc Imaging] / [Tier 3: e.g., Eur Radiol]
+- **Paradigm spec**: see PARADIGM.md (Phase 0 output)
+- **Citation integrity**: see references/CITATION_INTEGRITY.md
+- **Hallucination self-check**: see references/HALLUCINATION_PATTERNS.md
+
 ## Terminology Standardization
 
 | Unified Term | Avoid Using |
-|--------------|-------------|
-| [standard term 1] | [variant 1], [variant 2] |
-| [standard term 2] | [variant 1], [variant 2] |
-```
+|---|---|
+| coronary CT angiography (CCTA) | cardiac CT, CT angio, CTA (ambiguous) |
+| centerline (anatomical structure) | midline, vessel line |
+| [add domain-specific terms] | [variants to avoid] |
+
+## Canonical Paper / Dataset Descriptions
+
+To prevent internal inconsistency (HALLUCINATION_PATTERNS.md ▸ Pattern 9), lock in canonical descriptions:
+
+| Paper / Dataset | Canonical description |
+|---|---|
+| ImageCAS | 1000 cases, single-center, CCTA artery segmentation |
+| TransCC (Xu et al.) | 3 authors: Chenchu Xu, Meng Li, Xue Wu; Dice 0.730 / IoU 0.582 on ImageCAS |
+| FISH&CHIPS | NHS national CT-FFR implementation program; publication: Fairbairn TA et al. Nat Med 2025;31(6):1903-1910 |
+| [add high-value papers] | [verified description] |
 
 ## Reference Sources
 
-### ArXiv MCP (Latest Methods)
-```
-Search queries:
+### ArXiv MCP
+Search queries used:
 - "[topic] segmentation transformer" (cs.CV, eess.IV)
 - "[topic] deep learning" (cs.LG)
-Date range: 2022-present
-Downloaded papers: [list paper IDs]
-```
+Date range: last 3 years
+Downloaded papers: [list arXiv IDs]
 
-### PubMed MCP (Clinical Literature)
-```
-MeSH queries:
+### PubMed MCP
+MeSH queries used:
 - "Deep Learning"[MeSH] AND "[domain]"[MeSH]
 - "[method]"[MeSH] AND "diagnosis"[MeSH]
-Filters: Review, Clinical Study
-```
+Filters: Review, Clinical Trial
 
-### Zotero Database
-```
-API: http://localhost:23119/api/users/[USER_ID]/
-Collections:
-- [Collection 1]: collections/[KEY]/items
-- [Collection 2]: collections/[KEY]/items
-```
+### Zotero
+API: localhost:23119
+Relevant collections:
+- [Collection name 1]: [N papers]
+- [Collection name 2]: [N papers]
 
-### Literature Categories
-1. **[Category 1]**: [description, N papers]
-2. **[Category 2]**: [description, N papers]
-3. **[Category 3]**: [description, N papers]
+## Literature inventory (3-axis grouping)
 
-## Key Methods to Cover
+### Axis 1: Architectural priors
+- **CNN-based**: [list verified refs]
+- **Transformer-based**: [list]
+- **Mamba / state-space**: [list]
 
-| Category | Methods | Status |
-|----------|---------|--------|
-| [Cat 1] | [Method A], [Method B] | [ ] |
-| [Cat 2] | [Method C], [Method D] | [ ] |
+### Axis 2: Inductive priors
+- **Topology-aware**: [list]
+- **Multi-task**: [list]
+- **Graph-based**: [list]
 
-## Performance Data Summary
+### Axis 3: Data regime
+- **Self-supervised**: [list]
+- **Foundation models**: [list]
+- **Federated**: [list]
+- **Physics-informed**: [list]
 
-| Method | Dataset | Dice | HD95 | Source |
-|--------|---------|------|------|--------|
-| [Method 1] | [Dataset] | 0.XXX | X.XX | [ref] |
+### Clinical / downstream
+- [list]
 
-## Quality Checklist
+## Verdict positions to take (3-5)
 
-### Structure
-- [ ] Key Points section (3-5 bullets)
-- [ ] Table per major section
-- [ ] Figure placeholders with captions
+Plan the 3-5 verdict sentences in advance:
+- §Methods axis 1 closer: ...
+- §Methods axis 2 closer: ...
+- §Methods axis 3 closer: ...
+- §Clinical translation closer: ...
+- (optional) §Discussion closer: ...
 
-### Content
-- [ ] All major methods covered
-- [ ] Limitations for each category
-- [ ] Future directions articulated
+## Writing-time guardrails (from references/)
 
-### Language
-- [ ] Hedging language used
-- [ ] Consistent terminology
-- [ ] All claims cited
+- Per-claim verification on every `[N]` placed (CITATION_INTEGRITY ▸ Rule 1-5)
+- Self-scan against 9 hallucination patterns every 5-6 paragraphs (HALLUCINATION_PATTERNS.md)
+- Vendor names only in Table 3
+- Equations only in Box 1
+- Max 2 heading levels, no numbered headings
 ```
 
 ---
@@ -83,134 +102,190 @@ Collections:
 ```markdown
 # Implementation Plan: [Review Title]
 
-## Overview
-- **Topic**: [specific topic]
-- **Target journals**: [journal 1], [journal 2]
-- **Target length**: [word count], [ref count]
+## Phase 0: Paradigm Capture
+**Status**: [Not Started / In Progress / Complete]
 
-## Stage 1: Literature Collection
-**Goal**: Gather comprehensive corpus
-**Status**: Not Started
+- [ ] Identify 2-3 exemplar reviews from target tier
+- [ ] Read carefully (60-90 min each)
+- [ ] Extract style spec to PARADIGM.md
+- [ ] Re-anchor at start of each Phase 4 writing session
 
-### ArXiv MCP (Deep Learning Methods)
+## Phase 1: Project Initialization
+**Status**: [Not Started / In Progress / Complete]
+
+- [ ] CLAUDE.md created with terminology + sources + literature inventory skeleton
+- [ ] IMPLEMENTATION_PLAN.md (this file) created
+- [ ] manuscript_draft.md created (empty)
+- [ ] PARADIGM.md linked
+
+## Phase 2: Literature Collection + Verification
+**Status**: [Not Started / In Progress / Complete]
+
+### ArXiv (Deep Learning Methods)
 - [ ] Search "[topic] segmentation" in cs.CV, eess.IV
 - [ ] Search "[topic] transformer/attention" in cs.CV
-- [ ] Download key papers (target: 50-100)
-- [ ] Extract method details from downloaded papers
+- [ ] Download key papers (target: 50-80 — discriminate aggressively)
+- [ ] Read each (abstract + methods + results)
+- [ ] Note actual module names + actual numbers in working notes
 
-### PubMed MCP (Clinical Literature)
+### PubMed (Clinical Literature)
 - [ ] Search MeSH: "Deep Learning" AND "[domain]"
-- [ ] Filter by publication type (Review, Clinical Study)
-- [ ] Collect clinical validation studies (target: 30-50)
+- [ ] Filter by publication type (Review, Clinical Trial)
+- [ ] Collect clinical validation studies (target: 20-40)
+- [ ] PubMed WebFetch on each for metadata
 
-### Additional Sources
-- [ ] Search IEEE Xplore for [keywords]
-- [ ] Search Google Scholar for [keywords]
-- [ ] Check Zotero existing collections
+### Zotero (User's local library)
+- [ ] Check existing collections for closed-access papers
+- [ ] Note Zotero item keys for later fulltext retrieval
 
-### Organization
-- [ ] Export all to Zotero
-- [ ] Categorize by method/application
-- [ ] Gap analysis
+### Additional sources
+- [ ] WebSearch supplementary (IEEE Xplore, Springer)
 
-## Stage 2: Outline Development
-**Goal**: Define paper structure
-**Status**: Not Started
+### Verification (every entry, before adding)
+- [ ] DOI resolves on Crossref
+- [ ] First + last author verbatim from first-source
+- [ ] Journal, year, vol, issue, pages match
+- [ ] No `xxx` / `[TBD]` placeholders
 
-- [ ] Draft section headings
-- [ ] Map literature to sections
-- [ ] Plan comparison tables
-- [ ] Design figure placeholders
+### Gap analysis
+- [ ] Negative trials covered? (LLM bias: only positive)
+- [ ] Inter-vendor reproducibility covered?
+- [ ] Demographic-bias studies covered?
+- [ ] Recent 6-month preprints covered?
 
-## Stage 3: Section 1-2 (Introduction, Datasets)
-**Goal**: Write foundation sections
-**Status**: Not Started
+## Phase 3: Outline + 3-Axis Taxonomy
+**Status**: [Not Started / In Progress / Complete]
 
-- [ ] 1.1 Clinical Background
-- [ ] 1.2 Technical Challenges
-- [ ] 1.3 Scope and Contributions
-- [ ] 2.1 Public Datasets (Table 1)
-- [ ] 2.2 Evaluation Metrics
+- [ ] Top-level sections defined (Introduction / Methods / Applications / Translation / Discussion)
+- [ ] §Methods structured as **3 H3 subsections** (3 axes):
+  - [ ] §Methods.Architectural priors
+  - [ ] §Methods.Inductive priors
+  - [ ] §Methods.Data regime
+- [ ] Each paper in literature inventory mapped to an axis
+- [ ] Table 1 / 2 / 3 designs planned
+- [ ] Box 1 (metrics) content planned
+- [ ] Figures (3-5) planned
+- [ ] Verdict positions for 3 axes selected
 
-## Stage 4: Section 3 (Methods)
-**Goal**: Write method sections
-**Status**: Not Started
+## Phase 4: Write with Per-Claim Verification
+**Status**: [Not Started / In Progress / Complete]
 
-- [ ] 3.1 [Category 1]
-- [ ] 3.2 [Category 2]
-- [ ] ...
-- [ ] Method comparison table (Table 2)
+For each section, micro-workflow (per CITATION_INTEGRITY.md):
+- [ ] Re-read the actual cited papers
+- [ ] Write 2-4 sentences with actual module names + actual numbers
+- [ ] Verify each `[N]` placed (body↔bib, number, direction)
+- [ ] Close axis with verdict sentence
+- [ ] Equations to Box 1, not body
+- [ ] Vendor names to Table 3, not body
+- [ ] Self-scan against 9 hallucination patterns every 5-6 paragraphs
 
-## Stage 5: Section 4-5 (Applications, Commercial)
-**Goal**: Write application sections
-**Status**: Not Started
+### Section progress
 
-- [ ] 4.1 [Application 1]
-- [ ] 4.2 [Application 2]
-- [ ] 5.1 Commercial products (Table 3)
-- [ ] 5.2 Regulatory landscape
+- [ ] Introduction (Clinical background / Technical challenge / Scope)
+- [ ] Datasets and evaluation metrics (Box 1, Table 1)
+- [ ] Methods §Axis 1: Architectural priors
+- [ ] Methods §Axis 2: Inductive priors
+- [ ] Methods §Axis 3: Data regime
+- [ ] Methods Table 2 finalized
+- [ ] Downstream applications
+- [ ] Translation to clinical practice (Table 3)
+- [ ] Outstanding challenges
+- [ ] Future directions
+- [ ] Conclusion
+- [ ] References (cross-checked with body)
 
-## Stage 6: Section 6-7 (Discussion, Conclusion)
-**Goal**: Write synthesis sections
-**Status**: Not Started
+## Phase 5: Multi-Agent Peer Review
+**Status**: [Not Started / In Progress / Complete]
 
-- [ ] 6.1 Current Limitations
-- [ ] 6.2 Future Directions
-- [ ] 7. Conclusion
+- [ ] TeamCreate `manuscript-review`
+- [ ] Spawn `style-reviewer` teammate (Task 1)
+- [ ] Spawn `ref-checker` teammate (Task 2)
+- [ ] Spawn `peer-reviewer` teammate (Task 3)
+- [ ] Spawn `fact-checker` teammate (Task 4)
+- [ ] Synthesize 4 reports into 00_team_synthesis.md
+- [ ] Address all CRITICAL findings
+- [ ] Address HIGH findings agreed by ≥ 2 reviewers
 
-## Stage 7: Integration & Polish
-**Goal**: Finalize manuscript
-**Status**: Not Started
+## Phase 6: Submission Prep
+**Status**: [Not Started / In Progress / Complete]
 
-- [ ] Unify terminology
-- [ ] Cross-reference check
-- [ ] Language polish
-- [ ] Reference formatting
-
-## Key Literature Mapping
-
-| Section | Key Papers |
-|---------|------------|
-| 3.1 | [Paper A], [Paper B] |
-| 3.2 | [Paper C], [Paper D] |
+- [ ] Journal selected (reach + match + safety tiers)
+- [ ] Presubmission inquiries sent (reach tier, optional)
+- [ ] Cover letter drafted
+- [ ] Box vs body duplication scan run
+- [ ] Section cross-reference scan run
+- [ ] Figures produced (not placeholders)
+- [ ] Citation format converted for target journal
+- [ ] Final self-check checklist passed
 
 ## Literature Sources Summary
 
-| Source | Query/Collection | Papers | Status |
-|--------|------------------|--------|--------|
-| ArXiv | [query 1] | N | [ ] |
-| ArXiv | [query 2] | N | [ ] |
-| PubMed | [MeSH query] | N | [ ] |
-| Zotero | [collection name] | N | [ ] |
+| Source | Query / Collection | Papers | Verified | Status |
+|---|---|---|---|---|
+| ArXiv | [query 1] | N | N | [ ] |
+| ArXiv | [query 2] | N | N | [ ] |
+| PubMed | [MeSH query] | N | N | [ ] |
+| Zotero | [collection] | N | N | [ ] |
+
+## Change log
+
+### [Date] - v1.0
+- Initial draft completed through Phase 4
+### [Date] - v1.1
+- Phase 5 peer review found 8 issues; addressed
+### [Date] - v1.2
+- Phase 6 submission prep done; sent to [Journal]
 ```
 
 ---
 
-## Comparison Table Templates
+## Standard Table Templates
 
-### Dataset Table
+### Table 1: Public Datasets
+
 ```markdown
-**Table 1. Public Datasets for [Task]**
+**Table 1 | Public datasets for [task].**
 
-| Dataset | Year | Cases | Annotation Type | Access |
-|---------|------|-------|-----------------|--------|
+| Dataset | Year | Cases | Annotation type | Access |
+|---|---|---|---|---|
 | [Name] | 20XX | N | [type] | [link] |
+
+*Cases = unique patients. Where multi-center, the number of sites is given in parentheses. Access notations: O = open, R = restricted (registration), C = commercial.*
 ```
 
-### Method Comparison Table
+### Table 2: Method Comparison
+
 ```markdown
-**Table 2. Deep Learning Methods for [Task]**
+**Table 2 | Representative deep learning methods for [task].**
 
-| Reference | Category | Architecture | Dataset | Dice | HD95 | Innovation |
-|-----------|----------|--------------|---------|------|------|------------|
-| [Author] [ref] | [Cat] | [Arch] | [Data] | 0.XXX | X.XX | [1-line summary] |
+| Reference | Modality | Family | Architecture | Dataset | Headline metric | Innovation |
+|---|---|---|---|---|---|---|
+| [First-author Year] [N] | CCTA | Topology-aware | nnU-Net + clDice | ImageCAS | Dice 0.812 | First clDice on CCTA |
+
+*Performance numbers are taken from the original publications and should not be compared directly across rows; datasets, splits and metric definitions differ. Family is the most-engaged inductive prior or training regime, not the only one. CCTA = coronary CT angiography; HD95 = 95th-percentile Hausdorff distance; — = not reported.*
 ```
 
-### Commercial Products Table
+### Table 3: Commercial Products
+
 ```markdown
-**Table 3. Commercial [Domain] Products**
+**Table 3 | Commercial AI tools for [domain] with regulatory clearance.**
 
-| Company | Product | Technology | Regulatory | Key Features |
-|---------|---------|------------|------------|--------------|
-| [Name] | [Product] | [Tech] | FDA/CE/NMPA | [features] |
+| Manufacturer | Product | Indication | Underlying technology | Regulatory | Deployment | Key validation evidence |
+|---|---|---|---|---|---|---|
+| HeartFlow | CT-FFR Analysis | CT-FFR | CFD + DL hybrid | FDA cleared (CPT 75580); CE | Cloud-based SaaS | NXT, ADVANCE, PLATFORM, PACIFIC; FISH&CHIPS [N] |
+| Keya Medical | DeepVessel FFR | CT-FFR | DL surrogate of CFD | FDA, NMPA Class III, CE | Cloud + on-site | Multi-centre Chinese validation [N] |
+
+*Listed validation evidence refers to peer-reviewed primary publications, not vendor white papers. NMPA = National Medical Products Administration (China); CFD = computational fluid dynamics.*
 ```
+
+---
+
+## Notes
+
+### Why bibliography target removed
+
+v2 set "80-120 references" as a quality criterion. This drove Claude to **pad the bibliography**, and padding encouraged fabrication. v3 has no count target. Cite what supports the argument. If your review naturally has 60 high-quality refs, that's enough. If it needs 150, also fine. Quantity is downstream of substance.
+
+### Why 3-axis Methods is the structural commitment
+
+v2's coronary review produced 10 flat method H3 subsections. The resulting §Methods read as a textbook chapter, not a flagship review. Flagship reviews compress 10+ method variants into ~3 thematic axes that force comparative synthesis. The 3-axis structure is the most important structural fix in v3.
