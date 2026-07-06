@@ -1,6 +1,6 @@
 # Project File Templates
 
-Templates for `CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, and the 3 standard tables. v3 updates: Stage 4 (Methods) uses **3-axis structure**, not flat 10-subsection list. Bibliography target removed.
+Templates for `CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, route-specific protocol files, and standard tables. v3.1 updates: choose review type first; use the **3-axis structure** as a narrative/method-survey default, not as a universal rule. Bibliography target removed.
 
 ---
 
@@ -11,8 +11,12 @@ Templates for `CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, and the 3 standard tables. 
 
 ## Project info
 - **Topic**: [specific topic]
+- **Review type**: [narrative / method survey / scoping / systematic / systematic + meta-analysis / umbrella]
 - **Target journals**: [Tier 1: e.g., Nat Rev Cardiol] / [Tier 2: e.g., JACC Cardiovasc Imaging] / [Tier 3: e.g., Eur Radiol]
+- **Reporting standards**: [none / PRISMA 2020 / PRISMA-ScR / CLAIM / TRIPOD+AI / QUADAS-family / other]
 - **Paradigm spec**: see PARADIGM.md (Phase 0 output)
+- **Review-type route**: see references/REVIEW_TYPES.md
+- **Reporting standards**: see references/REPORTING_STANDARDS.md
 - **Citation integrity**: see references/CITATION_INTEGRITY.md
 - **Hallucination self-check**: see references/HALLUCINATION_PATTERNS.md
 
@@ -22,6 +26,7 @@ Templates for `CLAUDE.md`, `IMPLEMENTATION_PLAN.md`, and the 3 standard tables. 
 |---|---|
 | coronary CT angiography (CCTA) | cardiac CT, CT angio, CTA (ambiguous) |
 | centerline (anatomical structure) | midline, vessel line |
+| SCCT coronary segment labels | AHA 17-segment myocardium when referring to coronary artery labels |
 | [add domain-specific terms] | [variants to avoid] |
 
 ## Canonical Paper / Dataset Descriptions
@@ -37,26 +42,32 @@ To prevent internal inconsistency (HALLUCINATION_PATTERNS.md ▸ Pattern 9), loc
 
 ## Reference Sources
 
-### ArXiv MCP
+### Methodological preprints
 Search queries used:
 - "[topic] segmentation transformer" (cs.CV, eess.IV)
 - "[topic] deep learning" (cs.LG)
 Date range: last 3 years
 Downloaded papers: [list arXiv IDs]
 
-### PubMed MCP
+### PubMed / clinical literature
 MeSH queries used:
 - "Deep Learning"[MeSH] AND "[domain]"[MeSH]
 - "[method]"[MeSH] AND "diagnosis"[MeSH]
 Filters: Review, Clinical Trial
 
 ### Zotero
-API: localhost:23119
 Relevant collections:
 - [Collection name 1]: [N papers]
 - [Collection name 2]: [N papers]
 
-## Literature inventory (3-axis grouping)
+### Systematic/scoping search log
+- Databases: [PubMed, Embase, Web of Science, IEEE Xplore, Cochrane, etc.]
+- Exact search strings: see search_log.md
+- Screening log: see screening_log.csv
+- Extraction/charting table: see extraction_table.csv or charting_table.csv
+- Risk of bias: see risk_of_bias.md
+
+## Literature inventory (narrative/method survey default)
 
 ### Axis 1: Architectural priors
 - **CNN-based**: [list verified refs]
@@ -89,10 +100,11 @@ Plan the 3-5 verdict sentences in advance:
 ## Writing-time guardrails (from references/)
 
 - Per-claim verification on every `[N]` placed (CITATION_INTEGRITY ▸ Rule 1-5)
-- Self-scan against 9 hallucination patterns every 5-6 paragraphs (HALLUCINATION_PATTERNS.md)
-- Vendor names only in Table 3
+- Self-scan against hallucination patterns every 5-6 paragraphs (HALLUCINATION_PATTERNS.md)
+- Vendor names table-first; sparse body mentions only when precision requires
 - Equations only in Box 1
 - Max 2 heading levels, no numbered headings
+- If route is systematic/scoping: PRISMA/PRISMA-ScR methods must be present before drafting Results
 ```
 
 ---
@@ -101,6 +113,14 @@ Plan the 3-5 verdict sentences in advance:
 
 ```markdown
 # Implementation Plan: [Review Title]
+
+## Phase -1: Review-Type Routing
+**Status**: [Not Started / In Progress / Complete]
+
+- [ ] Review type selected: [narrative / method survey / scoping / systematic / systematic + meta-analysis / umbrella]
+- [ ] Required reporting standards selected
+- [ ] Route-specific files listed
+- [ ] Manuscript title/abstract language matches the route
 
 ## Phase 0: Paradigm Capture
 **Status**: [Not Started / In Progress / Complete]
@@ -117,22 +137,23 @@ Plan the 3-5 verdict sentences in advance:
 - [ ] IMPLEMENTATION_PLAN.md (this file) created
 - [ ] manuscript_draft.md created (empty)
 - [ ] PARADIGM.md linked
+- [ ] If scoping/systematic: PROTOCOL.md, search_log.md, screening_log.csv, and extraction/charting files created
 
 ## Phase 2: Literature Collection + Verification
 **Status**: [Not Started / In Progress / Complete]
 
-### ArXiv (Deep Learning Methods)
+### Methodological Literature
 - [ ] Search "[topic] segmentation" in cs.CV, eess.IV
 - [ ] Search "[topic] transformer/attention" in cs.CV
 - [ ] Download key papers (target: 50-80 — discriminate aggressively)
 - [ ] Read each (abstract + methods + results)
 - [ ] Note actual module names + actual numbers in working notes
 
-### PubMed (Clinical Literature)
+### PubMed / Clinical Literature
 - [ ] Search MeSH: "Deep Learning" AND "[domain]"
 - [ ] Filter by publication type (Review, Clinical Trial)
 - [ ] Collect clinical validation studies (target: 20-40)
-- [ ] PubMed WebFetch on each for metadata
+- [ ] Verify metadata for each selected paper
 
 ### Zotero (User's local library)
 - [ ] Check existing collections for closed-access papers
@@ -140,6 +161,9 @@ Plan the 3-5 verdict sentences in advance:
 
 ### Additional sources
 - [ ] WebSearch supplementary (IEEE Xplore, Springer)
+- [ ] If systematic/scoping: exact search strings documented in search_log.md
+- [ ] If systematic/scoping: deduplication and screening counts documented
+- [ ] If systematic: risk-of-bias tool selected and justified
 
 ### Verification (every entry, before adding)
 - [ ] DOI resolves on Crossref
@@ -153,14 +177,15 @@ Plan the 3-5 verdict sentences in advance:
 - [ ] Demographic-bias studies covered?
 - [ ] Recent 6-month preprints covered?
 
-## Phase 3: Outline + 3-Axis Taxonomy
+## Phase 3: Outline + Taxonomy
 **Status**: [Not Started / In Progress / Complete]
 
 - [ ] Top-level sections defined (Introduction / Methods / Applications / Translation / Discussion)
-- [ ] §Methods structured as **3 H3 subsections** (3 axes):
+- [ ] If narrative/method survey: Methods structured as **3 H3 subsections** when appropriate:
   - [ ] §Methods.Architectural priors
   - [ ] §Methods.Inductive priors
   - [ ] §Methods.Data regime
+- [ ] If systematic/scoping: Methods/Results structure follows REVIEW_TYPES.md and journal instructions
 - [ ] Each paper in literature inventory mapped to an axis
 - [ ] Table 1 / 2 / 3 designs planned
 - [ ] Box 1 (metrics) content planned
@@ -177,7 +202,7 @@ For each section, micro-workflow (per CITATION_INTEGRITY.md):
 - [ ] Close axis with verdict sentence
 - [ ] Equations to Box 1, not body
 - [ ] Vendor names to Table 3, not body
-- [ ] Self-scan against 9 hallucination patterns every 5-6 paragraphs
+- [ ] Self-scan against hallucination patterns every 5-6 paragraphs
 
 ### Section progress
 
@@ -197,11 +222,12 @@ For each section, micro-workflow (per CITATION_INTEGRITY.md):
 ## Phase 5: Multi-Agent Peer Review
 **Status**: [Not Started / In Progress / Complete]
 
-- [ ] TeamCreate `manuscript-review`
-- [ ] Spawn `style-reviewer` teammate (Task 1)
-- [ ] Spawn `ref-checker` teammate (Task 2)
-- [ ] Spawn `peer-reviewer` teammate (Task 3)
-- [ ] Spawn `fact-checker` teammate (Task 4)
+- [ ] Run `style-reviewer` pass
+- [ ] Run `ref-checker` pass
+- [ ] Run `peer-reviewer` pass
+- [ ] Run `fact-checker` pass
+- [ ] If systematic/scoping: run `methods-reviewer` pass for PRISMA/reporting-standard fit
+- [ ] Run bundled `<skill_dir>/scripts/audit_manuscript.py` and save report
 - [ ] Synthesize 4 reports into 00_team_synthesis.md
 - [ ] Address all CRITICAL findings
 - [ ] Address HIGH findings agreed by ≥ 2 reviewers
@@ -217,6 +243,7 @@ For each section, micro-workflow (per CITATION_INTEGRITY.md):
 - [ ] Figures produced (not placeholders)
 - [ ] Citation format converted for target journal
 - [ ] Final self-check checklist passed
+- [ ] Required reporting checklists included if applicable
 
 ## Literature Sources Summary
 
@@ -235,6 +262,56 @@ For each section, micro-workflow (per CITATION_INTEGRITY.md):
 - Phase 5 peer review found 8 issues; addressed
 ### [Date] - v1.2
 - Phase 6 submission prep done; sent to [Journal]
+```
+
+---
+
+## PROTOCOL.md Template (scoping/systematic routes)
+
+```markdown
+# Protocol: [Review title]
+
+## Review type
+[scoping / systematic / systematic + meta-analysis]
+
+## Question
+- PCC for scoping: Population / Concept / Context
+- PICOS or PIRD for systematic review: Population or Participants / Intervention or Index test / Comparator or Reference standard / Outcomes or Diagnosis / Study design
+
+## Eligibility criteria
+### Include
+- [criterion]
+
+### Exclude
+- [criterion]
+
+## Information sources
+| Database | Platform | Date searched | Date range | Notes |
+|---|---|---|---|---|
+| PubMed | NCBI | YYYY-MM-DD | 2019-2026 | [notes] |
+
+## Search strategy
+See search_log.md for exact strings.
+
+## Selection process
+Describe deduplication, title/abstract screening, full-text screening, reviewer count, and conflict handling.
+
+## Data items
+List extraction/charting variables.
+
+## Risk of bias
+Name and justify the tool if this is a systematic review.
+
+## Synthesis
+Describe narrative synthesis, evidence map, or meta-analysis approach. Do not pool metrics unless tasks and validation settings are comparable.
+```
+
+## Extraction / Charting Table Fields
+
+Use these as CSV headers and adapt to the route:
+
+```text
+study_id, first_author, year, doi_or_pmid, country, centers, modality, anatomy, task, review_route, population, dataset_size, train_val_test_split, external_validation, reference_standard, model_family, architecture, pretraining, metrics_reported, headline_result, confidence_interval, code_available, data_available, leakage_risk, bias_tool_domain_notes, fairness_or_subgroup_notes, clinical_translation_notes
 ```
 
 ---

@@ -1,6 +1,6 @@
 # Phase 0: Paradigm Capture
 
-Before writing the manuscript, extract a style spec from 2-3 exemplar reviews in the target journal tier. This anchors the draft to flagship-review style and prevents drift toward the generic "survey paper" register that LLMs default to.
+Before writing the manuscript, extract a style spec from 2-3 exemplar reviews in the target journal tier. For systematic or scoping reviews, include exemplars of the same review type, because Methods and Results conventions matter as much as prose style.
 
 ---
 
@@ -10,10 +10,10 @@ LLMs trained on the entire web have absorbed every register of medical writing â
 
 Flagship-tier reviews (Nature Reviews / Nat Med / Lancet family / JACC) write differently:
 
-- 2 heading levels, no number prefixes
+- 2 heading levels and no number prefixes for most narrative reviews; more formal method subheadings for systematic/scoping reviews when the journal expects them
 - 1-2 sentence "verdict" closers per axis section
 - Equations and dataset details in Boxes, not body
-- Vendor names confined to a single Table
+- Vendor names handled table-first, with sparse prose use only when needed for regulatory or comparative precision
 - Authorial position taken explicitly when evidence supports it
 - 1.5-2.5 references per paragraph, well-targeted
 - Often a 4-5 bullet "Key Points" box after the title
@@ -26,7 +26,7 @@ Without an exemplar anchor, even careful writing drifts toward the generic regis
 
 ### Selection criteria
 
-- **Same modality or same problem family** as your topic. (For coronary AI, look at recent coronary or cardiovascular AI reviews. For brain tumor segmentation, look at neuroradiology AI reviews.)
+- **Same modality, problem family, or review type** as your topic. (For coronary AI, look at recent coronary or cardiovascular AI reviews. For systematic reviews, include a recent systematic review in the same journal tier.)
 - **Same journal tier** as your target. If aiming for Nat Med, read a recent Nat Med review. If aiming for Eur Radiol, read a recent Eur Radiol review.
 - **Last 3 years**. Older exemplars may have outdated stylistic conventions.
 - **Recognized authors**. Reviews authored by senior figures in the field carry the conventions of their target journals more reliably.
@@ -96,7 +96,7 @@ Pay attention to:
 
 ### Vendor handling
 
-- Search for any commercial product name. Does it appear in body text or only in Tables?
+- Search for any commercial product name. Does it appear mainly in tables, and are any body mentions necessary for precision?
 - How are FDA / regulatory facts cited?
 
 ### Authorial voice
@@ -192,7 +192,7 @@ Phase 4 writing should conform to this spec. Specifically:
 - Max heading depth: ...
 - No numbered headings.
 - Box 1 for metrics / formulas.
-- Vendor names only in Table N.
+- Vendor names table-first; sparse body mentions only when needed.
 - â‰¥ 3 verdict sentences across the manuscript.
 - Citation density 1.5-2.5 refs/paragraph.
 - Key Points: 4-5 bullets after title.

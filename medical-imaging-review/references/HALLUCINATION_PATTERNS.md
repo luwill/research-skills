@@ -1,6 +1,6 @@
-# 9 Patterns of LLM Hallucination in Medical Imaging Reviews
+# 10 Patterns of LLM Hallucination in Medical Imaging Reviews
 
-Use this as a checklist during Phase 4 (writing) and Phase 5 (peer review). Every paragraph should be self-scanned against these patterns. The 9 patterns are derived from the actual failure modes observed in the `coronary-cta-paper` v2 draft.
+Use this as a checklist during Phase 4 (writing) and Phase 5 (peer review). Every paragraph should be self-scanned against these patterns. The first 9 patterns are derived from the actual failure modes observed in the `coronary-cta-paper` v2 draft; Pattern 10 addresses review-type overclaiming.
 
 Examples are drawn from coronary imaging but the patterns are domain-general.
 
@@ -194,6 +194,23 @@ For each high-value paper or dataset, lock in a canonical description in CLAUDE.
 
 ---
 
+## Pattern 10: Systematic-review label without systematic methods
+
+The manuscript calls itself a systematic review, meta-analysis, or scoping review, but the methods are really narrative: no exact search strings, no eligibility criteria, no screening flow, no extraction table, and no risk-of-bias method.
+
+### Detection signals
+
+- Title or abstract says "systematic review" but Methods lacks PRISMA, eligibility criteria, search strategy, screening, data extraction, or risk-of-bias assessment.
+- The manuscript claims "comprehensive search" without naming databases, dates, and exact strings.
+- Results discuss "included studies" without a flow diagram or exclusion reasons.
+- Meta-analysis language appears without pooling method, heterogeneity handling, and comparable outcomes.
+
+### Fix
+
+Either add the route-specific methods files and rewrite to PRISMA/PRISMA-ScR standards, or downgrade the label to "narrative review", "method survey", or "scoping review" as appropriate. Never preserve the systematic label by cosmetic wording alone.
+
+---
+
 ## Self-Check Workflow
 
 Every 5-6 paragraphs during writing:
@@ -203,9 +220,10 @@ Every 5-6 paragraphs during writing:
 3. Cross-check any vendor/agency references → verify pattern 4.
 4. Random-sample 1-2 `[N]` body↔bib → verify pattern 7.
 5. Check any metric formula displayed → verify pattern 8.
+6. If the title/abstract uses systematic/scoping/meta-analysis language → verify pattern 10.
 
 Every section completion:
 
-6. Search the section for the manuscript's top 5 cited papers → verify pattern 9 (internal consistency).
+7. Search the section for the manuscript's top 5 cited papers → verify pattern 9 (internal consistency).
 
 This adds ~10-15% to writing time. Catches >90% of hallucinations before they leave the writer's desk.

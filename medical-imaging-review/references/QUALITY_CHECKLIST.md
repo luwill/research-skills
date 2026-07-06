@@ -21,15 +21,29 @@ See [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) for the full 5-rule protocol.
 
 ---
 
+## Review-Type And Reporting-Standard Fit (Hard Gate)
+
+- [ ] Review type is declared before drafting: narrative, method survey, scoping, systematic, systematic + meta-analysis, or umbrella.
+- [ ] Title, abstract, and Methods use language consistent with the route.
+- [ ] If "systematic review" appears, PRISMA 2020 items are present: search strings, databases, eligibility criteria, screening flow, extraction fields, and risk-of-bias methods.
+- [ ] If "scoping review" appears, PRISMA-ScR items are present: PCC question, charting table, evidence map, and flow diagram.
+- [ ] If diagnostic accuracy is reviewed, QUADAS-family risk-of-bias domains are addressed.
+- [ ] If AI primary studies are appraised, CLAIM/TRIPOD+AI-style fields are extracted where relevant.
+- [ ] No meta-analysis language appears unless pooling methods, heterogeneity, and comparable outcomes are documented.
+
+See [REVIEW_TYPES.md](REVIEW_TYPES.md) and [REPORTING_STANDARDS.md](REPORTING_STANDARDS.md).
+
+---
+
 ## Structural Discipline
 
 - [ ] Heading depth ≤ 2 levels (H2 + H3 only in body)
 - [ ] No numbered headings (no `## 1.`, `### 1.1`)
-- [ ] H4 (`####`) absent from body — deeper grouping via bold lead-in `**Topic.**`
-- [ ] §Methods uses 3-axis grouping (Architectural / Inductive / Data regime), not flat 10-subsection list
-- [ ] Verdict sentences present in 3-5 places (not on every paragraph, not absent entirely)
+- [ ] H4 (`####`) absent from narrative body sections — deeper grouping via bold lead-in `**Topic.**`
+- [ ] Narrative/method-survey Methods uses the 3-axis grouping where appropriate; systematic/scoping reviews follow protocol-driven structure
+- [ ] Verdict sentences present in 3-5 places for narrative/method surveys (not on every paragraph, not absent entirely)
 - [ ] Key Points box has 4-5 bullets, 1-3 sentences each
-- [ ] Standard sections present: Introduction / Methods / Applications / Translation / Discussion (names may vary, structure fixed)
+- [ ] Standard sections match the selected review route
 
 ---
 
@@ -54,16 +68,15 @@ See [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) for the full 5-rule protocol.
 
 ## Vendor Names
 
-- [ ] No vendor name (HeartFlow, Cleerly, Caristo, Keya, Shukun, etc.) appears in body paragraph
-- [ ] All vendor names appear in Table 3 (Commercial Products) only
-- [ ] Body uses category descriptors with table cross-reference
+- [ ] Vendor names (HeartFlow, Cleerly, Caristo, Keya, Shukun, etc.) appear primarily in the commercial/regulatory table
+- [ ] Any body mention of a vendor/product is necessary for regulatory, trial, or comparative precision
+- [ ] Clinical-effectiveness claims use peer-reviewed evidence, not vendor white papers or clearance letters
+- [ ] Body uses category descriptors with table cross-reference when product names are not necessary
 
 ```bash
 # Quick check
-for name in HeartFlow Cleerly Caristo "Keya Medical" "Shukun Technology"; do
-  grep -n "$name" manuscript_draft.md | grep -v "| $name |"
-done
-# Expected: 0 hits per name
+python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
+# Inspect "Vendor body mentions"; justify or rewrite each hit.
 ```
 
 ---
@@ -91,10 +104,13 @@ done
 
 ## Content Coverage
 
-- [ ] All major method axes covered (Architectural / Inductive / Data regime)
+- [ ] Narrative/method surveys cover all relevant method axes (Architectural / Inductive / Data regime) or document a better taxonomy
+- [ ] Systematic/scoping reviews cover all protocol-specified outcomes, concepts, and extraction/charting domains
 - [ ] Negative trials included where they exist (LLM bias: only positive)
 - [ ] Inter-vendor reproducibility / cross-site validation discussed where relevant
 - [ ] Demographic bias / fairness considerations addressed where relevant
+- [ ] Dataset leakage, split integrity, external validation, calibration, and benchmark comparability discussed where relevant
+- [ ] Code/model/data availability and reproducibility addressed where relevant
 - [ ] Controversies and unresolved questions engaged, not glossed
 - [ ] Future directions specific and actionable (not "more research is needed" platitudes)
 
@@ -103,6 +119,9 @@ done
 ## Self-check Commands
 
 ```bash
+# Full audit
+python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
+
 # Numbered headings
 grep -cE "^#{2,4} [0-9]" manuscript_draft.md
 # Expected: 0
@@ -163,7 +182,7 @@ When a checklist item fails during writing:
 
 | Severity | Examples | Action |
 |---|---|---|
-| **CRITICAL** | Placeholder DOI, wrong-author list on real paper, citation direction flipped | **STOP and fix immediately**. These are reviewer-facing trust-killers. |
+| **CRITICAL** | Placeholder DOI, wrong-author list on real paper, citation direction flipped, systematic-review label without systematic methods | **STOP and fix immediately**. These are reviewer-facing trust-killers. |
 | **HIGH** | Body↔bib drift, vendor name in body, verdict absent in axis section | Fix before completing the current section. |
 | **MEDIUM** | Heading numbered, equation inline | Fix at section end. |
 | **LOW** | Multi-citation bracket > 4 refs, table > 20 rows | Note and address during peer-review phase. |

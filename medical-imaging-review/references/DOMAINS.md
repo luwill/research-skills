@@ -1,13 +1,13 @@
-# Domain-Specific Method Taxonomies (3-Axis Grouping)
+# Domain-Specific Method Taxonomies
 
-**This file replaces the v2 "flat 10-subsection list" approach.** For each medical imaging domain, methods are organized along **3 thematic axes**, not as a long flat list. These axes are **subsection structure** (the H3 organization in §Methods), with **bold lead-ins** for individual method families inside each axis.
+**This file replaces the v2 "flat 10-subsection list" approach for narrative AI method surveys.** For method-heavy reviews, organize methods along **3 thematic axes**, not as a long flat list. These axes are usually the H3 organization in Methods, with **bold lead-ins** for individual method families inside each axis.
 
-The 3 axes are universal:
+The 3-axis structure is the default for method surveys:
 1. **Architectural priors** — what kind of network (CNN, Transformer, Mamba, etc.)
 2. **Inductive priors** — what kind of geometric / structural / multi-task bias is built in (topology, multi-task, graph, etc.)
 3. **Data regime** — how data is used / pre-trained / federated (self-supervised, foundation models, federated, etc.)
 
-**Critical:** These 3 axes are how the §Methods section is structured. Do NOT bullet 10 method categories as 10 H3 subsections. Use 3 axis subsections, with bold lead-ins inside each axis for the method families.
+**Scope:** Use these axes for narrative reviews and method surveys. Do not force them onto systematic reviews, scoping reviews, diagnostic-accuracy reviews, implementation reviews, or health-economics reviews when the protocol-driven structure is clearer.
 
 ---
 
@@ -16,9 +16,10 @@ The 3 axes are universal:
 When writing the §Methods section:
 
 1. Open this file to find your domain.
-2. Use the 3-axis grouping as your H3 structure.
+2. Use the 3-axis grouping as your H3 structure when the project is a narrative/method survey.
 3. Inside each axis subsection, use bold lead-ins for the individual method families.
 4. End each axis subsection with a verdict sentence.
+5. If the selected review type is systematic/scoping, use REVIEW_TYPES.md for the Methods and Results structure; use this file only to label method families inside tables or synthesis text.
 
 Example for coronary segmentation §Methods:
 
@@ -79,7 +80,7 @@ domain-tuned specialists has narrowed substantially but is not yet closed.
 
 ### Downstream tasks (separate section, not part of methods axis structure)
 - Centerline extraction
-- Vessel labeling (SCCT 18-segment / AHA 17-segment myocardium)
+- Vessel labeling using SCCT coronary artery segment nomenclature. Do not confuse this with the AHA 17-segment left-ventricular myocardial model, which is used for myocardium/perfusion territory descriptions rather than coronary artery segment labels.
 - Stenosis detection
 - CT-FFR computation
 - Plaque analysis
@@ -287,9 +288,9 @@ Some methods span axes (e.g., a foundation-model-based topology-aware Mamba woul
 
 - Place the method in the axis it's most centrally about.
 - Cross-reference from the other 2 axes ("see also: this method type combines architectural and data-regime innovations").
-- Don't create a 4th axis to accommodate it. Three axes is the structural commitment.
+- Avoid creating many same-depth subsections merely to accommodate edge cases.
 
-If 30%+ of your methods don't fit, you may be in a sub-domain where the 3-axis structure needs adaptation. In that case, document the alternative structure in PARADIGM.md and use it consistently — but stay disciplined to 3 axes.
+If 30%+ of your methods don't fit, you may be in a sub-domain where the 3-axis structure needs adaptation. In that case, document the alternative structure in PARADIGM.md and use it consistently. Good alternatives include task-stage structure (detection -> segmentation -> quantification), evidence-stage structure (development -> validation -> implementation), or clinical-workflow structure (acquisition -> analysis -> decision support).
 
 ---
 

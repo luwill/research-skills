@@ -1,0 +1,4 @@
+interface:
+  display_name: "Medical Imaging Review"
+  short_description: "Write verified medical imaging AI reviews"
+  default_prompt: "Use $medical-imaging-review to plan and draft a verified medical imaging AI review."

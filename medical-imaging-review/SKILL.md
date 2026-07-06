@@ -1,13 +1,9 @@
 ---
 name: medical-imaging-review
-description: Write peer-review-quality comprehensive reviews for medical imaging AI research (segmentation, detection, classification across CT, MRI, X-ray, ultrasound, pathology). Use this skill whenever the user wants to produce a survey paper, systematic review, literature analysis, or "综述" on deep learning for medical imaging; whenever they mention writing a "review paper" / "literature review" / "系统综述" / "narrative review" / "scoping review" in a medical-AI context; whenever they want a draft suitable for journal submission rather than internal notes; whenever they need help organizing a multi-section method survey with vendor / regulatory / clinical translation coverage. This skill enforces fact-checking, citation integrity, and flagship-review writing voice — NOT a fill-in-the-blank template that invites hallucination. Use it especially when the goal is a publishable manuscript and not just a draft to discuss.
-metadata:
-  author: louwill
-  version: 3.0.0
-  prior_version_lessons: "v2.0.0 produced drafts that needed extensive multi-day fact-check revision (coronary-cta-paper case): 17 placeholder DOIs, 30-40 [N] drift errors, fabricated method modules, vendor-style citations, 10-subsection flat method taxonomy, AI-tone hedging throughout. v3.0.0 directly addresses these failure modes."
+description: Write peer-review-quality medical imaging AI reviews, including narrative reviews, method surveys, scoping reviews, and systematic reviews for segmentation, detection, classification, diagnosis, prognosis, and clinical translation across CT, MRI, X-ray, ultrasound, pathology, and related modalities. Use when the user asks for a "综述", review paper, literature review, systematic review, scoping review, survey paper, evidence map, or journal-submission manuscript in a medical-AI context. This skill routes the review type first, then enforces reporting-standard fit, fact-checking, citation integrity, tool-portable literature collection, and a flagship-review writing voice without template-filling hallucination.
 ---
 
-# Medical Imaging AI Literature Review Skill (v3.0.0)
+# Medical Imaging AI Literature Review Skill (v3.1.0)
 
 Produce comprehensive reviews that pass first-round peer review on factual grounds, not just structural grounds.
 
@@ -17,7 +13,9 @@ This is **not** a template-filling skill. It is a write-with-verify discipline.
 
 ## Quick Start
 
-A review project lives in 4 files (3 you write, 1 the skill provides):
+First choose the review type. Read [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) before collecting literature or drafting prose.
+
+Default narrative/method-survey projects live in 4 files:
 
 ```
 project_root/
@@ -27,7 +25,23 @@ project_root/
 └── manuscript_draft.md    # The actual manuscript
 ```
 
-Follow the 6-phase workflow in [references/WORKFLOW.md](references/WORKFLOW.md). The phases are: paradigm capture → init → collect-and-verify → 3-axis outline → write-with-per-claim-verification → multi-agent peer review.
+Scoping and systematic reviews add protocol, search, screening, extraction, and risk-of-bias files; see [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) and [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md).
+
+Follow the workflow in [references/WORKFLOW.md](references/WORKFLOW.md). The phases are: review-type routing -> paradigm capture -> init -> collect-and-verify -> outline/taxonomy -> write-with-per-claim-verification -> peer review -> submission prep.
+
+---
+
+## Review Type Routing
+
+Do not let the title outrun the methods.
+
+| If the user asks for... | Route to... | Read |
+|---|---|---|
+| flagship "综述", narrative synthesis, method survey | Narrative review / method survey | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [DOMAINS.md](references/DOMAINS.md) |
+| evidence map, "what exists", gap mapping | Scoping review | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) |
+| systematic review, meta-analysis, diagnostic-accuracy evidence | Systematic review route | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) |
+
+If the manuscript uses the phrase "systematic review", it must contain reproducible search strings, eligibility criteria, screening flow, extraction fields, and risk-of-bias methods. Otherwise, call it a narrative review, method survey, or scoping review.
 
 ---
 
@@ -69,19 +83,20 @@ Do **not** fill in a template like `[Author] et al. [ref] proposed [method]... A
 
 Use this discipline instead:
 
-1. **Read** the actual paper (abstract + methods + results). For arXiv, use `read_paper`. For closed-access, use Zotero MCP to access the user's library.
+1. **Read** the actual paper (abstract + methods + results). Use whatever first-source route is available: PubMed/DOI pages, arXiv pages or PDFs, Zotero full text, local PDFs, institutional copies, or journal pages. Confirm available tools before assuming a specific MCP name.
 2. **Note** the actual module names, the actual benchmark, the actual numbers, in your own working notes — not in the manuscript yet.
 3. **Write** the method description from those notes, citing specific numbers and module names verbatim from the paper.
 4. **Verify** by spot-checking 1-2 of the numbers against the paper one more time before moving on.
 
 If you can't access the paper, do not write about its internal architecture or specific performance numbers. Cite it for the contribution-level claim only ("first to apply X to Y") and move on.
 
-### Heading depth — Nature Reviews uses two levels
+### Heading depth — match the target article type
 
 - **H2** (`##`) for top-level sections (Introduction, Methods, Applications, Discussion, ...).
 - **H3** (`###`) for subsections.
-- **H4** (`####`) is forbidden in body. Use bold lead-in `**Topic.**` paragraph starters for deeper grouping.
-- **Number prefixes** (`1.`, `1.1`, `1.2.3`) are forbidden in section titles. Nature Reviews / Nat Med / Lancet / JACC don't use them in narrative reviews.
+- In flagship narrative reviews, avoid H4 in body; use bold lead-in `**Topic.**` paragraph starters for deeper grouping.
+- In systematic/scoping reviews, method subheadings may follow journal or PRISMA conventions even if that creates a more formal Methods section.
+- Avoid number prefixes (`1.`, `1.1`, `1.2.3`) unless the target journal explicitly requires numbered sections.
 
 ### Equations — in a Box, not in body
 
@@ -89,18 +104,19 @@ Display equations (DSC, IoU, clDice, FedAvg, GCN propagation, ...) appear in **B
 
 If a formula has no methodological insight worth displaying (e.g., FedAvg averaging), describe it in prose instead of showing it.
 
-### Vendor names — only in the regulatory/products table
+### Vendor names — table-first, sparing in prose
 
-Vendor names (HeartFlow, Cleerly, Caristo, Keya, Shukun, ...) appear ONLY in the Commercial Products / Regulatory & Validation table. In body text use category descriptors:
+Vendor names (HeartFlow, Cleerly, Caristo, Keya, Shukun, ...) belong primarily in the Commercial Products / Regulatory & Validation table. In body text use category descriptors unless the product name is necessary to define a regulatory fact, trial population, or head-to-head distinction.
 
 - ✗ "HeartFlow's CT-FFR product was validated in NXT, ADVANCE, and PACIFIC..."
 - ✓ "The first FDA-cleared CT-FFR product (Table N, row 1) was validated in NXT, ADVANCE, and PACIFIC..."
+- ✓ "The table lists HeartFlow, Cleerly, Caristo, and other products with their regulatory status and peer-reviewed validation evidence."
 
-Reason: scatter-cited vendor names look like marketing copy and undermine the review's authority.
+Reason: repeated product names in body text read like marketing copy. Use exact product names when precision matters; cite peer-reviewed evidence for clinical claims.
 
 ---
 
-## Standard Review Structure
+## Default Narrative / Method Survey Structure
 
 ```markdown
 # [Title]: <evocative subtitle>
@@ -119,7 +135,7 @@ Reason: scatter-cited vendor names look like marketing copy and undermine the re
 (Table 1: public datasets)
 (Box 1: evaluation metrics with equations)
 
-## Methods                              # 3-axis grouping, NOT flat 10-subsection list
+## Methods                              # 3-axis grouping is the default for method surveys
 ### Architectural priors
 **CNN-based design.** ... (bold lead-in for sub-grouping)
 **Transformer-based design.** ...
@@ -154,8 +170,9 @@ Reason: scatter-cited vendor names look like marketing copy and undermine the re
 ```
 
 Notes:
-- No number prefixes on headings.
-- §Methods is 3 H3 subsections (the three axes), with bold lead-ins for each method family inside.
+- No number prefixes on headings unless the journal requires them.
+- In narrative AI method surveys, §Methods is usually 3 H3 subsections (the three axes), with bold lead-ins for each method family inside.
+- In systematic/scoping reviews, use the structure in [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) instead of forcing the 3-axis method taxonomy.
 - Tables 1, 2, 3 are typically enough. Box 1 (metrics) is typical. Avoid 5+ tables.
 - Verdict sentences cluster at the end of §Methods axis subsections and at the end of clinical translation discussions — not after every paragraph.
 
@@ -163,7 +180,9 @@ Notes:
 
 ## Verdict Sentences
 
-Each H3 method-axis subsection (Architectural priors / Inductive priors / Data regime) should close with **one verdict sentence** expressing authorial position. Choose the 3-5 most opinionated positions across the whole manuscript — don't put verdicts on every paragraph.
+For narrative reviews and method surveys, each major method-axis subsection (Architectural priors / Inductive priors / Data regime) should close with **one verdict sentence** expressing authorial position. Choose the 3-5 most opinionated positions across the whole manuscript — don't put verdicts on every paragraph.
+
+For systematic and scoping reviews, verdicts must be constrained by the protocol and evidence map. Prefer "the included studies show..." over broad field-wide claims unless the search was designed to support the broader claim.
 
 Verdict templates:
 - "[Family] is currently the most cost-effective design choice for [problem]."
@@ -177,22 +196,26 @@ Neutral catalogue is the LLM default and exactly what flagship review editors pu
 
 ## Required Elements
 
-- **Key Points box** (4-5 bullets, 1-3 sentences each) after the title.
-- **Tables 1-3**: datasets, methods, commercial products.
-- **Box 1**: evaluation metrics with formulas.
-- **Figures**: typically 3-5 (overview/taxonomy, representative architectures, workflow, performance landscape).
+- **Review type declaration** before writing starts.
+- **Key Points box** (4-5 bullets, 1-3 sentences each) after the title for narrative/flagship-style manuscripts.
+- **Tables 1-3** for narrative/method surveys: datasets, methods, commercial products.
+- **Systematic/scoping tables** when applicable: search strategy, study characteristics, extraction variables, risk-of-bias summary.
+- **Box 1**: evaluation metrics with formulas when useful; for systematic reviews, move formal methods definitions into Methods if the target journal prefers that.
+- **Figures**: typically 3-5 for narrative reviews; systematic/scoping reviews require a PRISMA-style flow diagram.
 - **References**: cite only what supports the argument. Quantity is downstream of substance — don't pad to a target count.
-- **Verdict sentences**: 3-5 across the whole manuscript, clustered at axis-section ends.
+- **Verdict sentences**: 3-5 across narrative/method surveys, clustered at axis-section ends.
+- **Audit report**: run the bundled `scripts/audit_manuscript.py` before delivery, resolving the script path relative to this skill directory.
 
 ---
 
 ## Heading Depth
 
-See [Core Principles ▸ Heading depth](#heading-depth--nature-reviews-uses-two-levels) above. Hard rules:
+See [Core Principles ▸ Heading depth](#heading-depth--match-the-target-article-type) above. Defaults:
 
-- Max 2 heading levels in body.
-- No number prefixes.
+- Use max 2 heading levels in narrative body sections when possible.
+- Avoid number prefixes unless journal-required.
 - Use bold lead-in `**Topic.**` for deeper subsubsections.
+- Let systematic/scoping Methods follow PRISMA/journal conventions when needed.
 
 ---
 
@@ -204,7 +227,7 @@ See [Core Principles ▸ Equations](#equations--in-a-box-not-in-body) above. All
 
 ## Vendor Names
 
-See [Core Principles ▸ Vendor names](#vendor-names--only-in-the-regulatoryproducts-table) above. Vendor names live in Table 3 only; body text uses category descriptors with table cross-reference.
+See [Core Principles ▸ Vendor names](#vendor-names--table-first-sparing-in-prose) above. Put vendor names in Table 3 by default; allow sparse body mentions only for necessary regulatory or comparative precision.
 
 ---
 
@@ -230,18 +253,19 @@ See [Core Principles ▸ Vendor names](#vendor-names--only-in-the-regulatoryprod
 
 ## Literature Sources
 
-Use all three in combination:
+Use source types in combination. Confirm which tools are available in the current environment before using tool-specific names.
 
-| Source | Best for | Tools |
+| Source | Best for | Preferred route | Fallback |
 |---|---|---|
-| **ArXiv** | Methodological preprints, ML/AI advances | `mcp__arxiv-mcp-server__search_papers`, `read_paper` |
-| **PubMed** | Peer-reviewed clinical / validation studies | `mcp__pubmed-mcp-server__pubmed_search_articles` + WebFetch on PubMed |
-| **Zotero** | User's local library (closed-access journals) | `mcp__zotero__zotero_search_items`, `zotero_get_item_fulltext` |
-| **Crossref** | DOI verification | WebFetch on `api.crossref.org/works/<DOI>` |
+| **ArXiv** | Methodological preprints, ML/AI advances | Available arXiv MCP or paper search | arXiv abstract/PDF URLs |
+| **PubMed** | Peer-reviewed clinical / validation studies | PubMed MCP or NCBI/PubMed search | PubMed URL by PMID |
+| **Zotero** | User's local library (closed-access journals) | Available Zotero MCP or local Zotero API | user-provided PDFs |
+| **Crossref** | DOI verification | Crossref API/WebFetch | DOI resolver and publisher page |
+| **Local PDFs** | Exemplar reviews and closed-access papers | PDF text extraction | visual/manual reading |
 
 For closed-access journals (Med Image Anal, Eur Radiol, Lancet family) the user's local Zotero library is often the only path. Always check Zotero before assuming a paper is inaccessible.
 
-For MCP server configuration, see [references/MCP_SETUP.md](references/MCP_SETUP.md).
+For tool-adapter guidance, see [references/MCP_SETUP.md](references/MCP_SETUP.md).
 
 ---
 
@@ -249,20 +273,22 @@ For MCP server configuration, see [references/MCP_SETUP.md](references/MCP_SETUP
 
 | File | Read when |
 |---|---|
+| [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) | Before starting — choose narrative, scoping, systematic, meta-analysis, or umbrella route |
+| [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) | Whenever the manuscript claims systematic/scoping methods or appraises AI studies |
 | [references/WORKFLOW.md](references/WORKFLOW.md) | Starting a new review or moving between phases |
 | [references/PARADIGM.md](references/PARADIGM.md) | Phase 0: capturing exemplar review style spec |
 | [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) | Phase 2 (collection) and Phase 4 (write) — every citation must follow the 5 rules |
-| [references/HALLUCINATION_PATTERNS.md](references/HALLUCINATION_PATTERNS.md) | Phase 4 (write) and Phase 5 (peer review) — checklist of 9 LLM hallucination indicators to self-check against |
+| [references/HALLUCINATION_PATTERNS.md](references/HALLUCINATION_PATTERNS.md) | Phase 4 (write) and Phase 5 (peer review) — checklist of 10 LLM hallucination indicators to self-check against |
 | [references/DOMAINS.md](references/DOMAINS.md) | Phase 3 (outline) — 3-axis method groupings per domain |
 | [references/TEMPLATES.md](references/TEMPLATES.md) | Phase 1 (init) — CLAUDE.md, IMPLEMENTATION_PLAN.md, table templates |
 | [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md) | Before delivering a draft to the user |
-| [references/MCP_SETUP.md](references/MCP_SETUP.md) | Setting up arxiv-mcp / pubmedmcp / zotero-mcp |
+| [references/MCP_SETUP.md](references/MCP_SETUP.md) | Tool adapters and fallbacks for arXiv / PubMed / Zotero / Crossref |
 
 ---
 
 ## Related Skills
 
-For revising an existing AI-drafted review (whether your own previous output or someone else's draft), use `ai-review-revision`. That skill is the dedicated tool for fixing draft-quality issues — multi-agent diagnostic, factual reset, structural reset, content polish, submission prep.
+For revising an existing AI-drafted review (whether your own previous output or someone else's draft), use `ai-review-revision` if it is installed. That skill is the dedicated tool for fixing draft-quality issues — multi-agent diagnostic, factual reset, structural reset, content polish, submission prep.
 
 This skill (`medical-imaging-review`) is the dedicated tool for producing draft-quality content correctly the first time. They are complementary:
 
@@ -273,23 +299,25 @@ If a draft produced by this skill still ends up needing the `ai-review-revision`
 
 ---
 
-## Why this skill was rewritten (v3 vs v2)
+## Version Notes
 
-v2.0.0 produced the `coronary-cta-paper` initial draft. That draft needed extensive multi-day revision before submission-readiness: 17 placeholder DOIs, 30-40 [N] citation drift errors, fabricated method module names with wrong performance numbers, vendor-style citations attributed to peer-reviewed journals, a 10-subsection flat method taxonomy where 3 thematic axes would have served better, AI-tone hedging language throughout.
+v3.0.0 was rewritten after the `coronary-cta-paper` draft exposed recurring failure modes: placeholder DOIs, citation drift, fabricated method modules, wrong performance numbers, vendor-style citations, flat method taxonomy, and AI-tone hedging.
 
-v3 directly addresses each of these failure modes:
+v3.1.0 adds review-type routing, reporting-standard guidance, tool portability, softer structure rules, CCTA terminology correction, and an executable manuscript audit script.
 
-| v2 failure | v3 fix |
+| Earlier failure | Current fix |
 |---|---|
 | Hedging mandate in Core Principles | Removed; replaced with "match voice to evidence" |
 | 80-120 reference count target | Removed; replaced with "cite what supports the argument" |
 | Method fill-in template | Removed; replaced with "read-first, write-after" discipline |
-| 10-flat method subsection taxonomy | Replaced with 3-axis grouping in DOMAINS.md |
+| 10-flat method subsection taxonomy | Replaced with 3-axis grouping as the default for narrative method surveys |
 | QA = formal structural check | Replaced with per-claim verification embedded in Phase 4 |
 | No DOI / author / direction verification | Added as CITATION_INTEGRITY.md with 5 rules |
-| No hallucination self-check | Added as HALLUCINATION_PATTERNS.md (9 patterns) |
-| Numbered headings | Banned; max 2 levels, bold lead-in for deeper |
-| Vendor names scattered | Confined to Table 3 only |
+| No hallucination self-check | Added as HALLUCINATION_PATTERNS.md |
+| Systematic-review label without systematic methods | Added review-type routing and PRISMA/QUADAS/CLAIM/TRIPOD guidance |
+| Hard-coded MCP assumptions | Added tool-adapter and API fallback guidance |
+| Numbered headings | Avoided by default; journal exceptions allowed |
+| Vendor names scattered | Table-first, sparse body mentions only when precision requires |
 | Equations inline | Confined to Box 1 only |
 | Verdict-free neutral catalogue | Required 3-5 verdict sentences |
 | No exemplar paradigm capture | Added Phase 0 PARADIGM.md |

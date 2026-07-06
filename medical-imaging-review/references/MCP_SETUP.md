@@ -1,14 +1,42 @@
-# MCP Server Configuration for Literature Collection
+# Tool Adapters for Literature Collection
 
-Set up arxiv-mcp / pubmedmcp / zotero-mcp for use in Phase 2 (Literature Collection + Verification). For each server, this file documents installation, tools available, and the searches that match the workflow.
+Use this file to adapt the literature workflow to the tools available in the current environment. Do not assume a specific MCP server name exists. First inspect available tools; then choose the most direct first-source route.
+
+The core operations are tool-independent:
+
+| Operation | Preferred route | Fallback |
+|---|---|---|
+| Search method preprints | Available arXiv/paper-search MCP, Hugging Face papers, scholarly web search | arXiv website/API, publisher pages |
+| Search biomedical literature | Available PubMed/NCBI MCP or web search restricted to PubMed | PubMed website by query or PMID |
+| Read closed-access papers | Zotero MCP/local Zotero API/local PDFs | Ask user for PDF or use abstract-only contribution claim |
+| Verify DOI metadata | Crossref API or DOI resolver | Publisher page, PubMed metadata |
+| Verify author list | PubMed/Crossref/arXiv/publisher page | Zotero metadata plus manual spot-check |
+| Verify numeric/directional claims | Full text or abstract/results table | Remove the numeric claim if the source cannot be read |
+
+If a listed tool is unavailable, use the fallback. The manuscript quality standard stays the same.
 
 ---
 
-## ArXiv MCP (Preprints & Latest Research)
+## Tool discovery checklist
 
-**Repository:** https://github.com/blazickjp/arxiv-mcp-server
+Before search:
 
-### Configuration
+1. List available MCP/tools in the current environment.
+2. Record the actual usable tool names in `CLAUDE.md` or the project plan.
+3. For each source family, record the fallback URL/API.
+4. Do not write tool-specific commands into the manuscript or final notes.
+
+---
+
+## ArXiv / preprint route
+
+Use arXiv for preprints and ML-method advances. If an arXiv MCP is installed, use it; otherwise use arXiv URLs directly.
+
+### Optional Claude MCP example
+
+Repository: https://github.com/blazickjp/arxiv-mcp-server
+
+Configuration example:
 
 Add to `~/.claude/mcp.json` (or your MCP config file):
 
@@ -26,14 +54,14 @@ Add to `~/.claude/mcp.json` (or your MCP config file):
 }
 ```
 
-### Available tools
+Example tool names if this MCP is installed:
 
 | Tool | Purpose |
 |---|---|
-| `mcp__arxiv-mcp-server__search_papers` | Search by keywords with date range and category filters |
-| `mcp__arxiv-mcp-server__download_paper` | Download paper PDF by arXiv ID |
-| `mcp__arxiv-mcp-server__list_papers` | List all downloaded papers |
-| `mcp__arxiv-mcp-server__read_paper` | Read downloaded paper content (Markdown) |
+| `search_papers` equivalent | Search by keywords with date range and category filters |
+| `download_paper` equivalent | Download paper PDF by arXiv ID |
+| `list_papers` equivalent | List downloaded papers |
+| `read_paper` equivalent | Read downloaded paper content |
 
 ### Search strategy
 
@@ -55,21 +83,23 @@ Max results: 50-80 per query (discriminate aggressively — quality over breadth
 
 Per CITATION_INTEGRITY.md Rule 2, when adding an arXiv paper to bibliography:
 
-1. `search_papers` to find candidates
-2. `download_paper(paper_id)` for promising ones
-3. `read_paper(paper_id)` to read full text (or at least abstract + methods + results)
+1. Search to find candidates.
+2. Open the abstract page and download/read the PDF for promising ones.
+3. Read full text, or at least abstract + methods + results, before writing method details.
 4. Note actual first author, full author list, exact module names, headline numbers
 5. Cross-check: arxiv abstract page = `https://arxiv.org/abs/<id>` for author list verification
 
 ---
 
-## PubMed MCP (Biomedical Literature)
+## PubMed / biomedical route
 
-**Repository:** https://github.com/grll/pubmedmcp
+Use PubMed for peer-reviewed clinical, validation, diagnostic, and implementation literature.
 
-Access 35+ million biomedical literature citations.
+### Optional Claude MCP example
 
-### Configuration
+Repository: https://github.com/grll/pubmedmcp
+
+Configuration example:
 
 ```json
 {
@@ -86,11 +116,11 @@ Access 35+ million biomedical literature citations.
 }
 ```
 
-### Available tools
+Example tool names if this MCP is installed:
 
 | Tool | Purpose |
 |---|---|
-| `mcp__pubmed-mcp-server__pubmed_search_articles` | Search PubMed with MeSH and free-text queries |
+| `pubmed_search_articles` equivalent | Search PubMed with MeSH and free-text queries |
 
 ### Search tips
 
@@ -104,20 +134,20 @@ Access 35+ million biomedical literature citations.
 - `"Image Processing, Computer-Assisted"[MeSH] AND "Tomography, X-Ray Computed"[MeSH]`
 - `"Cardiac Imaging Techniques"[MeSH] AND "Artificial Intelligence"[MeSH]`
 
-### Direct WebFetch for verification
+### Direct URL/API verification
 
-`pubmed_search_articles` returns PMIDs. For metadata verification (CITATION_INTEGRITY.md Rules 1-2):
+For metadata verification (CITATION_INTEGRITY.md Rules 1-2), use the PubMed page by PMID:
 
 ```
 WebFetch on https://pubmed.ncbi.nlm.nih.gov/<PMID>/
   → Extract: full author list, journal, year, vol, issue, pages, DOI, finding direction
 ```
 
-This is the canonical first-source verification step for medical clinical papers.
+This is the canonical first-source metadata verification step for medical clinical papers.
 
 ---
 
-## Zotero Integration
+## Zotero / local-library route
 
 Access user's local Zotero database via Zotero-MCP.
 
@@ -131,11 +161,11 @@ curl -s "http://localhost:23119/api/users/[USER_ID]/collections"
 curl -s "http://localhost:23119/api/users/[USER_ID]/collections/[KEY]/items"
 ```
 
-### Zotero-MCP (recommended)
+### Zotero-MCP (if available)
 
 **Repository:** https://github.com/54yyyu/zotero-mcp
 
-Provides structured access:
+Possible tool names:
 
 | Tool | Purpose |
 |---|---|
@@ -149,12 +179,12 @@ Provides structured access:
 
 ### Workflow integration
 
-For closed-access journals (Med Image Anal, Eur Radiol, JACC family, Lancet family, Nature family), the user often has PDFs in Zotero that aren't accessible via WebFetch. Workflow:
+For closed-access journals (Med Image Anal, Eur Radiol, JACC family, Lancet family, Nature family), the user often has PDFs in Zotero that aren't accessible via web tools. Workflow:
 
 ```
-1. mcp__zotero__zotero_search_items(query: "<author> <method>", limit: 5)
-2. mcp__zotero__zotero_get_item_metadata(item_key: "<key>")
-3. mcp__zotero__zotero_get_item_fulltext(item_key: "<key>") for body content
+1. Search items by author/method/topic.
+2. Get item metadata and DOI.
+3. Retrieve full text only when metadata and abstract are insufficient.
 ```
 
 ### Extractable fields
@@ -181,36 +211,37 @@ For closed-access journals (Med Image Anal, Eur Radiol, JACC family, Lancet fami
 
 ---
 
-## Verification helper commands
+## Verification helper URLs
 
 For Phase 4 (per-claim verification) and Phase 5 (peer review):
 
 ```
-# Crossref by DOI
-WebFetch on https://api.crossref.org/works/<DOI>
+# Crossref by DOI (URL-encode the DOI if needed)
+https://api.crossref.org/works/<DOI>
   → Returns JSON: title, full author list, container-title (journal), volume, issue, page, DOI, published year
 
 # Crossref by topic search
-WebFetch on https://api.crossref.org/works?query.bibliographic=<keywords>&rows=5
+https://api.crossref.org/works?query.bibliographic=<keywords>&rows=5
   → Returns top 5 matching entries
 
 # PubMed by PMID
-WebFetch on https://pubmed.ncbi.nlm.nih.gov/<PMID>/
+https://pubmed.ncbi.nlm.nih.gov/<PMID>/
   → Returns parsed page: title, authors, journal info, DOI, abstract
 
 # arXiv abstract page (for author list verification)
-WebFetch on https://arxiv.org/abs/<id>
+https://arxiv.org/abs/<id>
   → Returns abstract + full author list
 ```
 
 ---
 
-## When MCP servers fail
+## When a tool is unavailable
 
 If an MCP server is not configured or fails:
 
-- **ArXiv fallback**: WebFetch on `https://arxiv.org/abs/<id>` directly
-- **PubMed fallback**: WebFetch on `https://pubmed.ncbi.nlm.nih.gov/<PMID>/` directly
+- **ArXiv fallback**: use `https://arxiv.org/abs/<id>` directly
+- **PubMed fallback**: use `https://pubmed.ncbi.nlm.nih.gov/<PMID>/` directly
 - **Zotero fallback**: ask the user to share PDFs directly, or use direct API access via curl
+- **Crossref fallback**: use DOI resolver and publisher page
 
-The skill is designed to work even without MCP — WebFetch on the underlying APIs is always available.
+The skill is designed to work without any specific MCP. The verification standard does not change when the tool route changes.

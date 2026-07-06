@@ -23,22 +23,22 @@ Expected: 0 hits at any milestone.
 For papers with a PMID:
 
 ```
-WebFetch on https://pubmed.ncbi.nlm.nih.gov/<PMID>/
+Open https://pubmed.ncbi.nlm.nih.gov/<PMID>/ with an available web/PubMed tool.
   → Extract: title, full author list, journal, year, volume, issue, pages, DOI
 ```
 
 For papers without a PMID but a known DOI:
 
 ```
-WebFetch on https://api.crossref.org/works/<DOI>
+Open https://api.crossref.org/works/<DOI> with an available web/API tool.
   → Extract: same fields from JSON
 ```
 
 For papers in a closed-access journal where the user has the PDF:
 
 ```
-mcp__zotero__zotero_search_items(query: "<author> <method>")
-mcp__zotero__zotero_get_item_metadata(item_key: ...)
+Search Zotero by "<author> <method>".
+Retrieve item metadata and attached full text if available.
 ```
 
 ### Why this is Rule 1
@@ -71,16 +71,16 @@ For any "yes" answer, treat as suspect and verify.
 ### Resolution
 
 ```
-WebFetch on https://pubmed.ncbi.nlm.nih.gov/<PMID>/
+Open https://pubmed.ncbi.nlm.nih.gov/<PMID>/
   OR
-WebFetch on https://api.crossref.org/works/<DOI>
+Open https://api.crossref.org/works/<DOI>
   → Replace the entire author list verbatim.
 ```
 
 For arXiv papers:
 
 ```
-WebFetch on https://arxiv.org/abs/<id>
+Open https://arxiv.org/abs/<id>
 ```
 
 ### Why this matters
@@ -123,18 +123,13 @@ For a typical 120-reference review, expect 5-15 drift instances if you're carefu
 
 ### Detection at scale
 
-Build a verification script:
+Run the bundled audit script:
 
-```python
-# Pseudocode
-for n in body_citations:
-    bib_entry = bibliography.get(n)
-    body_sentence = sentence_containing(n)
-    body_author = extract_author_mention(body_sentence)
-    bib_author = extract_first_author(bib_entry)
-    if body_author and bib_author and body_author.lower() not in bib_author.lower():
-        flag(n, body_author, bib_author)
+```bash
+python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
 ```
+
+The script flags missing bibliography entries, duplicate DOI entries, likely author-citation mismatches, placeholder strings, numbered headings, H4 headings, vendor-name body mentions, display equations outside Box context, and systematic-review claims without methods support. Treat script output as triage; final citation correctness still requires source-level reading.
 
 ---
 
@@ -192,7 +187,7 @@ Treat as **suspect** and search for the actual peer-reviewed publication.
 For each vendor- or agency-style citation, search PubMed:
 
 ```
-mcp__pubmed-mcp-server__pubmed_search_articles(query: "<study acronym> implementation OR validation")
+Search PubMed or the journal site for "<study acronym> implementation OR validation".
 ```
 
 If a peer-reviewed publication exists, use it. If not, use the vendor material **only for regulatory / programmatic facts**, never for clinical performance claims.
