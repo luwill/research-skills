@@ -7,9 +7,15 @@ A collection of Claude Code skills for academic research workflows.
 | Skill | Description | Trigger |
 |-------|-------------|---------|
 | [medical-imaging-review](./medical-imaging-review/) | Write comprehensive literature reviews for medical imaging AI | `/medical-imaging-review`, "review paper", "survey", "综述" |
-| [paper-slide-deck](./paper-slide-deck/) | Generate slides from academic papers via text-to-image figure generation | `/paper-slide-deck paper.pdf` |
+| [paper-slide-deck](./paper-slide-deck/) | Stylized slide **images** (17 T2I aesthetic styles) for reading & sharing — any content | `/paper-slide-deck content.md --style watercolor` |
 | [research-proposal](./research-proposal/) | Generate PhD research proposals with Nature Reviews-style academic writing | `/research-proposal`, "research proposal", "PhD proposal", "研究计划" |
-| [scholar-slides](./scholar-slides/) | Fidelity-first academic decks — vector equations, extracted figures, grounded citations, editable PPTX | "make slides", "组会 PPT", "答辩幻灯片", a paper PDF / arXiv / DOI |
+| [scholar-slides](./scholar-slides/) | Fidelity-first academic decks for a live talk — vector equations, extracted figures, grounded citations, editable PPTX | "make slides", "组会 PPT", "答辩幻灯片", a paper PDF / arXiv / DOI |
+
+> **Slides from a paper? Two different tools, on purpose.** Use **scholar-slides** for a faithful,
+> editable *live talk* — equations, numbers, tables, and citations stay exact and projector-ready.
+> Use **paper-slide-deck** for *stylized visual images* to read or share, where look-and-feel
+> matters more than editable precision (its slides are AI-generated images, so math and data are
+> not editable and can be garbled — don't use it for a defense or a results-heavy talk).
 
 ## Installation
 

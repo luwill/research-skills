@@ -1,6 +1,6 @@
 ---
 name: paper-slide-deck
-description: Generate professional slide deck images from academic papers and content. Creates comprehensive outlines with style instructions, auto-detects figures from PDFs, then generates individual slide images. Use when user asks to "create slides", "make a presentation", "generate deck", or "slide deck" for papers.
+description: Generate stylized slide deck IMAGES (17 T2I aesthetic styles — watercolor, sketch-notes, pixel-art, editorial, chalkboard, etc.) from any content — an article, blog post, topic, or paper — optimized for reading and social sharing rather than live presentation. Each slide is an AI-generated image (Gemini/Nano Banana), so the look is distinctive but text/math/data are baked into the image (not editable). Use when the user wants visually striking, shareable slides and look-and-feel matters more than editable precision. NOT for a faithful academic talk where equations, numbers, tables, and citations must stay exact, editable, and projector-ready (组会/答辩/thesis defense/conference/results-heavy talks) — for that use scholar-slides instead, since text-to-image will garble math and data.
 ---
 
 # Paper Slide Deck Generator
@@ -53,7 +53,7 @@ Transform academic papers and content into professional slide deck images with a
 
 | Style | Description | Best For |
 |-------|-------------|----------|
-| `academic-paper` | Clean professional, precise charts | Conference talks, thesis defense |
+| `academic-paper` | Clean professional, precise charts | Academic-style visuals, technical handouts (for a faithful *editable* talk use scholar-slides) |
 | `blueprint` (Default) | Technical schematics, grid texture | Architecture, system design |
 | `chalkboard` | Black chalkboard, colorful chalk | Education, tutorials, classroom |
 | `notion` | SaaS dashboard, card-based layouts | Product demos, SaaS, B2B |
