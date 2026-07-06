@@ -1,0 +1,15 @@
+# scholar-slides — Python runtime dependencies
+pymupdf>=1.27          # PDF text/layout extraction + figure bbox localization + region crop
+pillow>=11             # image post-processing for cropped figures
+requests>=2.32         # arXiv / DOI / Crossref fetch
+matplotlib>=3.9        # make_chart.py — data-bound Okabe-Ito charts
+numpy>=2               # make_chart.py — bar positioning
+python-pptx>=1.0       # verify_pptx_parity.py — PPTX content extraction
+
+# dev / test
+pytest>=8
+
+# NOTE (Node side): playwright is a RUNTIME dependency (render_deck / verify_slides /
+# equation export), declared in package.json "dependencies"; run
+#   npm install && npx playwright install chromium
+# once per machine to provision the browser.

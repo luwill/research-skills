@@ -1,0 +1,13 @@
+[project]
+name = "scholar-slides"
+version = "0.1.0"
+description = "Academic slide-deck Claude skill — fidelity-first paper-to-slides"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["scripts"]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "integration: tests that require the real test PDF (tests/fixtures/attention.pdf)",
+]

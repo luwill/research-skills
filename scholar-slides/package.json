@@ -1,0 +1,23 @@
+{
+  "name": "scholar-slides",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node --test tests/deck.test.mjs tests/qa.test.mjs tests/notes.test.mjs tests/pptx.test.mjs tests/emphasis.test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "katex": "^0.16.47",
+    "playwright": "^1.61.1",
+    "pptxgenjs": "^3.12.0",
+    "reveal.js": "^5.2.1"
+  }
+}

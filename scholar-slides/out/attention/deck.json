@@ -1,0 +1,211 @@
+{
+ "meta": {
+  "title": "Attention Is All You Need — journal club",
+  "deck_type": "journal-club",
+  "language": "en",
+  "figures_dir": "figures",
+  "source": {
+   "title": "Attention Is All You Need",
+   "arxiv_id": "1706.03762"
+  }
+ },
+ "slides": [
+  {
+   "layout": "paper-title",
+   "title": "Attention Is All You Need",
+   "authors": "Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin",
+   "affiliation": "Google Brain · Google Research · University of Toronto",
+   "venue": "NeurIPS 2017 · arXiv:1706.03762",
+   "presenter": "Journal club · louwill · 2026-07"
+  },
+  {
+   "layout": "outline-agenda",
+   "title": "Agenda",
+   "current": 0,
+   "items": [
+    "Problem & the gap",
+    "The Transformer architecture",
+    "How attention works",
+    "Results vs prior SOTA",
+    "Critical reading",
+    "Discussion"
+   ]
+  },
+  {
+   "layout": "bullets",
+   "eyebrow": "Motivation",
+   "action_title": "Recurrence forces sequential computation — the bottleneck this paper attacks",
+   "points": [
+    "Dominant seq-transduction models (RNN/LSTM/GRU encoder–decoder) compute step by step along the sequence.",
+    "This sequential nature precludes parallelization within a training example and lengthens training.",
+    "Long-range dependencies must traverse many sequential steps, making them hard to learn."
+   ],
+   "source_ref": "§1 Introduction"
+  },
+  {
+   "layout": "bullets",
+   "eyebrow": "Contributions",
+   "action_title": "A model based entirely on attention — no recurrence, no convolution",
+   "points": [
+    "The Transformer: the first sequence-transduction model relying solely on (self-)attention.",
+    "More parallelizable and faster to train than recurrent/convolutional models.",
+    "New state of the art: 28.4 BLEU (WMT'14 EN→DE) and 41.8 BLEU (EN→FR), trained in 3.5 days on 8 GPUs."
+   ],
+   "source_ref": "Abstract · §1"
+  },
+  {
+   "layout": "assertion-evidence",
+   "action_title": "The Transformer stacks self-attention + feed-forward, replacing recurrence",
+   "figure": {
+    "src": "figures/figure-1.png",
+    "caption": "Figure 1: The Transformer — model architecture.",
+    "cite": "Vaswani et al. 2017"
+   },
+   "annotation": "Encoder & decoder are stacks of N = 6 identical layers; each layer = multi-head self-attention + position-wise FFN, with residual connections + layer normalization. Positional encodings inject order.",
+   "source_ref": "Figure 1, p.3 · §3.1"
+  },
+  {
+   "layout": "equation",
+   "action_title": "Attention is a softmax-weighted sum of values, scaled by 1/√dₖ",
+   "equations": [
+    {
+     "latex": "\\text{Attention}(Q,K,V)=\\text{softmax}\\!\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V",
+     "numbered": true,
+     "num": "1"
+    }
+   ],
+   "note": "Scaling by $\\sqrt{d_k}$ keeps the dot products from growing large and pushing the softmax into low-gradient regions when $d_k$ is large.",
+   "source_ref": "§3.2.1 Scaled Dot-Product Attention"
+  },
+  {
+   "layout": "assertion-evidence",
+   "action_title": "Multi-head attention runs h attention functions in parallel subspaces",
+   "figure": {
+    "src": "figures/figure-2.png",
+    "caption": "Figure 2: (left) Scaled dot-product attention. (right) Multi-head attention.",
+    "cite": "Vaswani et al. 2017"
+   },
+   "source_ref": "Figure 2, p.4 · §3.2.2"
+  },
+  {
+   "layout": "results-table",
+   "action_title": "The big Transformer beats prior SOTA at a fraction of the training cost",
+   "table": {
+    "caption": "WMT 2014 newstest2014 BLEU and training cost (best per column in bold).",
+    "columns": [
+     {
+      "label": "Model"
+     },
+     {
+      "label": "BLEU",
+      "unit": "EN-DE"
+     },
+     {
+      "label": "BLEU",
+      "unit": "EN-FR"
+     },
+     {
+      "label": "Train cost",
+      "unit": "FLOPs, EN-FR"
+     }
+    ],
+    "row_header": true,
+    "rows": [
+     [
+      "GNMT + RL",
+      "24.6",
+      "39.92",
+      "1.4·10²⁰"
+     ],
+     [
+      "ConvS2S",
+      "25.16",
+      "40.46",
+      "1.5·10²⁰"
+     ],
+     [
+      "MoE",
+      "26.03",
+      "40.56",
+      "1.2·10²⁰"
+     ],
+     [
+      "Transformer (base)",
+      "27.3",
+      "38.1",
+      "—"
+     ],
+     [
+      "Transformer (big)",
+      {
+       "v": "28.4",
+       "bold": true
+      },
+      {
+       "v": "41.8",
+       "bold": true
+      },
+      {
+       "v": "2.3·10¹⁹",
+       "bold": true
+      }
+     ]
+    ],
+    "footnote": "Values transcribed from Table 2 (p.8). Big model trained 3.5 days on 8× P100."
+   },
+   "source_ref": "Table 2, p.8 · §6.1"
+  },
+  {
+   "layout": "assertion-evidence",
+   "action_title": "Attention heads learn interpretable long-distance structure",
+   "figure": {
+    "src": "figures/figure-3.png",
+    "caption": "Figure 3: An attention head following a long-distance dependency (verb 'making').",
+    "cite": "Vaswani et al. 2017"
+   },
+   "annotation": "Different heads specialize; several appear to track syntactic / anaphora structure (Figs. 3–5).",
+   "source_ref": "Figure 3, p.13 · §6 / Appendix"
+  },
+  {
+   "layout": "critique-concerns",
+   "eyebrow": "Critical reading",
+   "action_title": "What to push on — strengths granted, here are my concerns",
+   "points": [
+    {
+     "head": "O(n²) attention",
+     "body": "Self-attention is quadratic in sequence length n in compute and memory; the paper itself flags restricted/local attention as future work for long inputs. (paper §7 + complexity table)"
+    },
+    {
+     "head": "Positional encoding generalization",
+     "body": "Sinusoidal PE is claimed to extrapolate to longer sequences than seen in training, but this is asserted more than tested. (my analysis)"
+    },
+    {
+     "head": "Ablations tuned on dev",
+     "body": "Table 3 variations are selected on newstest2013 (dev) — watch for dev-set overfitting of architectural choices. (my analysis)"
+    },
+    {
+     "head": "Evaluation breadth",
+     "body": "Evidence is two MT pairs + one parsing task; 'attention is all you need' is a broad claim relative to that scope. (my analysis)"
+    }
+   ]
+  },
+  {
+   "layout": "discussion-questions",
+   "eyebrow": "Discussion",
+   "title": "Questions for the room",
+   "questions": [
+    "Does the $1/\\sqrt{d_k}$ scaling still matter at modern $d_k$, or do LayerNorm + init absorb it?",
+    "How far does $O(n^2)$ attention scale before sparse/linear attention becomes mandatory?",
+    "Table 3(E) shows learned PE ≈ sinusoidal — so why keep sinusoidal as the default?"
+   ]
+  },
+  {
+   "layout": "references",
+   "title": "References",
+   "entries": [
+    "Vaswani et al. (2017). Attention Is All You Need. NeurIPS. arXiv:1706.03762.",
+    "[UNVERIFIED] Full citation resolution (Zotero-first) lands in Stage 3 — baseline refs [9,18,32,38,39] from Table 2 not yet resolved."
+   ]
+  }
+ ]
+}

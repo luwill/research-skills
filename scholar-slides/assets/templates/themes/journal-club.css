@@ -1,0 +1,13 @@
+/* journal-club.css — flavor for the 组会 / journal-club register (reading-first, publication-grade).
+   Structure lives in base-theme.css; this file only sets the flavor hooks. The values here match
+   the tokens.css defaults, so a journal-club deck renders exactly as before the base/flavor split.
+   Nature/Science figure-editor: restrained, serif titles, light section dividers. */
+
+:root {
+  --title-font: var(--serif);
+  --marker-font: var(--serif);
+  --divider-bg: var(--surface);     /* light-gray section dividers */
+  --divider-ink: var(--ink);
+  --divider-num: var(--accent);
+  /* figure caps inherit base defaults (--fig-cap 640 / --fig-cap-ae 560) */
+}

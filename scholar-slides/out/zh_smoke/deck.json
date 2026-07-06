@@ -1,0 +1,49 @@
+{
+ "meta": {
+  "title": "中文渲染冒烟测试",
+  "deck_type": "journal-club",
+  "language": "zh"
+ },
+ "slides": [
+  {
+   "layout": "paper-title",
+   "title": "基于非增强 CT 与深度学习的大规模胰腺癌检测",
+   "authors": "Cao K 等 — 36 位作者",
+   "venue": "Nature Medicine 29(12):3033–3043, 2023",
+   "presenter": "组会汇报 · louwill · 2026-07"
+  },
+  {
+   "layout": "bullets",
+   "eyebrow": "研究动机",
+   "action_title": "胰腺癌最为致命，而非增强 CT 一度被认为无法用于发现它",
+   "points": [
+    "胰腺导管腺癌（PDAC）常在不可手术阶段才被发现；早期或偶然发现可显著延长生存。",
+    "对无症状人群做单一检测筛查不可行——患病率低，假阳性危害大。",
+    "非增强 CT 常规且廉价，但在其上识别 PDAC「长期被认为不可能」——这就是缺口。"
+   ],
+   "source_ref": "摘要 · 引言"
+  },
+  {
+   "layout": "equation",
+   "action_title": "缩放点积注意力：以 1/√dₖ 缩放的 softmax 加权和",
+   "equations": [
+    {
+     "latex": "\\mathrm{Attention}(Q,K,V)=\\mathrm{softmax}\\!\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V",
+     "numbered": true,
+     "num": "1"
+    }
+   ],
+   "note": "其中 $d_k$ 为键向量维度；缩放可避免点积过大导致 softmax 梯度消失。",
+   "source_ref": "§3.2.1"
+  },
+  {
+   "layout": "discussion-questions",
+   "eyebrow": "讨论",
+   "title": "留给大家的问题",
+   "questions": [
+    "在真实筛查患病率下，阳性预测值（PPV）是多少？每发现一例癌症要做多少次良性随访？",
+    "对最小、最早期（T1）的肿瘤，检测表现与总体 AUC 相比如何？"
+   ]
+  }
+ ]
+}

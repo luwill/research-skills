@@ -1,0 +1,125 @@
+{
+ "meta": {
+  "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+  "deck_type": "conference",
+  "language": "en",
+  "theme": "conference",
+  "figures_dir": "figures",
+  "source": {
+   "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+   "arxiv_id": "2512.02556"
+  }
+ },
+ "slides": [
+  {
+   "layout": "paper-title",
+   "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+   "authors": "DeepSeek-AI (200+ authors)",
+   "venue": "arXiv:2512.02556 · Dec 2025",
+   "presenter": "Conference talk · louwill · 2026-07",
+   "speaker_notes": "One sentence: DeepSeek made long-context attention sparse, held everything else fixed, and landed an open-weights model in the GPT-5 band at a fraction of the long-context cost."
+  },
+  {
+   "layout": "section",
+   "num": "01",
+   "title": "One architectural change: make attention sparse",
+   "speaker_notes": "The whole paper is one deliberate change over V3.1-Terminus."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "The idea",
+   "action_title": "DSA: a ==k|lightning indexer plus top-k selection==, bolted onto MLA",
+   "figure": {
+    "src": "figures/figure-2.png",
+    "caption": "Fig. 2 | Attention architecture of DeepSeek-V3.2 — DSA instantiated under MLA (green = the sparse path).",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "A lightweight “lightning indexer” scores past tokens; a Top-k Selector keeps only the highest-scoring key-value entries, so core attention runs over a sparse subset instead of the full sequence.",
+   "source_ref": "Fig. 2 · §2.1",
+   "speaker_notes": "The green path is the change: a cheap indexer scores every past token, a top-k selector keeps the best 2048, and the expensive core attention only sees that subset."
+  },
+  {
+   "layout": "equation",
+   "eyebrow": "The claim",
+   "action_title": "Core attention drops from ==k|quadratic to linear-in-k==",
+   "equations": [
+    {
+     "latex": "O(L^2)\\;\\longrightarrow\\;O(Lk),\\qquad k \\ll L"
+    }
+   ],
+   "note": "L = sequence length; k = number of selected key-value tokens per query (V3.2 uses ==k = 2048==).",
+   "source_ref": "§2.3 Inference Costs",
+   "speaker_notes": "Fixed k, so the quadratic term becomes effectively linear in context length."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "The evidence",
+   "action_title": "Long-context inference gets ==k|materially cheaper== on real hardware",
+   "figure": {
+    "src": "figures/figure-3.png",
+    "caption": "Fig. 3 | Inference cost of DeepSeek-V3.1-Terminus vs DeepSeek-V3.2 on H800 GPUs.",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "Measured on the deployed service (H800, $2 / GPU-hour): V3.2's cost stays far flatter as context grows, while the dense predecessor climbs steeply.",
+   "source_ref": "Fig. 3 · §2.3",
+   "speaker_notes": "Not just complexity on paper — measured dollars on the deployed service. The dense curve climbs; the sparse one stays flat."
+  },
+  {
+   "layout": "section",
+   "num": "02",
+   "title": "Does the cheap model still reason?",
+   "speaker_notes": "The obvious worry: sparsity costs capability. The scoreboard says no."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "Headline result",
+   "action_title": "V3.2-Thinking sits with GPT-5 and Gemini; Speciale ==p|tops the chart==",
+   "figure": {
+    "src": "figures/figure-1.png",
+    "caption": "Fig. 1 | Benchmark of DeepSeek-V3.2 and counterparts across reasoning and agentic tasks.",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "Across reasoning (AIME, HMMT, HLE, Codeforces) and agentic (SWE, Terminal-Bench, τ²-Bench) tasks, the shipped V3.2-Thinking is ==k|competitive with== GPT-5-High and Gemini-3.0-Pro; the high-compute Speciale variant is ==p|often highest== and reaches ==p|olympiad gold== (IMO, IOI, ICPC WF, CMO 2025).",
+   "source_ref": "Fig. 1 · §3",
+   "speaker_notes": "Shipped model: same band as the closed frontier. High-compute Speciale: frequently on top, and gold at four 2025 olympiads — at an RL budget exceeding 10% of pre-training."
+  },
+  {
+   "layout": "results-table",
+   "eyebrow": "Head-to-head",
+   "action_title": "An open model within striking distance, ==p|winning some==",
+   "table": {
+    "caption": "Selected benchmarks — DeepSeek-V3.2-Thinking vs leading closed models (row-best in bold)",
+    "row_header": true,
+    "columns": [
+     { "label": "Benchmark" },
+     { "label": "Claude-4.5", "unit": "Sonnet" },
+     { "label": "GPT-5", "unit": "High" },
+     { "label": "Gemini-3.0", "unit": "Pro" },
+     { "label": "DeepSeek-V3.2", "unit": "Thinking" }
+    ],
+    "rows": [
+     [ "MMLU-Pro (EM)", "88.2", "87.5", { "v": "90.1", "bold": true }, "85.0" ],
+     [ "AIME 2025 (Pass@1)", "87.0", "94.6", { "v": "95.0", "bold": true }, "93.1" ],
+     [ "SWE Multilingual (Resolved)", "68.0", "55.3", "—", { "v": "70.2", "bold": true } ],
+     [ "Terminal Bench 2.0 (Acc)", "42.8", "35.2", { "v": "54.2", "bold": true }, "46.4" ]
+    ],
+    "footnote": "Closed-model figures are vendor-reported. — = not reported."
+   },
+   "source_ref": "Table 2 · §3",
+   "speaker_notes": "Knowledge and math: a few points behind Gemini. Software engineering: it wins SWE Multilingual outright at 70.2 and beats GPT-5 and Claude on Terminal-Bench. Caveat: closed numbers are vendor-reported."
+  },
+  {
+   "layout": "section",
+   "num": "03",
+   "title": "Open weights, frontier band, linear-cost long context — read the paper",
+   "speaker_notes": "If you self-host long-context workloads, the cost curve alone is the reason to look. arXiv 2512.02556."
+  },
+  {
+   "layout": "references",
+   "title": "References",
+   "entries": [
+    "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556. https://doi.org/10.48550/arXiv.2512.02556"
+   ]
+  }
+ ]
+}

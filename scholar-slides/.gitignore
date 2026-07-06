@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+# working output (crops, rendered decks) — regenerated, not source. But deck.json is the durable
+# SPEC (the benchmark manifest points at it), so keep those tracked while ignoring build products,
+# so a fresh clone can rebuild + regress every benchmark deck.
+/out/*
+!/out/*/
+/out/*/*
+!/out/*/deck.json
+/tests/fixtures/*.pdf
+/tests/fixtures/*_source/
+.DS_Store

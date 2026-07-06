@@ -1,0 +1,41 @@
+/* viewport-base.css — fixed-stage reset shared by all scholar-slides themes.
+   The reveal stage is configured to 1920x1080 in build_deck.mjs; sizes below are in px
+   relative to that stage (reveal scales the whole stage to fit any viewport). */
+
+:root {
+  --stage-w: 1920px;
+  --stage-h: 1080px;
+  --pad-x: 96px;
+  --pad-y: 72px;
+}
+
+.reveal {
+  font-size: var(--fs-body, 32px);   /* body baseline >= projection-legible (back-of-room test) */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The <section> is left to reveal.js; the full-stage flex panel is the inner wrapper
+   (reveal toggles display:block inline on the active section, which would kill flex). */
+.reveal .slides > section { padding: 0; }
+
+.slide-inner {
+  box-sizing: border-box;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  padding: var(--pad-y) var(--pad-x);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-inner > * { margin: 0; }
+
+/* KaTeX should never overflow a slide silently; let the QA stage catch real overflow. */
+.reveal .katex { font-size: 1em; }
+.reveal .katex-display { margin: 0.4em 0; }
+
+/* Print / PDF: one slide per page, no scaling artifacts. */
+@media print {
+  .reveal .slides > section { page-break-after: always; }
+}

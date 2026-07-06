@@ -1,0 +1,87 @@
+/* tokens.css — the design-system primitives shared by every scholar-slides theme.
+   Loaded BEFORE viewport-base and the theme, so both may reference these custom properties.
+   Rule: layouts and themes reference tokens; no bare px for type/space/matting. Change a token
+   here and the whole deck re-tunes. Calibrated for the fixed 1920x1080 stage.
+
+   Register: Nature/Science figure-editor. One accent, one type scale, 8pt grid, figures matted
+   consistently, generous but disciplined whitespace. */
+
+:root {
+  /* ---- color palette (theme flavors may override --accent / dividers) ---- */
+  --ink: #1a1d21;
+  --ink-soft: #515860;
+  --paper: #ffffff;
+  --surface: #f5f6f8;
+  --rule: #d7dbe0;
+  --accent: #15497a;          /* deep academic blue (NOT the banned slop indigo #6366f1) */
+  --accent-soft: #e8eef5;
+  /* Okabe-Ito color-blind-safe data palette (method -> color stays consistent deck-wide) */
+  --c1: #0072b2; --c2: #d55e00; --c3: #009e73; --c4: #cc79a7;
+  --c5: #e69f00; --c6: #56b4e9; --c7: #000000;
+
+  /* ---- inline semantic emphasis (one meaning per role; QA caps added treatments at 2/slide) ----
+     Colored roles are from the Okabe-Ito palette (color-blind-safe), darkened for AA text contrast
+     on white. `metric` is weight-only (no color) so numbers pop without a highlighter. emphasis.mjs. */
+  --emph-key:  var(--accent);          /* the "so what" claim (base accent — free) */
+  --emph-pos:  #0a7d5a;                /* a win (Okabe-Ito green, AA-darkened) */
+  --emph-warn: #b34700;                /* a limitation (Okabe-Ito vermillion, AA-darkened) */
+  /* CJK fallbacks are cross-platform: PingFang/Songti (macOS) -> Noto/Source Han (Linux, from
+     fonts-noto-cjk) -> Microsoft YaHei (Windows). A CJK deck renders clean on any of the three. */
+  --serif: Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  --sans: -apple-system, "Segoe UI", system-ui, "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  /* ---- theme-flavor hooks (journal-club defaults; conference.css overrides) ---- */
+  --title-font: var(--serif);      /* action titles, cover, section, results headers */
+  --title-ink: var(--accent);      /* action-title color — conference-report register (was --ink) */
+  --marker-font: var(--serif);     /* agenda numerals, discussion '?' markers */
+  --divider-bg: var(--surface);    /* section-divider background */
+  --divider-ink: var(--ink);       /* section-divider heading color */
+  --divider-num: var(--accent);    /* section-divider number color */
+
+  /* ---- modular type scale (base 32px body floor, ratio 1.25 "major third") ----
+     Sizes are pinned (not calc) so they're stable in print and PPTX-portable. */
+  --fs-fine:     20px;  /* captions, source line, table units, references */
+  --fs-caption:  24px;  /* figcaption, footnotes */
+  --fs-small:    26px;  /* secondary body, dense two-column */
+  --fs-body:     32px;  /* body floor — back-of-room legible */
+  --fs-lead:     40px;  /* lead body, agenda, discussion */
+  --fs-subhead:  50px;  /* action title */
+  --fs-title:    62px;  /* cover / large title */
+  --fs-display:  78px;  /* section divider, cover hero */
+
+  /* ---- 8pt spacing grid (never freehand a margin) ---- */
+  --s1: 8px;  --s2: 16px; --s3: 24px; --s4: 32px;
+  --s5: 48px; --s6: 64px; --s7: 96px;
+
+  /* ---- line-height + measure (line-length discipline) ---- */
+  --lh-tight: 1.15;   /* display / titles */
+  --lh-snug:  1.30;   /* leads, list items */
+  --lh-body:  1.45;   /* body copy */
+  --measure:      65ch;   /* max line length, latin body */
+  --measure-cjk:  35em;   /* max line length, CJK body */
+  --measure-title: 22ch;  /* keep action titles to <=2 tidy lines */
+
+  /* ---- figure matting (the "one system" figure treatment) ---- */
+  /* Figures are the PROTAGONIST: layouts render them at these target heights (deterministic,
+     independent of the crop's pixel size or embedded DPI metadata). Flavors override. */
+  --fig-cap:     640px;   /* figure-only slides */
+  --fig-cap-ae:  620px;   /* assertion-evidence ceiling; flex-shrink yields when caption/annotation need room */
+  --fig-bg:      #ffffff;
+  --fig-mat:     #f5f6f8;   /* mat behind imported crops so varied bg edges don't jar */
+  --fig-hair:    1px solid var(--rule, #d7dbe0);
+  --fig-radius:  6px;
+  --fig-pad:     var(--s2);
+  --fig-shadow:  0 1px 3px rgba(20, 30, 45, 0.06);
+
+  /* ---- rules / accents ---- */
+  --rule-weight:  3px;   /* the title underline / cover bar */
+  --hair-weight:  1px;   /* row separators */
+}
+
+/* Latin/CJK measure helpers a theme can apply to any text block. */
+.measure    { max-width: var(--measure); }
+.measure-cjk { max-width: var(--measure-cjk); }
+
+/* Titles should never break mid-phrase when the browser can balance the lines. */
+.balance { text-wrap: balance; }

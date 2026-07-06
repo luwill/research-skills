@@ -1,0 +1,166 @@
+/* base-theme.css — shared structural component styles for every scholar-slides theme.
+   Nature/Science figure-editor register: one accent, modular scale (tokens.css), 8pt grid,
+   figures matted consistently, no collisions. Theme "flavor" (title typeface, section-divider
+   colors, scale bumps) lives in the thin flavor files (journal-club.css, conference.css) via the
+   --title-font / --marker-font / --divider-* hooks defined in tokens.css. Palette is in tokens.css.
+   Load order: tokens.css -> viewport-base.css -> base-theme.css -> <flavor>.css. */
+
+.reveal { font-family: var(--sans); color: var(--ink); background: var(--paper); }
+.reveal .slides > section { background: var(--paper); }
+.slide-inner { background: var(--paper); }
+
+/* ---- action title: a full-sentence assertion, not a label ---- */
+.s-title-bar { flex: 0 0 auto; margin-bottom: var(--s5); }
+.s-action-title {
+  font-family: var(--title-font);
+  font-weight: 600;
+  font-size: var(--fs-subhead);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--title-ink);            /* conference-report register: accent by default (token hook) */
+  text-wrap: balance;                 /* balanced lines, no mid-phrase breaks (full measure) */
+  padding-bottom: var(--s2);
+  border-bottom: var(--rule-weight) solid var(--accent);
+}
+/* A titleless slide (e.g. a references page) must not draw an orphan accent rule. */
+.s-action-title:empty { display: none; }
+.s-title-bar:not(:has(.s-eyebrow)):has(> .s-action-title:empty) { display: none; }
+/* eyebrow as a filled chip (conference-report register) — reads as a section label, not stray text */
+.s-eyebrow {
+  display: inline-block;
+  font-family: var(--sans); font-weight: 700; font-size: 22px;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--paper); background: var(--accent);
+  padding: var(--s1) var(--s3); border-radius: 5px;
+  margin-bottom: var(--s3);
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+
+/* ---- inline semantic emphasis (see emphasis.mjs; QA enforces <=2 roles per slide) ---- */
+/* Emphasis is a BODY device. Inside an action title (already accent ink) the roles rendered
+   invisibly (key) or inconsistently (pos/warn) — so titles neutralize all four on purpose. */
+.reveal .s-action-title .key, .reveal .s-action-title .pos,
+.reveal .s-action-title .warn, .reveal .s-action-title .metric {
+  color: inherit; font-weight: inherit;
+}
+.reveal .key    { color: var(--emph-key);  font-weight: 600; }
+.reveal .pos    { color: var(--emph-pos);  font-weight: 600; }
+.reveal .warn   { color: var(--emph-warn); font-weight: 600; }
+/* metric = weight-only emphasis (no highlighter): numbers read heavier, add zero color */
+.reveal .metric { font-weight: 700; font-variant-numeric: tabular-nums; }
+/* opt-in: a headline finding lifted into a tinted callout row (conference-report register) */
+.reveal .callout {
+  display: block; background: var(--accent-soft);
+  border-left: 5px solid var(--accent); border-radius: 0 var(--fig-radius) var(--fig-radius) 0;
+  padding: var(--s2) var(--s4); list-style: none;
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+/* Content hangs from the header (editorial top-anchor) — vertical centering created a dead band
+   under the title on every text-light slide. Layouts that center on purpose (.s-ae, .s-equation,
+   .s-paper-title, .s-section) override this locally. */
+.s-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: var(--s2); }
+.s-source { flex: 0 0 auto; margin-top: var(--s3); font-size: var(--fs-fine); color: var(--ink-soft); }
+.s-source .cite { font-variant-numeric: tabular-nums; }
+
+/* ---- paper-title / cover: composed, uses the canvas ---- */
+.s-paper-title { justify-content: center; align-items: flex-start; }
+.s-paper-title h1 {
+  font-family: var(--title-font); font-size: var(--fs-title); line-height: var(--lh-tight);
+  font-weight: 600; max-width: 26ch; text-wrap: balance;
+}
+.s-paper-title h1::before {           /* editorial accent bar anchors the cover */
+  content: ""; display: block; width: var(--s7); height: var(--rule-weight);
+  background: var(--accent); margin-bottom: var(--s5);
+}
+.s-paper-title .authors { font-size: var(--fs-lead); margin-top: var(--s5); color: var(--ink); }
+.s-paper-title .affil { font-size: var(--fs-small); color: var(--ink-soft); margin-top: var(--s1); }
+.s-paper-title .venue { font-size: var(--fs-small); color: var(--accent); margin-top: var(--s4); font-weight: 600; }
+.s-paper-title .presenter { font-size: var(--fs-caption); color: var(--ink-soft); margin-top: var(--s5); }
+
+/* ---- section divider (colors via flavor hooks: journal-club = light, conference = full-bleed dark) ---- */
+.s-section { justify-content: center; align-items: flex-start; background: var(--divider-bg); color: var(--divider-ink); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.s-section .num { font-family: var(--title-font); font-size: var(--fs-lead); color: var(--divider-num); }
+.s-section h2 { font-family: var(--title-font); font-size: var(--fs-display); font-weight: 600; max-width: 26ch; text-wrap: balance; color: var(--divider-ink); }
+
+/* ---- agenda ---- */
+.s-agenda ol { list-style: none; counter-reset: a; padding: 0; }
+.s-agenda li { counter-increment: a; font-size: var(--fs-lead); padding: var(--s2) 0; border-bottom: var(--hair-weight) solid var(--rule); display: flex; gap: var(--s4); }
+.s-agenda li::before { content: counter(a, decimal-leading-zero); font-family: var(--marker-font); color: var(--accent); font-weight: 700; min-width: 56px; }
+.s-agenda li.cur { color: var(--accent); }
+
+/* ---- unified figure matting (every crop framed the same way, deck-wide) ----
+   Fixed 1920x1080 stage, so figures use px height caps (deterministic) with min-height:0 so they
+   shrink rather than overflow when a slide is tight. --fig-cap / --fig-cap-ae are flavor hooks. */
+.s-figure { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 0; max-width: 100%; }
+.s-figure img {
+  /* Explicit target HEIGHT, not just a cap: a small or DPI-stamped crop must still be shown at
+     protagonist size — the layout decides display size, the source only supplies pixels.
+     object-fit keeps aspect; max-width letterboxes very wide figures inside the mat. */
+  height: var(--fig-cap, 640px); min-height: 0; max-width: 100%; object-fit: contain;
+  background: var(--fig-mat); padding: var(--fig-pad);
+  border: var(--fig-hair); border-radius: var(--fig-radius); box-shadow: var(--fig-shadow);
+}
+.s-figure figcaption { flex: 0 0 auto; margin-top: var(--s1); font-size: var(--fs-caption); color: var(--ink-soft); text-align: center; max-width: 80ch; }  /* wider than body measure: captions should stay ONE line */
+.s-figure figcaption .cite { color: var(--accent); white-space: nowrap; }
+
+/* ---- assertion-evidence: figure is the protagonist; figure flexes, annotation is a fixed row
+   BELOW it — overlap is structurally impossible (annotation is a normal flow sibling, not floated) ---- */
+/* Figure slides: every spare vertical px goes to the figure (protagonist), so the title bar
+   hands over part of its stand-off and the centered body drops the top pad. */
+.s-ae .s-title-bar { margin-bottom: var(--s3); }
+.s-ae .s-body { align-items: center; justify-content: center; gap: var(--s2); padding-top: 0; }
+.s-ae .s-figure { flex: 1 1 auto; }
+.s-ae .s-figure img { height: var(--fig-cap-ae, 560px); }   /* leave room for caption + annotation */
+.s-annotation {
+  flex: 0 0 auto; font-size: var(--fs-small); line-height: var(--lh-snug); color: var(--ink);
+  background: var(--accent-soft); border-left: 5px solid var(--accent);
+  padding: var(--s2) var(--s4); border-radius: 0 var(--fig-radius) var(--fig-radius) 0; max-width: var(--measure);
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+
+/* ---- equation ---- */
+.s-equation .s-body { align-items: center; justify-content: center; gap: var(--s4); }
+.s-equation .eq { font-size: 44px; }
+.s-equation .eq-num { color: var(--ink-soft); font-size: var(--fs-small); }
+.s-equation .note { font-size: var(--fs-small); color: var(--ink-soft); max-width: var(--measure); text-align: center; }
+
+/* ---- results table (real data, never a picture) ---- */
+table.results { border-collapse: collapse; font-size: var(--fs-small); font-variant-numeric: tabular-nums; margin: 0 auto; }
+table.results caption { caption-side: top; font-size: var(--fs-caption); color: var(--ink-soft); text-align: left; margin-bottom: var(--s2); }
+table.results th, table.results td { padding: var(--s1) var(--s3); text-align: right; }
+table.results thead th { border-bottom: 2px solid var(--ink); font-weight: 700; }
+table.results thead th .u { display: block; font-weight: 400; font-size: var(--fs-fine); color: var(--ink-soft); }
+table.results tbody th { text-align: left; font-weight: 600; }
+table.results tbody tr + tr td, table.results tbody tr + tr th { border-top: var(--hair-weight) solid var(--rule); }
+table.results td strong { color: var(--accent); }
+table.results tfoot td { border-top: 2px solid var(--ink); font-size: var(--fs-fine); color: var(--ink-soft); text-align: left; padding-top: var(--s1); }
+
+/* ---- two-column (method / qualitative) ---- */
+.s-two-col .cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s6); align-items: center; height: 100%; }
+.s-two-col .col-text { font-size: 30px; line-height: var(--lh-snug); max-width: var(--measure); }
+.s-two-col .col-text li { margin: var(--s2) 0; }
+.s-two-col .col-fig .s-figure { max-height: 100%; }
+.s-two-col .col-fig .s-figure img { height: auto; max-height: 720px; }  /* grid cell governs; no forced height */
+
+/* ---- critique / concerns (required for journal club) ---- */
+.s-critique .pt { padding: var(--s2) 0; border-bottom: var(--hair-weight) solid var(--rule); }
+.s-critique .pt .head { font-size: 32px; font-weight: 700; color: var(--accent); }
+.s-critique .pt .body { font-size: var(--fs-small); color: var(--ink); margin-top: var(--s1); line-height: var(--lh-snug); max-width: var(--measure); }
+
+/* ---- discussion questions (required for journal club) ---- */
+.s-discussion ul { list-style: none; padding: 0; }
+.s-discussion li { font-size: var(--fs-lead); line-height: var(--lh-snug); padding: var(--s3) 0; padding-left: 56px; position: relative; max-width: var(--measure); }
+.s-discussion li::before { content: "?"; position: absolute; left: 0; font-family: var(--marker-font);
+  font-weight: 700; color: var(--accent); }
+
+/* ---- generic bullets ---- */
+.s-bullets ul { font-size: 32px; line-height: var(--lh-body); padding-left: var(--s5); max-width: var(--measure); }
+.s-bullets li { margin: var(--s2) 0; }
+
+/* ---- references ---- */
+.s-references ol { font-size: 22px; line-height: var(--lh-body); columns: 2; column-gap: var(--s6); padding-left: var(--s4); }
+.s-references li { margin: var(--s1) 0; break-inside: avoid; }
+.s-references .flag { color: var(--c2); font-weight: 700; }
+
+/* integrity flags rendered inline must be visible, never hidden */
+.flag-missing, .flag-unverified { color: var(--c2); font-weight: 700; }

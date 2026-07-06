@@ -1,0 +1,22 @@
+/* print.css — used only by deck.print.html to produce a one-page-per-slide VECTOR PDF.
+   No reveal.js runtime here, so slides aren't display-toggled; each .slide-inner is a page.
+   KaTeX glyphs and real text stay selectable/vector (never rasterized). */
+
+@page { size: 1920px 1080px; margin: 0; }
+
+html, body { margin: 0; padding: 0; background: #fff; }
+.reveal, .reveal .slides { width: 1920px; position: static; transform: none; }
+
+.reveal .slides > section {
+  display: block;
+  position: static;
+  page-break-after: always;
+  break-after: page;
+}
+.reveal .slides > section:last-child { page-break-after: auto; break-after: auto; }
+
+/* Avoid splitting an equation, figure, table, or concern across two pages. */
+.s-figure, table.results, .s-equation .eq, .s-critique .pt { break-inside: avoid; }
+
+/* Speaker notes are never printed on the slides (no reveal.js here to hide them). */
+aside.notes { display: none; }

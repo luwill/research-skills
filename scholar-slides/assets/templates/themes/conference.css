@@ -1,0 +1,47 @@
+/* conference.css — flavor for the conference-talk register (10–15 min, big room, one idea/slide).
+   Same Nature/Science figure-editor DNA as journal-club, but punchier: a larger type scale, figures
+   that dominate, and full-bleed deep-blue cover + section dividers for visual rhythm from the back
+   row. Structure is in base-theme.css; this file is almost entirely token overrides — the payoff of
+   the design-token system (swap a theme by re-tuning tokens, not rewriting components). */
+
+:root {
+  /* bump the modular scale ~15–25% for legibility in a large room */
+  --fs-fine:     22px;
+  --fs-caption:  26px;
+  --fs-small:    32px;
+  --fs-body:     36px;
+  --fs-lead:     46px;
+  --fs-subhead:  60px;   /* action title */
+  --fs-title:    84px;   /* cover */
+  --fs-display: 108px;   /* section divider */
+
+  /* figures dominate a conference slide */
+  --fig-cap:     780px;
+  --fig-cap-ae:  660px;
+
+  /* flavor hooks: serif titles (editorial gravitas), full-bleed deep-blue dividers */
+  --title-font: var(--serif);
+  --marker-font: var(--serif);
+  --divider-bg: var(--accent);
+  --divider-ink: #ffffff;
+  --divider-num: #9ec3e6;
+}
+
+/* full-bleed dark cover — high-impact open */
+.s-paper-title {
+  background: var(--accent); color: #ffffff;
+  print-color-adjust: exact; -webkit-print-color-adjust: exact;
+}
+.s-paper-title h1 { color: #ffffff; }
+.s-paper-title h1::before { background: #ffffff; }
+.s-paper-title .authors { color: #ffffff; }
+.s-paper-title .affil,
+.s-paper-title .presenter { color: #cfe0f0; }
+.s-paper-title .venue { color: #9ec3e6; }
+
+/* fewer, larger bullets — a conference slide makes one point, not five */
+.s-bullets ul { font-size: var(--fs-lead); }
+.s-bullets li { margin: var(--s4) 0; }
+
+/* the takeaway banner carries the room — size it up */
+.s-annotation { font-size: var(--fs-body); }

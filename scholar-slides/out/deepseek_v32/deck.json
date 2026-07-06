@@ -1,0 +1,264 @@
+{
+ "meta": {
+  "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+  "deck_type": "journal-club",
+  "language": "en",
+  "theme": "journal-club",
+  "figures_dir": "figures",
+  "source": {
+   "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+   "arxiv_id": "2512.02556"
+  }
+ },
+ "slides": [
+  {
+   "layout": "paper-title",
+   "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+   "authors": "DeepSeek-AI (200+ authors)",
+   "venue": "arXiv:2512.02556 · Dec 2025 · doi:10.48550/arXiv.2512.02556",
+   "presenter": "Journal club · louwill · 2026-07",
+   "speaker_notes": "This is DeepSeek-V3.2, the December 2025 frontier release from DeepSeek-AI. The one-line story: they take last version's model, bolt on a sparse-attention mechanism to make long context cheap, scale up reinforcement learning, and land at roughly GPT-5 parity as an open-weights model — with a high-compute variant that wins math and coding olympiad gold. I'll cover the architecture change, the efficiency argument, and how the numbers actually stack up."
+  },
+  {
+   "layout": "outline-agenda",
+   "action_title": "Agenda",
+   "items": [
+    "The efficiency bottleneck",
+    "DeepSeek Sparse Attention (DSA)",
+    "Cost & the complexity win",
+    "Benchmarks vs GPT-5 / Gemini / Claude",
+    "Agentic capabilities",
+    "Critical reading",
+    "Discussion"
+   ],
+   "current": 0,
+   "speaker_notes": "Seven beats: the problem, the core architectural idea, the efficiency payoff, the headline benchmarks, the agentic story, then my critique and questions for the room."
+  },
+  {
+   "layout": "bullets",
+   "eyebrow": "Motivation",
+   "action_title": "Frontier reasoning wants long context — but dense attention is ==O(L²)==",
+   "points": [
+    "Reasoning and agent workloads need long context (V3.2 runs at ==128K==); dense attention cost grows ==k|quadratically== with sequence length.",
+    "The goal: ==k|cut that cost substantially== without giving up model quality on long-context tasks.",
+    "V3.2's answer is a ==k|single architectural change== over DeepSeek-V3.1-Terminus — everything else is held fixed to isolate its effect."
+   ],
+   "source_ref": "Abstract · §2",
+   "speaker_notes": "Why do this at all? Because the expensive part of a long-context transformer is attention, and it scales with the square of the sequence length. If you want cheap 128K reasoning, that's the wall you hit. DeepSeek's move is deliberately minimal: start from their last model, V3.1-Terminus, change exactly one thing — the attention — and hold everything else constant so you can attribute any difference to that change."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "Architecture",
+   "action_title": "DSA is a ==k|lightning indexer plus top-k selection==, bolted onto MLA",
+   "figure": {
+    "src": "figures/figure-2.png",
+    "caption": "Fig. 2 | Attention architecture of DeepSeek-V3.2 — DSA instantiated under MLA (green = the sparse path).",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "A lightweight “lightning indexer” scores past tokens; a Top-k Selector keeps only the highest-scoring key-value entries, so core attention runs over a sparse subset instead of the full sequence.",
+   "source_ref": "Fig. 2 · §2.1",
+   "speaker_notes": "Here is the whole idea in one picture. The green path is what's new. A cheap 'lightning indexer' looks at the query and scores every past token. A top-k selector then keeps only the highest-scoring key-value entries, and the expensive multi-query core attention runs only over that small selected set — not the whole sequence. It's instantiated on top of MLA, their existing latent-attention scheme, so it's a graft, not a rewrite."
+  },
+  {
+   "layout": "equation",
+   "eyebrow": "The efficiency claim",
+   "action_title": "Core attention drops from ==k|quadratic to linear-in-k==",
+   "equations": [
+    {
+     "latex": "O(L^2)\\;\\longrightarrow\\;O(Lk),\\qquad k \\ll L"
+    }
+   ],
+   "note": "L = sequence length; k = number of selected key-value tokens per query (V3.2 uses ==k = 2048==). Because k is fixed and far below L, long-context attention ==k|stops scaling with L²==.",
+   "source_ref": "§2.3 Inference Costs",
+   "speaker_notes": "And this is the payoff, stated as complexity. Full attention is order L-squared in the sequence length L. DSA makes the core attention order L-times-k, where k is the number of tokens you keep — fixed at 2048. Since k is far smaller than a long L and doesn't grow, you've turned the quadratic term into effectively linear. That's the entire efficiency argument in one line."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "Efficiency",
+   "action_title": "The sparse path makes long-context inference ==k|materially cheaper==",
+   "figure": {
+    "src": "figures/figure-3.png",
+    "caption": "Fig. 3 | Inference cost of DeepSeek-V3.1-Terminus vs DeepSeek-V3.2 on H800 GPUs.",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "Measured on the actual service deployed on H800 GPUs (rental price $2 / GPU-hour): V3.2's cost stays far flatter as context grows, while the dense predecessor climbs steeply.",
+   "source_ref": "Fig. 3 · §2.3",
+   "speaker_notes": "Complexity on paper is nice; this is the measured version. They plot real inference cost against context length, on the actual deployed service — H800 GPUs at two dollars per GPU-hour. The dense V3.1-Terminus curve climbs steeply as context grows; V3.2 stays much flatter. That's the quadratic-to-linear win showing up as dollars, which is the number that actually matters for an open-weights model people self-host."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "Results",
+   "action_title": "V3.2-Thinking sits with GPT-5 and Gemini; the high-compute Speciale ==p|tops the chart==",
+   "figure": {
+    "src": "figures/figure-1.png",
+    "caption": "Fig. 1 | Benchmark of DeepSeek-V3.2 and counterparts across reasoning and agentic tasks.",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "Across reasoning (AIME, HMMT, HLE, Codeforces) and agentic (SWE, Terminal-Bench, τ²-Bench) tasks, V3.2-Thinking is ==k|competitive with== GPT-5-High and Gemini-3.0-Pro; the high-compute Speciale variant is ==p|often highest==.",
+   "source_ref": "Fig. 1 · §3",
+   "speaker_notes": "Now the scoreboard. Two blues are DeepSeek — the solid one is Speciale, the high-compute variant, the hatched one is the shipped Thinking model. Grey bars are GPT-5-High, Claude, and Gemini. The takeaway is that the shipped model lands in the same band as the closed frontier across both reasoning and agentic benchmarks, and Speciale is frequently at the top. Hold the word 'high-compute' — I'll come back to what it costs in the critique."
+  },
+  {
+   "layout": "results-table",
+   "eyebrow": "Results",
+   "action_title": "Head-to-head: an open model within striking distance, ==p|winning some==",
+   "table": {
+    "caption": "Selected benchmarks — DeepSeek-V3.2-Thinking vs leading closed models (row-best in bold)",
+    "row_header": true,
+    "columns": [
+     {
+      "label": "Benchmark"
+     },
+     {
+      "label": "Claude-4.5",
+      "unit": "Sonnet"
+     },
+     {
+      "label": "GPT-5",
+      "unit": "High"
+     },
+     {
+      "label": "Gemini-3.0",
+      "unit": "Pro"
+     },
+     {
+      "label": "DeepSeek-V3.2",
+      "unit": "Thinking"
+     }
+    ],
+    "rows": [
+     [
+      "MMLU-Pro (EM)",
+      "88.2",
+      "87.5",
+      {
+       "v": "90.1",
+       "bold": true
+      },
+      "85.0"
+     ],
+     [
+      "GPQA Diamond (Pass@1)",
+      "83.4",
+      "85.7",
+      {
+       "v": "91.9",
+       "bold": true
+      },
+      "82.4"
+     ],
+     [
+      "AIME 2025 (Pass@1)",
+      "87.0",
+      "94.6",
+      {
+       "v": "95.0",
+       "bold": true
+      },
+      "93.1"
+     ],
+     [
+      "SWE Verified (Resolved)",
+      {
+       "v": "77.2",
+       "bold": true
+      },
+      "74.9",
+      "76.2",
+      "73.1"
+     ],
+     [
+      "SWE Multilingual (Resolved)",
+      "68.0",
+      "55.3",
+      "—",
+      {
+       "v": "70.2",
+       "bold": true
+      }
+     ],
+     [
+      "Terminal Bench 2.0 (Acc)",
+      "42.8",
+      "35.2",
+      {
+       "v": "54.2",
+       "bold": true
+      },
+      "46.4"
+     ]
+    ],
+    "footnote": "Closed-model figures are vendor-reported. — = not reported."
+   },
+   "source_ref": "Table 2 · §3",
+   "speaker_notes": "The chart in numbers, for a representative slice. On knowledge and math — MMLU-Pro, GPQA, AIME — Gemini and GPT-5 edge ahead, but DeepSeek is within a few points. On software engineering it flips: DeepSeek wins SWE Multilingual outright at 70.2, and beats GPT-5 and Claude on Terminal-Bench. One honest caveat: the closed-model numbers are vendor-reported, so this isn't a perfectly controlled comparison."
+  },
+  {
+   "layout": "assertion-evidence",
+   "eyebrow": "Agentic",
+   "action_title": "Reasoning is ==k|carried through tool calls==, trained on synthesized agentic tasks",
+   "figure": {
+    "src": "figures/figure-4.png",
+    "caption": "Fig. 4 | Thinking-retention mechanism in tool-calling scenarios.",
+    "cite": "DeepSeek-AI 2025"
+   },
+   "annotation": "A large-scale synthesis pipeline generates agentic training data at scale; a thinking-retention mechanism keeps the chain of reasoning alive across tool calls rather than resetting each turn.",
+   "source_ref": "Fig. 4 · §4",
+   "speaker_notes": "The third contribution is agentic. Two pieces. First, they built a pipeline that synthesizes tool-use tasks at scale — that's how you get enough interactive training data. Second, this retention mechanism: in a multi-step tool-calling episode, the model keeps its reasoning state across calls instead of starting cold each turn. That's what lifts the agentic numbers you saw — the SWE and terminal and tau-bench results."
+  },
+  {
+   "layout": "bullets",
+   "eyebrow": "Frontier",
+   "action_title": "The high-compute Speciale variant reaches ==p|olympiad gold==",
+   "points": [
+    "DeepSeek-V3.2-Speciale ==p|surpasses GPT-5== and reaches ==p|parity with Gemini-3.0-Pro== on the paper's reasoning suite.",
+    "==p|Gold-medal performance== at IMO 2025, IOI 2025, ICPC World Final 2025, and CMO 2025.",
+    "Cost of the win: the RL stage that produces Speciale spends a compute budget ==w|exceeding 10% of pre-training==."
+   ],
+   "source_ref": "§3 · Table 3–4",
+   "speaker_notes": "And the headline that got the attention: the high-compute variant, Speciale, surpasses GPT-5 and matches Gemini-3.0-Pro on their reasoning suite, and takes gold at four 2025 olympiads — the math ones IMO and CMO, informatics IOI, and the ICPC world final for competitive programming. The number to keep honest is the last one: producing Speciale spends more than ten percent of the pre-training compute on reinforcement learning alone. It's a real result, but it's not the cheap shipped model."
+  },
+  {
+   "layout": "critique-concerns",
+   "action_title": "Strengths granted — here is what I would push on",
+   "points": [
+    {
+     "head": "“Surpasses GPT-5” is the ==w|expensive variant==",
+     "body": "The frontier claim is Speciale, whose RL alone exceeds ==10%== of pre-training compute. The shipped V3.2-Thinking is ==w|competitive but not ahead== — the framing conflates the two. (my analysis)"
+    },
+    {
+     "head": "Fixed ==k = 2048== selected tokens",
+     "body": "Selection is ==w|capped regardless of L==. Tasks needing broad long-range recall (not just local relevance) could lose information the indexer down-ranks — the benchmarks may not stress this. (my analysis)"
+    },
+    {
+     "head": "Vendor-reported baselines",
+     "body": "Closed-model scores are taken from vendors under their own harnesses; a few points of gap may be evaluation setup, not capability. (my analysis)"
+    },
+    {
+     "head": "Indexer overhead vs the O(Lk) win",
+     "body": "The lightning indexer still scores all tokens; the paper argues the net is favorable (Fig. 3), but the crossover point and short-sequence regime deserve scrutiny. (my analysis)"
+    }
+   ],
+   "source_ref": "My critical reading",
+   "speaker_notes": "Four things I'd push on. One: the 'beats GPT-5' line is the expensive Speciale, not the model you download — worth separating. Two: k is fixed at 2048 selected tokens no matter how long the context is; that's great for locality but I'd want to see tasks that need scattered long-range recall. Three: the closed baselines are vendor-reported. Four: the indexer itself still touches every token, so the O(Lk) story depends on that overhead being small — figure 3 argues yes, but I'd want the crossover point."
+  },
+  {
+   "layout": "discussion-questions",
+   "action_title": "Questions for the room",
+   "questions": [
+    "With only ==2048== tokens selected per query, which long-context tasks should ==w|break== — and do the reported benchmarks actually probe broad recall?",
+    "Is “==k|parity with GPT-5==” meaningful given ==w|benchmark saturation and possible contamination==, or do we need harder discriminators?",
+    "Training on a synthesized agentic-task distribution: real generalization, or overfitting to the synthesis pipeline's biases?",
+    "For self-hosters, where is the practical ==k|inference-cost crossover== between V3.1-Terminus and V3.2 at production context lengths?"
+   ],
+   "speaker_notes": "To open it up: does 2048 selected tokens actually hold on tasks that need to pull from far apart in the context? Is GPT-5 parity even the right target given how saturated these benchmarks are? Does training on synthetic agentic tasks generalize or just fit the generator? And practically, at what context length does the efficiency win pay off for someone self-hosting?"
+  },
+  {
+   "layout": "references",
+   "title": "References",
+   "entries": [
+    "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556. https://doi.org/10.48550/arXiv.2512.02556"
+   ]
+  }
+ ]
+}

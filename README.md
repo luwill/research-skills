@@ -4,51 +4,28 @@ A collection of Claude Code skills for academic research workflows.
 
 ## Skills
 
-### Single-Agent Skills
-
 | Skill | Description | Trigger |
 |-------|-------------|---------|
 | [medical-imaging-review](./medical-imaging-review/) | Write comprehensive literature reviews for medical imaging AI | `/medical-imaging-review`, "review paper", "survey", "综述" |
-| [paper-slide-deck](./paper-slide-deck/) | Generate professional slides from academic papers with auto figure extraction | `/paper-slide-deck paper.pdf` |
+| [paper-slide-deck](./paper-slide-deck/) | Generate slides from academic papers via text-to-image figure generation | `/paper-slide-deck paper.pdf` |
 | [research-proposal](./research-proposal/) | Generate PhD research proposals with Nature Reviews-style academic writing | `/research-proposal`, "research proposal", "PhD proposal", "研究计划" |
-
-### Multi-Agent Survey System (5 Agents)
-
-A collaborative system where 5 specialized AI agents work together to produce conference-quality survey papers.
-
-| Agent | Skill | Role |
-|-------|-------|------|
-| 研究主管 (Survey Director) | [survey-director](./skills/survey-director/) | Topic planning, outline design, task dispatch, final review |
-| 文献侦查员 (Literature Scout) | [literature-scout](./skills/literature-scout/) | Multi-source literature search, build literature matrix |
-| 论文分析师 (Paper Analyst) | [paper-analyst](./skills/paper-analyst/) | Deep reading, structured extraction, comparison tables |
-| 论文撰写员 (Survey Writer) | [survey-writer](./skills/survey-writer/) | Section writing following academic templates |
-| 质量编辑员 (Quality Editor) | [quality-editor](./skills/quality-editor/) | Terminology consistency, citation integrity, quality review |
-
-**Shared References**: [references/](./references/) — Workflow, domain knowledge, templates, quality checklists
-
-**Agent Configs**: [agents-config/](./agents-config/) — AGENTS.md templates for each agent
+| [scholar-slides](./scholar-slides/) | Fidelity-first academic decks — vector equations, extracted figures, grounded citations, editable PPTX | "make slides", "组会 PPT", "答辩幻灯片", a paper PDF / arXiv / DOI |
 
 ## Installation
 
-Copy the desired skill folder to your Claude Code skills directory:
+Copy the desired skill folder into your Claude Code skills directory:
 
 ```bash
-# For medical-imaging-review
 cp -r medical-imaging-review ~/.claude/skills/
-
-# For paper-slide-deck
-cp -r paper-slide-deck ~/.claude/skills/
-
-# For research-proposal
-cp -r research-proposal ~/.claude/skills/
+cp -r paper-slide-deck       ~/.claude/skills/
+cp -r research-proposal      ~/.claude/skills/
+cp -r scholar-slides         ~/.claude/skills/
 ```
 
-Or copy to project-local skills:
+`scholar-slides` carries Python + Node toolchains; after copying, provision them once:
 
 ```bash
-cp -r medical-imaging-review .agents/skills/
-cp -r paper-slide-deck .agents/skills/
-cp -r research-proposal .agents/skills/
+cd ~/.claude/skills/scholar-slides && ./install.sh
 ```
 
 ---
@@ -167,6 +144,39 @@ Generate high-quality academic research proposals for PhD applications following
 - Minimum 40 references
 - 3-5 figure suggestions
 - Markdown format (convertible to DOCX/PDF via pandoc)
+
+---
+
+## Scholar Slides Skill
+
+Turn a research paper (or arXiv/DOI link, or a topic) into a **fidelity-first** slide deck — one where every equation, table, number, figure, and citation stays true vector/text and **traceable to the source**, never rasterized by an image model and never fabricated. Where `paper-slide-deck` optimizes visual style via text-to-image, scholar-slides inverts the priority for scholarly work: **source fidelity > polish**, behind an executable integrity gate.
+
+### Features
+
+- **Fidelity-first rendering** — KaTeX vector equations, real `<table>`/OOXML tables, cited figure crops; numbers grounded against the source, no fabrication
+- **Integrity QA gate** — number grounding, `[MISSING]`/`[UNVERIFIED]` flags instead of silent fills, PPTX-parity regression, a scoreable aesthetics rubric
+- **Two registers** — journal-club (组会, reading-first) and conference (big-room), via a token-based theme system
+- **Bilingual** — English default, full 中文 / CJK support
+- **Zotero-first citations** with Crossref / arXiv / DOI fallback
+
+### Outputs
+
+- Interactive reveal.js deck (with browser speaker view)
+- One-page-per-slide **vector PDF**
+- **Editable PPTX** (native text, bullets, tables, speaker notes; equations/figures as flagged images)
+- Speaker notes with a bilingual talk-time estimate
+
+### Install & run
+
+```bash
+cd ~/.claude/skills/scholar-slides && ./install.sh   # .venv + npm + Chromium, then self-checks
+```
+
+Prereqs: **Python 3.11+, Node 18+.** For Chinese decks on Linux: `sudo apt-get install fonts-noto-cjk` (macOS/Windows already have CJK fonts).
+
+### Known limitation
+
+Figure localization is layout-dependent — ~95–100% on single-column / arXiv / Nature-style papers, ~75% on dense IEEE/TPAMI two-column pages. Low-confidence crops are **flagged for you to confirm**, never silently wrong. Stress-tested over 9 cross-layout papers: 0 crashes, 98% of figures localized. See [scholar-slides/README.md](./scholar-slides/README.md) for the full story.
 
 ---
 
