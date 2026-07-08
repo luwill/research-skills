@@ -202,7 +202,7 @@ These 5 rules are applied at multiple points:
 |---|---|---|
 | Phase 2 (collection) | Rules 1, 2, 5 | At entry time, before adding to bibliography |
 | Phase 4 (writing) | Rules 1, 3, 4 | Per-paragraph as citations are placed |
-| Phase 5 (peer review) | All 5 | `ref-checker` teammate runs systematic pass |
+| Phase 5 (peer review) | All 5 | `ref-checker` pass runs a systematic body↔bib + author + DOI sweep (see WORKFLOW.md Phase 5) |
 | Phase 6 (submission) | All 5 | Final checklist before submission |
 
 ---

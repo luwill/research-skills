@@ -46,7 +46,7 @@ The cited paper is real, the topic is right, but the specific Dice / sensitivity
 
 ### Fix
 
-Open the actual paper. Quote the actual numbers from abstract or results table. If the paper isn't accessible, drop the specific numeric claim and only cite the contribution level ("first to apply X to Y").
+Open the actual paper. Quote the actual numbers from abstract or results table. If the paper isn't accessible, drop the specific numeric claim and cite it only at a neutral contribution level ("applied X to Y"). Do **not** substitute an unverified priority/novelty claim ("first to", "首个", "novel") — that is a different hallucination, not a safe fallback.
 
 ---
 
