@@ -6,29 +6,15 @@ Guide for gathering relevant literature during research proposal generation.
 
 ## Overview
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      Literature Source Strategy                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌──────────────┐   ┌──────────────────┐   ┌─────────────────────────┐ │
-│  │  WebSearch   │   │   Open Access    │   │    Zotero MCP           │ │
-│  │              │   │                  │   │    (User Library)       │ │
-│  │  • Trends    │   │  • arXiv         │   │                         │ │
-│  │  • News      │   │  • PubMed        │   │  • Full-text papers     │ │
-│  │  • Reviews   │   │  • bioRxiv       │   │  • User annotations     │ │
-│  │  • General   │   │  • SSRN          │   │  • User notes           │ │
-│  │    info      │   │  • Google Scholar│   │  • Organized refs       │ │
-│  └──────────────┘   └──────────────────┘   └─────────────────────────┘ │
-│         │                    │                         │               │
-│         └────────────────────┴─────────────────────────┘               │
-│                              │                                          │
-│                    ┌─────────▼─────────┐                               │
-│                    │  Synthesize into  │                               │
-│                    │  Proposal Sections│                               │
-│                    └───────────────────┘                               │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+Three source roles, combined:
+
+- **WebSearch** — trends, news, reviews, terminology, and who works on the topic.
+- **Open access via WebFetch** — arXiv, PubMed/PMC, bioRxiv/medRxiv, SSRN, Google Scholar: primary papers and metadata you can open and confirm.
+- **Zotero MCP** — the user's own library: full-text papers, annotations, notes, organized references (best path for closed-access journals).
+
+All three feed a single verified candidate pool, which is then synthesized into proposal sections.
+
+**Tool portability & verification.** Confirm which tools are connected before using tool-specific names. If a Zotero/arXiv/PubMed MCP is unavailable, fall back to `WebSearch` + `WebFetch`. Every candidate must pass the existence/author/year checks in [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) *before* it is eligible to be cited — verify at collection time, not at the end.
 
 ---
 
@@ -483,7 +469,7 @@ Strategy:
 - [ ] Appropriate review-to-primary ratio
 
 ### Recency Check
-- [ ] ~80% from last 5 years
+- [ ] ~60% from the last 5 years where the field moves fast
 - [ ] Latest advances included
 - [ ] No outdated methods cited as current
 - [ ] Historical context appropriately old

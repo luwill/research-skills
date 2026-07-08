@@ -366,9 +366,10 @@ Author Last, First. "Article Title." Journal Name Volume, no. Issue (Year): page
 ```
 
 ### Reference Count Guidelines
-- PhD Proposal: 30-50 references minimum
-- Balance: ~60% from last 5 years, ~40% foundational works
-- Include variety: journals, books, conference papers, reports
+- **No minimum, no quota.** Cite what the argument needs; never pad to hit a number. A PhD proposal typically cites 25–50 sources (humanities often more), but a tightly argued 25 beats a padded 45.
+- Every reference must be verified per [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) before it enters the list — existence (DOI/PMID/arXiv or Zotero), author, and year.
+- Balance: aim for ~60% from the last 5 years where the field moves fast; foundational work is legitimately older.
+- Include variety where it serves the argument: journals, books, conference papers, reports.
 
 ---
 

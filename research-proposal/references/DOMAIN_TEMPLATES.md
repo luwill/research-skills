@@ -43,8 +43,10 @@ Expected Outcomes          300 words       (12%)
   - Scientific Contribution 150 words
   - Publications Plan       100 words
   - Potential Applications  50 words
-References                 30-50 citations
+References                 ~25-40 (typical, not a target)
 ```
+
+> Reference counts throughout this file are **typical ranges, not quotas**. Cite what the argument needs and verify every entry ([CITATION_INTEGRITY.md](CITATION_INTEGRITY.md)); never pad to a number.
 
 ### Key Characteristics
 
@@ -131,6 +133,60 @@ To ensure validity:
 
 ---
 
+## STEM — Computational / ML / AI-for-Science variant
+
+Most contemporary STEM PhD proposals in AI/CV/NLP/ML and AI-for-Science are **computational, not wet-lab**. The wet-lab methodology template above (equipment, reagents, protocols, `p < 0.05`) does not fit them. Use this variant when the research trains, adapts, evaluates, or analyzes models rather than running physical experiments.
+
+### What replaces "Materials and Equipment"
+
+Instead of reagents and instruments, a computational methodology specifies:
+
+- **Datasets & benchmarks** — named public datasets or benchmarks (with versions/splits), how they are licensed, and — if a new dataset is proposed — its size, collection protocol, annotation process, and inter-annotator agreement. State the evaluation metrics up front (e.g., accuracy, F1, AUROC, Dice, BLEU, nDCG, calibration/ECE) and the baselines to compare against.
+- **Compute budget** — realistic hardware (GPU/TPU type and count), estimated GPU-hours, and whether the plan fits the group's resources. A plan to pre-train a foundation model without a compute estimate reads as infeasible.
+- **Models & method** — base architecture or foundation model, whether it is trained from scratch / fine-tuned / adapted (LoRA, prompting, distillation), and what is genuinely novel versus adopted.
+- **Ablations & analysis** — which components will be ablated to isolate the contribution; robustness, generalization (out-of-distribution / cross-domain), and failure-mode analysis.
+- **Reproducibility** — fixed seeds, reported variance across runs, hyperparameter search protocol, and a **data & code availability statement** (repository, model weights, license).
+
+### Modern framings to consider (2026)
+
+- **Foundation-model era** — position the work relative to large pretrained/foundation models: are you building one, adapting one, probing one, or providing a benchmark that stresses one? "Yet another task-specific model" is a weak framing when a strong foundation-model baseline exists.
+- **Multimodal** — if the work spans vision + language + other modalities, specify alignment, fusion, and the evaluation of each modality's contribution.
+- **Benchmark / evaluation research** — a proposal whose contribution *is* a benchmark or evaluation protocol is legitimate and increasingly valued; treat dataset/benchmark construction with the same rigor as a method.
+- **AI-for-Science** — when ML is applied to a scientific domain (biology, chemistry, materials, physics), address domain validity, not just held-out accuracy: does the model respect known constraints, and how are predictions validated against domain ground truth?
+
+### Responsible-AI disclosure
+
+Most institutions (2024 onward) expect a proposal to address, where relevant: data provenance and consent, bias/fairness, dual-use/safety, environmental cost of compute, and **disclosure of generative-AI assistance** in the research and the writing. Include a short honest statement rather than omitting it.
+
+### Computational methodology template (STEM/ML)
+
+```markdown
+## 3. Methodology
+
+### 3.1 Problem Formulation and Approach
+[Formal task definition; inputs/outputs; where a foundation model / from-scratch
+training / fine-tuning / adaptation fits; what is novel vs. adopted.]
+
+### 3.2 Data and Benchmarks
+[Named datasets/benchmarks with versions and splits; licensing; for any new
+dataset: size, collection, annotation protocol, agreement. Evaluation metrics
+and baselines stated explicitly.]
+
+### 3.3 Compute and Implementation
+[Hardware (GPU/TPU type × count), estimated GPU-hours, frameworks; feasibility
+within available resources.]
+
+### 3.4 Experiments, Ablations, and Analysis
+[Main experiments per research question; ablations isolating each contribution;
+robustness / OOD generalization; failure-mode analysis.]
+
+### 3.5 Reproducibility and Responsible AI
+[Seeds, variance across runs, hyperparameter protocol; data & code availability
+statement; bias/safety/compute-cost and GenAI-use disclosure as relevant.]
+```
+
+---
+
 ## Humanities Domain (History, Philosophy, Literature, Languages, Arts)
 
 ### Structural Emphasis
@@ -154,7 +210,7 @@ Methodology                400-600 words   (12%)
 Chapter Outline            400-500 words   (12%)    ← UNIQUE TO HUMANITIES
 Timeline                   200-300 words   (6%)
 Significance               400-500 words   (12%)
-References                 50-100 citations
+References                 ~40-80 (typical; historiographical breadth)
 ```
 
 ### Key Characteristics
@@ -292,7 +348,7 @@ Methodology                600-800 words   (25%)    ← BALANCED EMPHASIS
   - Ethics                 100 words
 Timeline                   200-250 words   (7%)
 Significance               300-400 words   (12%)
-References                 40-60 citations
+References                 ~30-50 (typical, not a target)
 ```
 
 ### Key Characteristics

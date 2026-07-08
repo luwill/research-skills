@@ -59,12 +59,16 @@ Use this checklist to verify the quality of generated research proposals.
 - [ ] Broader impact discussed
 - [ ] Claims appropriately hedged
 
-#### References
-- [ ] **Minimum 40 citations** for PhD proposal
-- [ ] Citation format consistent
-- [ ] Mix of foundational and recent works (~40% classic, ~60% recent 5 years)
-- [ ] All in-text citations have matching references
-- [ ] No orphan references (cited but not referenced)
+#### References (see [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) — the delivery gate)
+- [ ] **Every reference verified to exist** — DOI/PMID/arXiv resolves, or Zotero metadata confirms it (Rule 1)
+- [ ] **First author and year match the source** for every entry (Rule 2)
+- [ ] No fabricated or padded references; **count follows the argument, no minimum** (typically 25–50, humanities often more)
+- [ ] No placeholder strings — `grep` for `xxx`, `[TBD]`, `10.xxxx` returns 0; any `[UNVERIFIED]` was disclosed to the user, never presented as confirmed
+- [ ] Every in-text `(Author, Year)` has a matching References entry, and every entry is cited (no orphans either direction) (Rule 3)
+- [ ] Every quantitative/directional claim matches its source; ≥20% of references spot-checked (Rule 4)
+- [ ] Primary sources cited for findings, not blogs / press releases / other reviews (Rule 5)
+- [ ] Citation format consistent (APA / MLA / Chicago / GB/T 7714)
+- [ ] Mix of foundational and recent works (~60% from the last 5 years where the field moves fast)
 - [ ] Balance across different research groups/institutions
 
 #### Figures (3-5 suggested)
@@ -293,6 +297,7 @@ Use this checklist to verify the quality of generated research proposals.
 ### Minimum Standards
 - No section rated below 3
 - Overall weighted average ≥ 3.5
+- **Zero unverified or fabricated references** (CITATION_INTEGRITY.md gate passed)
 - No critical errors in citations or methodology
 - Appropriate hedging throughout
 
@@ -305,7 +310,7 @@ Use this checklist to verify the quality of generated research proposals.
 2. Gap in literature identified
 3. Methodology matches questions
 4. No absolute claims without evidence
-5. All citations present and correct
+5. All citations verified to exist, correctly attributed, and reconciled (CITATION_INTEGRITY.md)
 6. Word count within range (±10%)
 
 ### Common Issues to Check
@@ -320,6 +325,7 @@ Use this checklist to verify the quality of generated research proposals.
 9. Undefined abbreviations
 10. Unrealistic timeline
 11. **Excessive bullet points** instead of flowing prose
-12. **Insufficient references** (must be ≥40)
-13. **Missing figure suggestions**
-14. **Appendix included** (should not have appendix)
+12. **Unverified or fabricated references** (the single most serious defect — see CITATION_INTEGRITY.md)
+13. **Padded bibliography** (references added to hit a number, not to support a claim)
+14. **Missing figure suggestions**
+15. **Appendix included** (should not have appendix)

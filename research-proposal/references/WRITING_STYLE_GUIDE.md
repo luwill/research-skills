@@ -32,7 +32,7 @@ The hallmark of excellent academic writing is the ability to present complex ide
 > - Clinical validation results
 
 *Better (prose-based):*
-> This research is expected to advance the field through several interconnected contributions. The development of a novel segmentation algorithm will enable automated plaque detection with accuracy surpassing current methods. Building on this foundation, a multi-modal fusion framework will integrate complementary imaging data to capture plaque characteristics inaccessible to any single modality. Finally, rigorous clinical validation will establish the prognostic value of these computational biomarkers for predicting cardiovascular events.
+> This research is expected to advance the field through several interconnected contributions. A new annotated corpus of multilingual policy debates will provide the first shared resource for studying argument structure across languages. Building on this resource, a discourse-analysis framework will make it possible to trace how rhetorical strategies migrate between political contexts. Finally, an empirical study linking these strategies to measured shifts in public opinion will establish whether, and under what conditions, framing choices affect persuasion.
 
 ### 2. Precision Over Impression
 - Say exactly what you mean
@@ -54,6 +54,24 @@ The hallmark of excellent academic writing is the ability to present complex ide
 - Anticipate reader questions
 - Provide necessary context
 - Guide through complexity
+
+### 6. Avoid the LLM Tells (防 AI 味)
+
+These openers and phrases are AI-detector signatures and mark a draft as machine-written. Strip them and write a specific opening grounded in the actual field instead.
+
+| Avoid (AI tell) | Do instead |
+|---|---|
+| "Over the past decade, X has emerged as…" | Open with the specific problem, finding, or number that motivates the work |
+| "In recent years, X has garnered significant attention" | State *what* changed and cite it: "Since the 2020 release of X, …" |
+| "It is worth noting that…" / "Importantly, it should be noted…" | Just make the point; the emphasis word adds nothing |
+| "plays a crucial/pivotal/vital role" | Say the specific mechanism or effect |
+| "delves into" / "sheds light on" / "paves the way for" | "examines" / "shows" / "enables" |
+| "a testament to" / "the ever-evolving landscape of" | Delete; state the fact |
+| "This paper/proposal aims to explore the fascinating world of…" | "This research investigates [specific question]." |
+
+Chinese equivalents to avoid: "近年来，随着……的飞速发展，……日益受到广泛关注"（套话开头）、"众所周知"、"不言而喻"、"具有重要的理论意义和现实意义"（空泛）。改为具体、可核验的陈述。
+
+The goal is not a banned-word list to route around, but specificity: an opening a domain expert could not have written from the topic title alone signals real engagement.
 
 ---
 
@@ -189,17 +207,18 @@ architectures have significantly improved NLP capabilities."
 ### Sentence Templates by Function
 
 #### Introducing Background/Context
-```
-English:
-- "Over the past decade, [X] has emerged as a critical area of research in [field]."
-- "Recent advances in [X] have opened new possibilities for [application]."
-- "[Field] has witnessed remarkable progress in [area], driven by [factors]."
-- "The importance of [X] has been increasingly recognized in [context]."
 
-中文:
-- "近年来，[X]已成为[领域]研究的热点问题。"
-- "随着[X]的快速发展，[Y]日益受到学界关注。"
-- "[领域]在[方面]取得了显著进展，主要体现在[具体表现]。"
+Do **not** open with generic scene-setting ("Over the past decade, X has emerged…", "近年来，随着…日益受到关注") — those are AI tells (see Core Principle 6). Open with a specific, citable anchor: a concrete problem, a measured gap, a pivotal result. The templates below are *structures*, not fill-in-the-blank phrases; ground each in a real fact.
+
+```
+English (ground each in a specific, cited fact):
+- "[Specific measurable problem or statistic] motivates growing interest in [X] (Author, Year)."
+- "[Named advance/result] (Author, Year) made [previously infeasible task] tractable, raising the question of [gap]."
+- "Although [established approach] achieves [specific result], it fails when [specific condition] (Author, Year)."
+
+中文（每句须落到具体、可引用的事实）:
+- "[具体问题或数据]促使[领域]研究者转向[X]（作者，年份）。"
+- "[某项具体进展]（作者，年份）使[原本难以实现的任务]成为可能，但[具体空白]仍未解决。"
 ```
 
 #### Identifying Problems/Gaps
@@ -293,11 +312,11 @@ English:
 - Hence, Accordingly, For this reason
 - 因此，由此可见，正因如此
 
-### Emphasis
-- Importantly, Notably, Significantly
-- Of particular note, It is worth noting
-- Indeed, In fact, Particularly
-- 值得注意的是，尤其重要的是，特别是
+### Emphasis (use sparingly)
+- Notably, Particularly, In particular
+- Indeed, In fact
+- 尤其是，特别是
+- Avoid "It is worth noting that" and "Importantly," as sentence openers — they are AI tells (Core Principle 6). If a point matters, its content should carry the emphasis; a flag word rarely helps.
 
 ### Sequence
 - First, Second, Third, Finally
@@ -608,14 +627,14 @@ Include figure suggestions at appropriate locations using this format:
 ```markdown
 > **[Figure 1 Suggestion]** *Title: Overview of the proposed research framework*
 >
-> Content: A flowchart illustrating the three-phase research design, showing
-> data flow from imaging modalities (CCTA, IVUS, OCT) through AI processing
-> modules to clinical outcome predictions. Include distinct visual elements
-> for each phase with connecting arrows indicating data flow.
+> Content: A flowchart illustrating the three-phase research design, showing how
+> the primary data sources feed each processing stage and lead to the study's
+> outputs/outcomes. Include distinct visual elements for each phase with
+> connecting arrows indicating flow and dependencies.
 >
 > Recommended style: Clean vector graphics using a consistent color palette
-> (e.g., blues for data inputs, greens for processing, oranges for outputs).
-> Consider using icons for different imaging modalities.
+> (e.g., blues for inputs, greens for processing, oranges for outputs).
+> Use icons to distinguish the different data sources or components.
 ```
 
 ### Recommended Figures by Section
@@ -639,16 +658,18 @@ Include figure suggestions at appropriate locations using this format:
 
 ### Example Figure Suggestions
 
-**For Methodology Section:**
-> **[Figure 2 Suggestion]** *Title: Deep learning architecture for multimodal plaque analysis*
+**For Methodology Section (example — a multimodal ML architecture):**
+> **[Figure 2 Suggestion]** *Title: Model architecture for the proposed multimodal task*
 >
-> Content: A schematic showing the neural network architecture with three parallel
-> encoder branches (one for each imaging modality), a cross-modal attention fusion
-> module in the center, and multiple output heads for segmentation, classification,
-> and risk prediction tasks.
+> Content: A schematic showing the architecture with one encoder branch per input
+> modality, a fusion module in the center, and the output head(s) for the target
+> task. Annotate where the novel component sits relative to adopted baselines.
 >
-> Style: Technical diagram with layer representations, dimension annotations,
-> and data flow arrows. Use consistent shapes for similar operations.
+> Style: Technical diagram with layer/block representations, dimension annotations,
+> and data-flow arrows. Use consistent shapes for similar operations.
+
+*(Adapt the figure content to your own domain — a qualitative study might instead
+show a coding/analysis pipeline; a humanities project, a source-corpus map.)*
 
 **For Timeline Section:**
 > **[Figure 3 Suggestion]** *Title: Research timeline and milestones*
