@@ -1,6 +1,6 @@
 ---
 name: paper-slide-deck
-description: Generate stylized slide deck IMAGES (17 T2I aesthetic styles — watercolor, sketch-notes, pixel-art, editorial, chalkboard, etc.) from any content — an article, blog post, topic, or paper — optimized for reading and social sharing rather than live presentation. Each slide is an AI-generated image (Gemini/Nano Banana), so the look is distinctive but text/math/data are baked into the image (not editable). Use when the user wants visually striking, shareable slides and look-and-feel matters more than editable precision. NOT for a faithful academic talk where equations, numbers, tables, and citations must stay exact, editable, and projector-ready (组会/答辩/thesis defense/conference/results-heavy talks) — for that use scholar-slides instead, since text-to-image will garble math and data.
+description: Use when the user wants visually striking, shareable slide-deck IMAGES from any content — an article, blog post, topic, or paper — where look-and-feel matters more than editable precision (风格化幻灯/小红书配图/公众号配图/视觉化海报), optimized for reading and social sharing rather than live presentation. Offers 17 T2I aesthetic styles (watercolor, sketch-notes, pixel-art, editorial, chalkboard, etc.); each slide is an AI-generated image (Gemini/Nano Banana), so the look is distinctive but text/math/data are baked into the image (not editable). NOT for a faithful academic talk where equations, numbers, tables, and citations must stay exact, editable, and projector-ready (组会/答辩/thesis defense/conference/results-heavy talks) — for that use scholar-slides instead, since text-to-image will garble math and data.
 ---
 
 # Paper Slide Deck Generator
@@ -20,6 +20,32 @@ Transform academic papers and content into professional slide deck images with a
 /paper-slide-deck  # Then paste content
 ```
 
+## Setup (one-time)
+
+The TypeScript scripts (`merge-to-*`, `detect-figures`, `extract-figure`,
+`apply-template`) need Node dependencies. Install them once:
+
+```bash
+cd ${SKILL_DIR}/scripts && npm install
+```
+
+This installs `canvas`, `pdfjs-dist`, `pptxgenjs`, and `pdf-lib` (a `package-lock.json`
+pins versions). If a script exits with `missing Node dependency "<name>"`, run the
+command above. The Python generator (`generate-slides.py`) auto-installs `google-genai`
+on first run.
+
+### Image generation & no-API-key path
+
+Image generation needs either a `GOOGLE_API_KEY`/`GEMINI_API_KEY` (Gemini API) or the
+Gemini Web skill. **If no key and no web option is available, the skill still works in
+a degraded mode** — do not abort:
+
+1. Run with `--outline-only` to produce the outline + prompts (no images).
+2. For a source PDF, extract real figures/tables with `detect-figures.ts` +
+   `extract-figure.ts` + `apply-template.ts` (no API key needed — pure rendering).
+3. Merge whatever slides exist (`extract`-sourced pages) into PPTX/PDF, and hand the
+   `prompts/` back to the user to generate images later when a key is available.
+
 ## Script Directory
 
 **Important**: All scripts are located in the `scripts/` subdirectory of this skill.
@@ -35,8 +61,8 @@ Transform academic papers and content into professional slide deck images with a
 | `scripts/generate-slides.py` | Generate AI slides via Gemini API (Python) |
 | `scripts/merge-to-pptx.ts` | Merge slides into PowerPoint |
 | `scripts/merge-to-pdf.ts` | Merge slides into PDF |
-| `scripts/detect-figures.ts` | Auto-detect figures/tables in PDF |
-| `scripts/extract-figure.ts` | Extract figure from PDF page (uses PyMuPDF fallback) |
+| `scripts/detect-figures.ts` | Auto-detect figures/tables in PDF (heuristic; verify pages) |
+| `scripts/extract-figure.ts` | Render a full PDF page to PNG (optional `--crop`; PyMuPDF fallback) |
 | `scripts/apply-template.ts` | Apply figure container template |
 
 ## Options
@@ -93,6 +119,8 @@ Transform academic papers and content into professional slide deck images with a
 | history, heritage, vintage, expedition, historical | `vintage` |
 | lifestyle, wellness, travel, artistic, natural | `watercolor` |
 | Default | `blueprint` |
+
+> **Academic-signal caution**: When the content matches `academic-paper` signals (paper/thesis/neurips/cvpr/icml/…), this skill still bakes text into an image, so **equations, result tables, and exact numbers may be garbled**. Extract real figures/tables from the source PDF (`Source: extract`) rather than letting the model redraw them, and if the deck needs faithful, editable formulas/data, tell the user to use **scholar-slides** instead.
 
 ## Layout Gallery
 
@@ -265,15 +293,23 @@ If `--outline-only`, stop here.
 1. **Verify API key**: Check `GOOGLE_API_KEY` or `GEMINI_API_KEY` environment variable
 2. **Run generation script**:
    ```bash
-   python ${SKILL_DIR}/scripts/generate-slides.py <slide-deck-dir> --model gemini-3-pro-image-preview
+   python3 ${SKILL_DIR}/scripts/generate-slides.py <slide-deck-dir>
    ```
+   The default model is `gemini-3-pro-image` (Nano Banana Pro, GA). Override with
+   `--model <id>` if needed. The older `gemini-3-pro-image-preview` id is deprecated.
 
 **Script Features**:
 - Auto-installs `google-genai` package if missing
+- Reads prompt files as `*.md` (or `*.txt`) from `prompts/`
+- **Errors out (non-zero) if no prompt files are found** — no silent "nothing to do"
 - Retry logic with exponential backoff (3 retries)
-- Skips already-generated slides (> 10KB)
+- Sets `response_modalities=["IMAGE"]` so the model returns image parts
+- Skips already-generated slides (> 10KB, any image extension)
+- Writes each slide to the **deck root** (e.g. `01-slide-cover.png`), the same
+  place extracted-figure slides land — so one merge step picks up both
+- Saves with the **real** image extension (Gemini often returns JPEG even when
+  PNG is requested → saved as `.jpg`, never a mislabeled `.png`)
 - Supports custom model via `--model` flag
-- Outputs to `slides/` subdirectory
 
 **Troubleshooting**:
 - If server disconnection errors occur, script auto-retries
@@ -325,6 +361,11 @@ For academic presentations, IMAGE_SOURCE metadata was auto-populated in Step 2 b
        --page <page-number> \
        --output figures/figure-<N>.png
      ```
+     **Note**: `extract-figure.ts` renders the **entire page** to a high-resolution
+     PNG — it does **not** auto-detect or crop a single figure's bounding box. On a
+     two-column page you will get both columns. To isolate one figure, either pass
+     `--crop "x,y,width,height"` (pixels in the rendered/scaled page) or open the
+     PNG, confirm it visually, and crop manually before applying the template.
    - Run template application script:
      ```bash
      npx -y bun ${SKILL_DIR}/scripts/apply-template.ts \
@@ -366,6 +407,32 @@ Then apply template using `apply-template.ts`.
 5. Report progress: "Generated X/N"
 6. Auto-retry once on generation failure
 
+### Step 6.5: Proofread Generated Images (Content Integrity)
+
+Text-to-image **bakes text into pixels and will garble spelling, math symbols, and
+numbers** — this is the single biggest risk of this skill. Do not ship unchecked.
+
+**For every generated slide** (especially any with equations, tables, key numbers,
+or non-Latin text), use `Read` to open the PNG and visually check:
+
+1. **Spelling / wording** — headline and body text match the outline, no invented or
+   mangled words.
+2. **Math & symbols** — equations, subscripts, Greek letters, operators are correct
+   (or absent). Assume the model got them wrong until you confirm otherwise.
+3. **Numbers & units** — any figure that carries data matches the source exactly.
+
+**If garbling is found:**
+- Regenerate that slide with a corrected/simplified prompt (spell risky terms
+  phonetically, reduce text density, move exact numbers to a caption). **Max 2 retries.**
+- If it still fails after 2 retries, **flag the slide `[CHECK]`** in the Step 8 summary
+  and recommend one of:
+  - Replace with an **extracted** figure/table from the source PDF (`Source: extract`), or
+  - **Simplify** the slide to remove the fragile text, or
+  - For a deck that genuinely needs faithful, editable formulas/data, switch to
+    **scholar-slides**.
+
+Never silently deliver a slide with garbled math or data — always surface it.
+
 ### Step 7: Merge to PPTX and PDF
 
 ```bash
@@ -385,6 +452,7 @@ Slides: N total
 
 - 01-slide-cover.png ✓ Cover
 - 02-slide-intro.png ✓ Content
+- 04-slide-results.png ⚠ [CHECK] math/numbers — verify or use scholar-slides
 - ...
 - {NN}-slide-back-cover.png ✓ Back Cover
 
@@ -392,6 +460,9 @@ Outline: outline.md
 PPTX: {topic-slug}.pptx
 PDF: {topic-slug}.pdf
 ```
+
+List any `[CHECK]`-flagged slides (from Step 6.5) explicitly so the user knows which
+slides may contain garbled text/math/data and how to remediate them.
 
 ## Slide Modification
 
@@ -410,7 +481,8 @@ Requires:
 - Python 3.8+ with pip
 - `google-genai` package (auto-installed by script)
 
-Model: `gemini-3-pro-image-preview` (default)
+Model: `gemini-3-pro-image` (default; Nano Banana Pro, GA). The older
+`gemini-3-pro-image-preview` id is deprecated — override with `--model` only if needed.
 
 ### Gemini Web Skill (Option 2)
 
@@ -421,10 +493,10 @@ Requires:
 
 ### PDF Figure Extraction
 
-Requires:
+Requires (install via `cd ${SKILL_DIR}/scripts && npm install`):
 - **Primary**: `pdfjs-dist` npm package (use legacy build for Node.js)
+- `canvas` npm package for extract-figure.ts / apply-template.ts
 - **Fallback**: `pymupdf` Python package (more reliable for complex PDFs)
-- `canvas` npm package for apply-template.ts
 
 ## References
 

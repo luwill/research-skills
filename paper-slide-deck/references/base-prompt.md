@@ -33,6 +33,13 @@ When style is `academic-paper`, override these principles:
 - Axis labels, legends, and data annotations are required on all charts
 - Figure captions in format "Figure N: [Description]" are encouraged
 
+**Data-fidelity guardrail**: You are an image generator and WILL mis-render exact
+numbers, equations, and table cells. Do NOT invent or "fill in" quantitative results,
+metric values, or formula terms. Only render numbers/equations that are explicitly given
+in the content below, and keep them minimal. For anything that must be numerically exact
+(result tables, precise equations, real charts), the correct path is to **extract the
+real figure/table from the source PDF** — not to redraw it here.
+
 ## Text Style (CRITICAL)
 
 - **ALL text MUST match the designated style exactly**
@@ -67,4 +74,4 @@ When style is `academic-paper`, override these principles:
 
 ---
 
-Please use nano banana pro to generate the slide image based on the content provided below:
+Generate the slide image based on the content provided below:

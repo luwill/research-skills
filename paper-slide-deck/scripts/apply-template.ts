@@ -16,7 +16,24 @@
 
 import { existsSync, writeFileSync, mkdirSync } from "fs";
 import { dirname, resolve } from "path";
-import { createCanvas, loadImage, CanvasRenderingContext2D } from "canvas";
+
+/**
+ * Dynamically load a third-party dependency, printing an actionable install
+ * hint (instead of an opaque stack trace) if node_modules is missing.
+ */
+async function loadDep<T>(name: string, load: () => Promise<T>): Promise<T> {
+  try {
+    return await load();
+  } catch (err: any) {
+    const msg = String(err?.message ?? err);
+    if (err?.code === "ERR_MODULE_NOT_FOUND" || /Cannot find (module|package)/i.test(msg)) {
+      console.error(`\nError: missing Node dependency "${name}".`);
+      console.error(`Install the script dependencies first:\n  cd ${import.meta.dir} && npm install`);
+      process.exit(1);
+    }
+    throw err;
+  }
+}
 
 // Color palette from academic-paper style
 const COLORS = {
@@ -46,6 +63,7 @@ interface Args {
   output: string;
   width: number;
   height: number;
+  font: string;
 }
 
 function parseArgs(): Args {
@@ -56,6 +74,9 @@ function parseArgs(): Args {
   let output = "";
   let width = 1920;
   let height = 1080;
+  // Default sans-serif stack. Override with --font for CJK titles/captions,
+  // e.g. --font "Noto Sans CJK SC, Arial, sans-serif" on Linux.
+  let font = "Arial, Helvetica, sans-serif";
 
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
@@ -77,6 +98,9 @@ function parseArgs(): Args {
       case "--height":
         height = parseInt(args[++i], 10);
         break;
+      case "--font":
+        font = args[++i];
+        break;
     }
   }
 
@@ -89,13 +113,14 @@ function parseArgs(): Args {
     console.error("  --output   Output slide PNG file path (required)");
     console.error("  --width    Output width, default 1920 (optional)");
     console.error("  --height   Output height, default 1080 (optional)");
+    console.error('  --font     CSS font-family stack, default "Arial, Helvetica, sans-serif" (optional; set for CJK)');
     process.exit(1);
   }
 
-  return { figure, title, caption, output, width, height };
+  return { figure, title, caption, output, width, height, font };
 }
 
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+function wrapText(ctx: any, text: string, maxWidth: number): string[] {
   const words = text.split(" ");
   const lines: string[] = [];
   let currentLine = "";
@@ -120,7 +145,7 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
 }
 
 function drawRoundedRect(
-  ctx: CanvasRenderingContext2D,
+  ctx: any,
   x: number,
   y: number,
   width: number,
@@ -141,7 +166,10 @@ function drawRoundedRect(
 }
 
 async function applyTemplate(args: Args) {
-  const { figure, title, caption, output, width, height } = args;
+  const { figure, title, caption, output, width, height, font } = args;
+
+  // Load canvas dynamically so a missing install produces a clear hint.
+  const { createCanvas, loadImage } = await loadDep("canvas", () => import("canvas"));
 
   // Validate figure exists
   const absoluteFigurePath = resolve(figure);
@@ -172,7 +200,7 @@ async function applyTemplate(args: Args) {
 
   // Draw title
   ctx.fillStyle = COLORS.titleText;
-  ctx.font = `bold ${titleFontSize}px Arial, Helvetica, sans-serif`;
+  ctx.font = `bold ${titleFontSize}px ${font}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
@@ -240,7 +268,7 @@ async function applyTemplate(args: Args) {
 
   // Draw caption
   ctx.fillStyle = COLORS.captionText;
-  ctx.font = `italic ${captionFontSize}px Arial, Helvetica, sans-serif`;
+  ctx.font = `italic ${captionFontSize}px ${font}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
