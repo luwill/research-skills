@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
-import { join, basename } from "path";
+import { join, basename, resolve } from "path";
 
 interface SlideInfo {
   filename: string;
@@ -149,7 +149,9 @@ async function main() {
 
   const { PDFDocument } = await loadDep("pdf-lib", () => import("pdf-lib"));
 
-  const dirName = basename(dir) === "slide-deck" ? basename(join(dir, "..")) : basename(dir);
+  // Resolve first: basename(".") is "." (yielding "..pdf"); resolve() gives the real dir name.
+  const absDir = resolve(dir);
+  const dirName = basename(absDir) === "slide-deck" ? basename(resolve(absDir, "..")) : basename(absDir);
   const outputPath = output || join(dir, `${dirName}.pdf`);
 
   console.log(`Found ${slides.length} slides in: ${dir}\n`);

@@ -82,7 +82,7 @@ Read [references/LITERATURE_WORKFLOW.md](references/LITERATURE_WORKFLOW.md) for 
 
 **Tool portability.** Confirm which tools are available before using tool-specific names. Prefer the user's Zotero library (via the `mcp__zotero__*` tools) for closed-access papers; use `WebSearch` for landscape/trends and `WebFetch` to open DOI / PubMed / arXiv pages and confirm metadata. If a Zotero/arXiv/PubMed MCP is not connected, fall back to `WebSearch` + `WebFetch`. Remind the user to add relevant closed-access papers to Zotero.
 
-Sources by role: `WebSearch` for trends, reviews, and terminology; `WebFetch` on arXiv / PubMed / publisher pages for open-access primary sources and metadata; Zotero MCP for the user's own library, annotations, and notes.
+Sources by role: `WebSearch` for trends, reviews, and terminology; `WebFetch` on arXiv / PubMed / publisher pages for open-access primary sources and metadata; Zotero MCP for the user's own library, annotations, and notes. For journal articles the **Crossref REST API** (`WebFetch https://api.crossref.org/works/<DOI>`) is the highest-signal existence+metadata check — it returns clean JSON (title / first author / year / venue), more reliable than parsing a publisher HTML page.
 
 Organize candidates by role: background/context, current state-of-the-art, gap-identifying, methodology, and related work.
 
@@ -95,6 +95,8 @@ Before any source is eligible to be cited:
 3. Present the **verified candidate list** (title, author, year, source/DOI) to the user for a quick sanity check before outlining.
 
 Anything that cannot be verified does not enter the reference pool; if the user insists on a half-remembered source, flag it `[UNVERIFIED]`.
+
+**Non-interactive / headless runs.** If the skill is invoked without an interactive user (a background agent or pipeline), do not deadlock on step 3: record the verified candidate list inline in the deliverable (or a companion `citation_verification_log.md`) and continue. The recorded list is the audit trail in lieu of a live sanity check.
 
 ---
 
@@ -125,6 +127,8 @@ Add a **Chapter Outline** section for humanities proposals. Do NOT include appen
 Ask whether the structure, section emphasis, and scope are acceptable, and whether to add/remove/modify sections.
 
 **If the user says "you decide" / "你看着办" / defers:** state the assumptions you are locking in (scenario, domain, section set, target length, language), present the concrete outline once more as the decision, and proceed only after that — treat silence-plus-deferral as approval of *that stated* outline, but still surface the assumptions so the user can veto.
+
+**If there is no interactive user at all** (headless/agent run): record the locked assumptions and the outline inline in the deliverable and treat that recorded outline as approved. This keeps the audit trail without deadlocking on an approval that no one can give.
 
 ---
 
@@ -161,7 +165,7 @@ Verify against [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md
 - `grep -nE "xxx|XXXX|\[TBD\]|\[UNVERIFIED\]|10\.xxxx|\[.*占位.*\]"` returns 0 hits — or every remaining `[UNVERIFIED]` has been explicitly disclosed to the user and never presented as confirmed.
 - Every in-text `(Author, Year)` reconciles with the References list (no orphans either direction).
 - At least 20% of references, and every quantitative/directional claim, spot-checked against sources.
-- No placeholder `[brackets]` or "TBD" left in the body.
+- No placeholder `[brackets]` or "TBD" left in the body — **except** applicant-specific scaffold fields the user must personalize (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`) and `[Figure N Suggestion]` labels, which are intentional and may remain.
 
 Offer format conversion:
 

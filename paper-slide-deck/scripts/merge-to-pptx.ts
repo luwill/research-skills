@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
-import { join, basename } from "path";
+import { join, basename, resolve } from "path";
 
 interface SlideInfo {
   filename: string;
@@ -168,7 +168,9 @@ async function main() {
 
   const PptxGenJS = (await loadDep("pptxgenjs", () => import("pptxgenjs"))).default;
 
-  const dirName = basename(dir) === "slide-deck" ? basename(join(dir, "..")) : basename(dir);
+  // Resolve first: basename(".") is "." (yielding "..pptx"); resolve() gives the real dir name.
+  const absDir = resolve(dir);
+  const dirName = basename(absDir) === "slide-deck" ? basename(resolve(absDir, "..")) : basename(absDir);
   const outputPath = output || join(dir, `${dirName}.pptx`);
 
   console.log(`Found ${slides.length} slides in: ${dir}\n`);

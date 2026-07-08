@@ -34,6 +34,12 @@ pins versions). If a script exits with `missing Node dependency "<name>"`, run t
 command above. The Python generator (`generate-slides.py`) auto-installs `google-genai`
 on first run.
 
+**Also install PyMuPDF** (`pip install pymupdf`) — it is the reliable fallback for
+extracting figures from pages that embed bitmaps (X-rays, CAM heatmaps, photographs),
+where the `pdfjs` + `canvas` path in `extract-figure.ts` fails with
+`Error: Image or Canvas expected`. For medical-imaging papers this is the common case,
+not the exception, so treat PyMuPDF as required, not optional.
+
 ### Image generation & no-API-key path
 
 Image generation needs either a `GOOGLE_API_KEY`/`GEMINI_API_KEY` (Gemini API) or the
@@ -234,6 +240,15 @@ Multiple sources supported: text, images, files from conversation.
    npx -y bun ${SKILL_DIR}/scripts/detect-figures.ts --pdf source-paper.pdf --output figures.json
    ```
    This outputs a JSON file with all detected figures/tables, their page numbers, and captions.
+
+   **Caption detection is heuristic — verify, especially the first-page teaser.** The
+   line-anchored `Figure N` matcher reliably finds captions that sit on their own line
+   (single-column layouts), but **misses figures whose caption is interleaved with body
+   text on a two-column first page** — which is often the paper's most important
+   architecture/overview figure. After running detect-figures, cross-check the source's
+   `Figure 1` explicitly: if the paper's text references a `Figure N` that is absent from
+   `figures.json`, add it manually via an `// IMAGE_SOURCE` block and extract it with the
+   PyMuPDF fallback. Do not assume `figures.json` is complete.
 
 ### Step 2: Generate Outline Variants
 
