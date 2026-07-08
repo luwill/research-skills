@@ -21,6 +21,7 @@ unit-tested; `extract_from_pptx` is the thin python-pptx adapter.
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 
@@ -125,13 +126,40 @@ def expects_figure(s) -> bool:
     return bool(s.get("figure") and s["figure"].get("src"))
 
 
+def absent_figures(deck, base_dir) -> set:
+    """The set of figure `src`s referenced by the deck whose image asset is *not on disk* under
+    `base_dir` (the deck.json's directory) — i.e. build products missing from a clean clone.
+
+    Figure crops are regenerated build products (git-ignored, and some are hand re-cropped), so a
+    fresh clone won't have them. When the asset is genuinely absent, the exporter can't embed a
+    picture and the resulting `missing-figure` is an environment gap, not an export regression — we
+    degrade it to a warning (skip) instead of a hard parity failure. If the asset IS present but the
+    picture is still missing, that's a real bug and stays blocking."""
+    absent = set()
+    for s in deck.get("slides", []) or []:
+        if not expects_figure(s):
+            continue
+        src = s["figure"]["src"]
+        if re.match(r"^https?:", src):
+            continue  # remote asset — presence can't be checked here; treat as expected
+        candidates = [os.path.join(base_dir, src), os.path.join(base_dir, "deck", src)]
+        if not any(os.path.exists(p) for p in candidates):
+            absent.add(src)
+    return absent
+
+
 def expects_table(s) -> bool:
     return s.get("layout") == "results-table" and bool(s.get("table"))
 
 
-def check_parity(deck, extracted) -> list[dict]:
+def check_parity(deck, extracted, absent=frozenset()) -> list[dict]:
     """Pure comparison. `extracted` = per-slide dicts {text, notes, has_picture, has_table}
-    (from extract_from_pptx). Returns a list of parity findings (empty = faithful)."""
+    (from extract_from_pptx). Returns a list of parity findings (empty = faithful).
+
+    `absent` is the set of figure `src`s whose image asset is missing on disk (see
+    `absent_figures`). A slide whose figure is in `absent` gets a NON-blocking
+    `missing-figure-skipped` finding (marked `skipped=True`) instead of a blocking `missing-figure`,
+    so a clean clone without the regenerated crops degrades gracefully instead of hard-failing."""
     findings = []
     slides = deck.get("slides", []) or []
     if len(slides) != len(extracted):
@@ -162,8 +190,13 @@ def check_parity(deck, extracted) -> list[dict]:
             findings.append({"slide": i + 1, "kind": "missing-notes",
                              "detail": "speaker notes not native in pptx"})
         if expects_figure(s) and not ex.get("has_picture"):
-            findings.append({"slide": i + 1, "kind": "missing-figure",
-                             "detail": f'figure {s["figure"]["src"]} has no picture shape'})
+            src = s["figure"]["src"]
+            if src in absent:
+                findings.append({"slide": i + 1, "kind": "missing-figure-skipped", "skipped": True,
+                                 "detail": f'figure {src} not on disk (build product absent) — skipped'})
+            else:
+                findings.append({"slide": i + 1, "kind": "missing-figure",
+                                 "detail": f'figure {src} has no picture shape'})
         if expects_table(s) and not ex.get("has_table"):
             findings.append({"slide": i + 1, "kind": "missing-table",
                              "detail": "results-table slide has no native table"})
@@ -206,12 +239,22 @@ def main(argv):
     ap.add_argument("pptx")
     args = ap.parse_args(argv)
     deck = json.load(open(args.deck_json, encoding="utf-8"))
-    findings = check_parity(deck, extract_from_pptx(args.pptx))
-    if not findings:
-        print(f"PPTX parity OK — {len(deck.get('slides', []))} slides, all native content preserved.")
+    base_dir = os.path.dirname(os.path.abspath(args.deck_json))
+    absent = absent_figures(deck, base_dir)
+    findings = check_parity(deck, extract_from_pptx(args.pptx), absent=absent)
+
+    skipped = [f for f in findings if f.get("skipped")]
+    blocking = [f for f in findings if not f.get("skipped")]
+
+    for f in skipped:
+        print(f"  WARN [slide {f['slide']}] {f['kind']}: {f['detail']}")
+
+    if not blocking:
+        note = f" ({len(skipped)} figure(s) skipped: assets not on disk)" if skipped else ""
+        print(f"PPTX parity OK — {len(deck.get('slides', []))} slides, all native content preserved.{note}")
         return 0
-    print(f"PPTX parity: {len(findings)} issue(s)")
-    for f in findings:
+    print(f"PPTX parity: {len(blocking)} issue(s)")
+    for f in blocking:
         print(f"  [slide {f['slide']}] {f['kind']}: {f.get('field', '')} {f['detail']}")
     return 1
 

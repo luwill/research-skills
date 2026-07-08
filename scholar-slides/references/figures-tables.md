@@ -15,7 +15,8 @@ localizes the tightest figure region and **strips page furniture** before the cr
   lying *entirely* within the page's top or bottom margin band (the running head — e.g.
   `Article  https://doi.org/…` — and the running foot / page number). Without this, the
   region-grower bridges the small gap between the header and the first panel and swallows the header
-  and DOI band into the crop (the PANDA bug: crop tops sat at y≈20pt, the page top).
+  and DOI band into the crop (a real regression on a journal-formatted medical paper: crop tops sat
+  at y≈20pt, the page top — see `TestStripMarginBands` for the pinned regression case).
 - "Entirely within" is deliberate: a figure that only *dips* into the margin straddles the band edge
   and is kept — furniture is removed, real figure content is never clipped.
 - Geometric and journal-agnostic (no journal-name allow-list). Runs in `detect()` before
