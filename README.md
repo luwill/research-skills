@@ -42,11 +42,12 @@ A systematic workflow for writing survey papers, systematic reviews, and literat
 
 ### Features
 
-- **Structured 7-phase workflow** for literature review writing
-- **Domain-specific templates** covering multiple medical imaging domains
-- **Standardized writing style** with hedging language and citation patterns
-- **Quality checklists** ensuring completeness
-- **Zotero integration** for reference management
+- **Structured 8-phase write-with-verify workflow** (review-type routing → paradigm capture → init → collect-and-verify → outline/taxonomy → per-claim-verified writing → peer review → submission prep)
+- **Review-type routing** — narrative / method survey / scoping / systematic, with matching reporting standards (PRISMA 2020, QUADAS-3, CLAIM 2024, TRIPOD+AI)
+- **Citation integrity as a hard gate** — every `[N]` verified for existence, author, number, and direction before commit; an executable audit script (`scripts/audit_manuscript.py`) locked by a fixture test suite
+- **Evidence-calibrated writing voice** — match claim strength to evidence; the default-hedging register is explicitly removed as an AI tell
+- **Domain-specific 3-axis method taxonomy** across multiple medical imaging domains
+- **Quality checklists** and **Zotero-first literature collection** with tool-portable fallbacks
 
 ### Supported Domains
 
@@ -62,24 +63,32 @@ A systematic workflow for writing survey papers, systematic reviews, and literat
 | Path | Description |
 |------|-------------|
 | `SKILL.md` | Main skill definition and quick reference |
-| `references/WORKFLOW.md` | Detailed 7-phase workflow guide |
+| `references/REVIEW_TYPES.md` | Review-type routing (narrative / scoping / systematic / meta-analysis) |
+| `references/REPORTING_STANDARDS.md` | PRISMA / QUADAS-3 / CLAIM / TRIPOD+AI standards fit |
+| `references/WORKFLOW.md` | Detailed 8-phase workflow guide |
+| `references/PARADIGM.md` | Phase 0 exemplar-review style capture |
+| `references/CITATION_INTEGRITY.md` | The citation verification protocol (5 rules) |
+| `references/HALLUCINATION_PATTERNS.md` | 10 LLM hallucination indicators to self-check |
 | `references/TEMPLATES.md` | Project file templates |
 | `references/DOMAINS.md` | Domain-specific method categories and datasets |
-| `references/MCP_SETUP.md` | ArXiv, PubMed, Zotero MCP configuration |
+| `references/MCP_SETUP.md` | ArXiv, PubMed, Zotero MCP configuration and fallbacks |
 | `references/QUALITY_CHECKLIST.md` | Pre-submission quality checklist |
+| `scripts/audit_manuscript.py` | Executable manuscript audit (with `scripts/tests/` fixtures) |
 
 ---
 
 ## Paper Slide Deck Skill
 
-Transform academic papers into professional slide decks with automatic figure extraction and AI-generated visuals.
+Transform any content into stylized, shareable slide **images** (AI-generated), with figure detection and high-resolution page rendering from PDFs.
+
+> Text, math, and data are baked into each image and **not editable** — for a faithful, editable academic talk (组会/答辩/results-heavy) use **scholar-slides** instead.
 
 ### Features
 
-- **Auto figure detection** from PDF papers
-- **Smart figure-to-slide mapping** based on caption analysis
+- **Caption-based figure detection** from PDF papers (locates the page; human confirmation recommended for dense two-column layouts)
+- **Figure-to-slide mapping** with full-page high-res render + template container (not per-figure bbox cropping)
 - **17 visual styles** (academic-paper, sketch-notes, minimal, etc.)
-- **Gemini API integration** for AI slide generation
+- **Gemini API integration** (`gemini-3-pro-image`) for AI slide generation, with a post-generation garbled-text proofread pass
 - **PPTX/PDF export** with merge scripts
 
 ### Workflow
@@ -113,15 +122,16 @@ Transform academic papers into professional slide decks with automatic figure ex
 
 ## Research Proposal Skill
 
-Generate high-quality academic research proposals for PhD applications following Nature Reviews-style academic writing conventions.
+Generate high-quality academic research proposals — PhD applications, research plans, 研究计划书 / 开题报告 — following Nature Reviews-style academic writing conventions.
 
 ### Features
 
-- **Structured 5-phase workflow**: Requirements → Literature → Outline → Content → Output
-- **Multi-source literature integration**: WebSearch, Zotero MCP, arXiv, PubMed
+- **Structured 5-phase workflow** with a **write-with-verify** content stage: Requirements → Literature (+verification gate) → Outline (approval red line) → Content (section-by-section) → Output
+- **Citation-integrity guardrails**: every reference verified to exist (DOI/PMID/arXiv or Zotero) with author and year matching the source — unverifiable entries are flagged, never fabricated
+- **Multi-source literature integration**: WebSearch, Zotero MCP, arXiv, PubMed (with tool-portable fallbacks)
 - **Bilingual support**: English and Chinese (中文)
-- **Domain adaptation**: STEM, Humanities, Social Sciences
-- **Academic writing style**: Prose-based with hedging language, minimum 40 references
+- **Domain adaptation**: STEM (incl. computational / ML / AI-for-Science), Humanities, Social Sciences
+- **Academic writing style**: prose-based, evidence-calibrated language; reference count follows the argument (no padding quota)
 
 ### Workflow
 
@@ -139,6 +149,7 @@ Generate high-quality academic research proposals for PhD applications following
 | `references/STRUCTURE_GUIDE.md` | Section-by-section writing guide |
 | `references/DOMAIN_TEMPLATES.md` | STEM vs Humanities differences |
 | `references/WRITING_STYLE_GUIDE.md` | Nature Reviews academic writing style |
+| `references/CITATION_INTEGRITY.md` | Reference verification protocol (5 rules, author-year style) |
 | `references/QUALITY_CHECKLIST.md` | Quality verification checklist |
 | `references/LITERATURE_WORKFLOW.md` | Literature collection workflow |
 | `assets/proposal_scaffold_en.md` | English template scaffold |
@@ -147,7 +158,7 @@ Generate high-quality academic research proposals for PhD applications following
 ### Output
 
 - Target: 2,000-4,000 words (default ~3,000)
-- Minimum 40 references
+- References: count follows the argument (typically 25–50; no minimum, no padding), each verified
 - 3-5 figure suggestions
 - Markdown format (convertible to DOCX/PDF via pandoc)
 
