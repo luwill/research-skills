@@ -94,7 +94,7 @@ This is where Nature/Science decks are won or lost.
   is a smell — the deck is telling, not showing. Prefer assertion-evidence, results-table, and
   redrawn charts over bullets. This is enforced deterministically: `qa.layoutMix(deck)` computes the
   ratio and `qa_report` emits a P3 nudge when bullet-ratio > 1/3 (and when ≥4 identical layouts run
-  consecutively). The worked conference deck (`out/pancreatic_conf/`) is 0% bullets.
+  consecutively). The worked conference deck (`out/deepseek_conf/`) is 0% bullets.
 - **Rhythm.** No 3 consecutive slides of the same layout; section dividers break long runs.
 - **Cover & close.** Title and references/questions slides get the same design care as the middle —
   they book-end the talk and set expectation.

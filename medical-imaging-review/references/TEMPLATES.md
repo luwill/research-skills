@@ -219,18 +219,18 @@ For each section, micro-workflow (per CITATION_INTEGRITY.md):
 - [ ] Conclusion
 - [ ] References (cross-checked with body)
 
-## Phase 5: Multi-Agent Peer Review
+## Phase 5: Multi-Perspective Peer Review
 **Status**: [Not Started / In Progress / Complete]
 
+- [ ] Run bundled `<skill_dir>/scripts/audit_manuscript.py` and save report (seeds the ref-checker pass)
 - [ ] Run `style-reviewer` pass
 - [ ] Run `ref-checker` pass
 - [ ] Run `peer-reviewer` pass
 - [ ] Run `fact-checker` pass
 - [ ] If systematic/scoping: run `methods-reviewer` pass for PRISMA/reporting-standard fit
-- [ ] Run bundled `<skill_dir>/scripts/audit_manuscript.py` and save report
-- [ ] Synthesize 4 reports into 00_team_synthesis.md
-- [ ] Address all CRITICAL findings
-- [ ] Address HIGH findings agreed by ≥ 2 reviewers
+- [ ] Synthesize passes into 00_team_synthesis.md
+- [ ] **Zero unfixed hard factual errors** (nonexistent citation / wrong author / fabricated number / flipped direction / placeholder DOI / systematic label without methods) — every one fixed, regardless of count
+- [ ] Address HIGH findings agreed by ≥ 2 passes
 
 ## Phase 6: Submission Prep
 **Status**: [Not Started / In Progress / Complete]

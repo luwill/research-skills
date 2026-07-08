@@ -1,9 +1,9 @@
 ---
 name: medical-imaging-review
-description: Write peer-review-quality medical imaging AI reviews, including narrative reviews, method surveys, scoping reviews, and systematic reviews for segmentation, detection, classification, diagnosis, prognosis, and clinical translation across CT, MRI, X-ray, ultrasound, pathology, and related modalities. Use when the user asks for a "综述", review paper, literature review, systematic review, scoping review, survey paper, evidence map, or journal-submission manuscript in a medical-AI context. This skill routes the review type first, then enforces reporting-standard fit, fact-checking, citation integrity, tool-portable literature collection, and a flagship-review writing voice without template-filling hallucination.
+description: Use when the user asks to write a "综述", narrative review, method survey, scoping review, systematic review, meta-analysis, evidence map, or journal-submission review manuscript in a medical imaging AI context — segmentation, detection, classification, diagnosis, prognosis, or clinical translation across CT, MRI, X-ray, ultrasound, pathology, and related modalities. Not for revising an existing AI-drafted review draft (use ai-review-revision) or for original research.
 ---
 
-# Medical Imaging AI Literature Review Skill (v3.1.0)
+# Medical Imaging AI Literature Review Skill (v3.2.0)
 
 Produce comprehensive reviews that pass first-round peer review on factual grounds, not just structural grounds.
 
@@ -68,14 +68,15 @@ These phrases are AI-detector top features. Real flagship-review authors don't u
 
 ### Citations — every claim verified before commit
 
-Every `[N]` citation must satisfy four checks:
+Every `[N]` citation must satisfy these checks (the full 5-rule protocol is in [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md)):
 
-1. The cited paper **exists** (DOI / PMID resolves on PubMed or Crossref).
+1. The cited paper **exists** (DOI / PMID resolves on PubMed or Crossref) with **no placeholder DOI**.
 2. The **author list** matches the first-source (especially first and last author).
 3. The **numeric claim** in the body sentence (Dice, HR, sample size, etc.) appears in the cited paper's abstract or results section.
 4. The **directional claim** in the body sentence (higher/lower, increased/decreased) matches the source's stated direction.
+5. Clinical claims cite a **peer-reviewed primary source**, not a vendor white paper or regulatory letter.
 
-If any check fails, the citation is broken — fix before continuing. See [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) for the full protocol.
+If any check fails, the citation is broken — fix before continuing. This is a hard gate: even a single broken citation must be fixed before delivery.
 
 ### Method descriptions — read first, write after
 
@@ -88,7 +89,7 @@ Use this discipline instead:
 3. **Write** the method description from those notes, citing specific numbers and module names verbatim from the paper.
 4. **Verify** by spot-checking 1-2 of the numbers against the paper one more time before moving on.
 
-If you can't access the paper, do not write about its internal architecture or specific performance numbers. Cite it for the contribution-level claim only ("first to apply X to Y") and move on.
+If you can't access the paper, do not write about its internal architecture or specific performance numbers — and do not assert **priority or novelty** ("first to", "首个", "earliest", "novel"). Priority claims are strong, falsifiable, and frequently wrong; asserting one you haven't verified is a hallucination. Instead, cite it for a neutral, non-priority contribution ("applied X to Y") and, if useful, note the claim is unverified — or leave it out.
 
 ### Heading depth — match the target article type
 
@@ -204,30 +205,17 @@ Neutral catalogue is the LLM default and exactly what flagship review editors pu
 - **Figures**: typically 3-5 for narrative reviews; systematic/scoping reviews require a PRISMA-style flow diagram.
 - **References**: cite only what supports the argument. Quantity is downstream of substance — don't pad to a target count.
 - **Verdict sentences**: 3-5 across narrative/method surveys, clustered at axis-section ends.
-- **Audit report**: run the bundled `scripts/audit_manuscript.py` before delivery, resolving the script path relative to this skill directory.
+- **Audit report**: run the bundled `scripts/audit_manuscript.py` before delivery (resolve the path relative to this skill directory). The script is a **triage** tool — it flags likely issues from surface patterns; it does not prove any citation or number is correct. Delivery requires **both** a clean script pass (0 critical/high) **and** a manual source-level spot-check of quantitative and directional claims. A green script alone is not sufficient.
 
 ---
 
-## Heading Depth
+## Formatting Quick Reference
 
-See [Core Principles ▸ Heading depth](#heading-depth--match-the-target-article-type) above. Defaults:
+Full rationale is in [Core Principles](#core-principles) above; this is the at-a-glance recap.
 
-- Use max 2 heading levels in narrative body sections when possible.
-- Avoid number prefixes unless journal-required.
-- Use bold lead-in `**Topic.**` for deeper subsubsections.
-- Let systematic/scoping Methods follow PRISMA/journal conventions when needed.
-
----
-
-## Equations
-
-See [Core Principles ▸ Equations](#equations--in-a-box-not-in-body) above. All display equations go in Box 1 (or rare additional Boxes for specific protocols). Textbook formulas with no methodological insight should be described in prose, not displayed.
-
----
-
-## Vendor Names
-
-See [Core Principles ▸ Vendor names](#vendor-names--table-first-sparing-in-prose) above. Put vendor names in Table 3 by default; allow sparse body mentions only for necessary regulatory or comparative precision.
+- **Heading depth** — max 2 body levels (H2/H3); no number prefixes unless journal-required; deeper grouping via bold lead-in `**Topic.**`; systematic/scoping Methods may follow PRISMA/journal conventions. ([details](#heading-depth--match-the-target-article-type))
+- **Equations** — display equations (`$$…$$`) live in Box 1 (rarely additional Boxes); textbook formulas with no methodological insight go in prose, not inline. ([details](#equations--in-a-box-not-in-body))
+- **Vendor names** — Table 3 by default; sparse body mentions only where regulatory or comparative precision requires them. ([details](#vendor-names--table-first-sparing-in-prose))
 
 ---
 
@@ -256,7 +244,7 @@ See [Core Principles ▸ Vendor names](#vendor-names--table-first-sparing-in-pro
 Use source types in combination. Confirm which tools are available in the current environment before using tool-specific names.
 
 | Source | Best for | Preferred route | Fallback |
-|---|---|---|
+|---|---|---|---|
 | **ArXiv** | Methodological preprints, ML/AI advances | Available arXiv MCP or paper search | arXiv abstract/PDF URLs |
 | **PubMed** | Peer-reviewed clinical / validation studies | PubMed MCP or NCBI/PubMed search | PubMed URL by PMID |
 | **Zotero** | User's local library (closed-access journals) | Available Zotero MCP or local Zotero API | user-provided PDFs |
@@ -305,19 +293,15 @@ v3.0.0 was rewritten after the `coronary-cta-paper` draft exposed recurring fail
 
 v3.1.0 adds review-type routing, reporting-standard guidance, tool portability, softer structure rules, CCTA terminology correction, and an executable manuscript audit script.
 
+v3.2.0 hardens the guardrails: the audit script now detects author↔citation mismatches under standard "Author et al. [N]" typesetting and recognises internationalised reference headings (`## 参考文献`, etc.) so Chinese drafts no longer mis-flag every citation; a fixture test suite (`scripts/tests/`) locks these in. Hard factual errors are now zero-tolerance (not gated behind a "5-or-more" threshold), unverified priority/novelty claims are forbidden, Phase 5 peer review is rewritten as executable sub-agent passes, and DOMAINS.md gains a generative/multimodal (VLM, diffusion, promptable-segmentation) paradigm section.
+
+Consolidated fix ledger (v3.0.0 → v3.2.0):
+
 | Earlier failure | Current fix |
 |---|---|
-| Hedging mandate in Core Principles | Removed; replaced with "match voice to evidence" |
-| 80-120 reference count target | Removed; replaced with "cite what supports the argument" |
-| Method fill-in template | Removed; replaced with "read-first, write-after" discipline |
-| 10-flat method subsection taxonomy | Replaced with 3-axis grouping as the default for narrative method surveys |
-| QA = formal structural check | Replaced with per-claim verification embedded in Phase 4 |
-| No DOI / author / direction verification | Added as CITATION_INTEGRITY.md with 5 rules |
-| No hallucination self-check | Added as HALLUCINATION_PATTERNS.md |
-| Systematic-review label without systematic methods | Added review-type routing and PRISMA/QUADAS/CLAIM/TRIPOD guidance |
-| Hard-coded MCP assumptions | Added tool-adapter and API fallback guidance |
-| Numbered headings | Avoided by default; journal exceptions allowed |
-| Vendor names scattered | Table-first, sparse body mentions only when precision requires |
-| Equations inline | Confined to Box 1 only |
-| Verdict-free neutral catalogue | Required 3-5 verdict sentences |
-| No exemplar paradigm capture | Added Phase 0 PARADIGM.md |
+| Hedging mandate; 80-120 reference target | Removed — match voice to evidence; cite what supports the argument |
+| Method fill-in template; flat 10-subsection taxonomy | Read-first/write-after discipline; 3-axis grouping default |
+| Structural-only QA; no source verification | Per-claim verification (Phase 4) + CITATION_INTEGRITY 5 rules + HALLUCINATION_PATTERNS |
+| Systematic label without methods; hard-coded MCP names | Review-type routing (PRISMA/QUADAS/CLAIM/TRIPOD) + tool-adapter fallbacks |
+| Numbered headings; scattered vendors; inline equations; neutral catalogue | Bold lead-ins; Table-3-first; Box-1 equations; 3-5 required verdicts; Phase 0 PARADIGM |
+| Audit gate ineffective on standard/Chinese citations | Marker-anchored author check + i18n reference headings + fixture tests (v3.2.0) |

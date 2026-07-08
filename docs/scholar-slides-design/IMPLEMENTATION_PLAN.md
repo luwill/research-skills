@@ -1,7 +1,10 @@
 # IMPLEMENTATION_PLAN — `scholar-slides`
 
-Academic slide-deck Claude skill. Build spec: [`docs/03-design-proposal.md`](docs/03-design-proposal.md).
-Research basis: [`docs/01-landscape-research.md`](docs/01-landscape-research.md), [`docs/02-academic-needs.md`](docs/02-academic-needs.md).
+Academic slide-deck Claude skill. Build spec: [`03-design-proposal.md`](03-design-proposal.md).
+Research basis: [`01-landscape-research.md`](01-landscape-research.md), [`02-academic-needs.md`](02-academic-needs.md).
+
+> Development-history doc, kept in the project repo under `docs/scholar-slides-design/` — not
+> shipped inside the installable `scholar-slides/` skill.
 
 ## Locked decisions (2026-06-29)
 - **Backend:** reveal.js + KaTeX → vector PDF (Playwright). Editable PPTX & Beamer deferred.
@@ -165,7 +168,7 @@ is regressed on a multi-paper benchmark to avoid single-paper overfit.
 - `references/aesthetics-review.md`: 6-dimension scoreable rubric (hierarchy, typography, space,
   figures, color, consistency; 0–4 each; forced weakest-3 anti-inflation; run on *rendered pixels*
   with a different persona than generation). Runs after the integrity gate, never overrides it.
-- `docs/04-panda-aesthetic-audit.md`: scored PANDA baseline (~15/24; figures dim 1.5; bullet-ratio 36%)
+- `04-panda-aesthetic-audit.md`: scored PANDA baseline (~15/24; figures dim 1.5; bullet-ratio 36%)
   → ranked defect backlog mapped to milestones.
 - `assets/templates/deck-stage/tokens.css` (NEW): modular 1.25 type scale, 8pt spacing grid, line
   measure, figure-matting tokens. Wired into `build_deck.mjs` (loads before viewport-base + theme).

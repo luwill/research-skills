@@ -1,23 +1,23 @@
 ---
 name: research-proposal
 description: >
-  Generate academic research proposals for PhD applications.
-  Use when user asks to "write a research proposal", "create PhD proposal",
-  "generate research plan", "撰写研究计划", "写博士申请", "doctoral proposal",
-  or mentions specific research topics for PhD application. Supports STEM,
-  humanities, and social sciences with field-specific adaptations.
-  Follows Nature Reviews-style academic writing conventions.
-  Supports both English and Chinese output based on user preference.
+  Use when the user asks to write or draft a PhD / doctoral research proposal,
+  research plan, 研究计划书, or 开题报告 — a forward-looking plan of background,
+  gap, research questions, methodology, timeline, and significance, in English or
+  Chinese. Triggers: "write a research proposal", "PhD proposal", "doctoral
+  proposal", "研究计划书", "开题报告", "写博士研究计划". Not for backward-looking
+  literature reviews / 综述 / surveys (use medical-imaging-review), nor grant
+  forms bound to a funder's own template (国自然/NSF).
 metadata:
   author: user
-  version: "1.0.0"
+  version: "2.0.0"
 allowed-tools:
   - WebSearch
+  - WebFetch
   - Read
   - Write
   - Edit
   - AskUserQuestion
-  - Task
   - Glob
   - Grep
   - mcp__zotero__zotero_search_items
@@ -32,542 +32,194 @@ allowed-tools:
 
 # Research Proposal Generator
 
-Generate high-quality academic research proposals for PhD applications following Nature Reviews-style academic writing conventions.
+Generate a forward-looking academic research proposal — a plan for research not yet done — following flagship academic writing conventions, in English or Chinese.
 
-## Overview
+This skill produces the **first draft correctly**, not a template to be fixed later. Its single most important discipline is citation integrity: a proposal with a fabricated reference is an academic-integrity problem, not a style problem. Read [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) before Phase 2.
 
-This skill guides the generation of research proposals through a structured 5-phase workflow:
+## Core Principles
 
-1. **Requirements Gathering** - Collect research topic, domain, language preferences
-2. **Literature Collection** - Gather relevant literature from multiple sources
-3. **Outline Generation** - Create structured outline for user approval
-4. **Content Writing** - Generate full proposal based on approved outline
-5. **Output & Review** - Deliver Markdown file with quality checklist
+**Prose first.** Proposals read as flowing, connected paragraphs — not bulleted lists. Reserve lists for a focused set of research questions/objectives (2–4 items) and timeline milestones. Never enumerate contributions, methodology, background, or significance as bullets; narrate them. Full rules and examples: [references/WRITING_STYLE_GUIDE.md](references/WRITING_STYLE_GUIDE.md).
 
-**Target Output**: 2,000-4,000 words (default ~3,000 words) for PhD applications.
+**Every citation verified before it is committed.** Reference count follows the argument, never a quota — there is no minimum. A PhD proposal typically cites 25–50 sources (humanities often more); a tightly argued 25 beats a padded 45. Every reference must exist (DOI/PMID/arXiv resolves, or Zotero metadata), with author and year matching the source, before it enters the proposal. Unverifiable references are flagged `[UNVERIFIED]` and disclosed — never fabricated. See [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md).
+
+**Write with verification, not one-shot.** Draft section by section; verify each section's citations before moving to the next (Phase 4). Do not generate a full multi-section proposal with dozens of citations in a single pass — that is the structural cause of hallucinated references.
+
+**Hedge to the evidence.** Use tentative language ("aims to", "may", "is expected to") for proposed work and uncertain claims; state well-established facts plainly. Do not over-claim ("will prove", "revolutionize").
+
+**Avoid the LLM tells.** These phrases are AI-detector signatures — strip them: "Over the past decade, X has emerged as…", "In recent years,", "It is worth noting that", "plays a crucial/pivotal role", "has garnered significant attention", "delves into", "a testament to". Write specific openings grounded in the actual field instead of generic scene-setting.
+
+## Scenario Routing
+
+The default structure below targets **PhD/doctoral proposals and academic research plans** (Abstract → Introduction → Literature Review → Methodology → Timeline → Significance). Confirm the scenario in Phase 1 and adapt:
+
+| Request | Structure |
+|---|---|
+| PhD/doctoral proposal, research plan, 研究计划书 | Default structure (this skill) |
+| 开题报告 (thesis proposal / defense) | Default structure, but weight Literature Review and feasibility/existing-basis more heavily; keep methodology concrete |
+| Humanities dissertation proposal | Default + a **Chapter Outline** section (see [references/DOMAIN_TEMPLATES.md](references/DOMAIN_TEMPLATES.md)) |
+| 基金申请书 / 国自然 / NSF grant | **Different structure** (立项依据 / 研究内容与目标 / 研究方案与可行性 / 研究基础与工作条件 / 经费预算). Tell the user the default 5-section template is not a grant form; adapt headings to the funder's required template and confirm with the user before writing |
 
 ---
 
 ## Phase 1: Requirements Gathering
 
-Use `AskUserQuestion` to collect the following information:
+Use `AskUserQuestion` to collect:
 
-### Required Information
+- **Research topic / question** — core problem to investigate.
+- **Scenario** — PhD proposal / 开题报告 / research plan / grant (routes structure, see above).
+- **Academic domain** — STEM (and whether computational/ML — see [references/DOMAIN_TEMPLATES.md](references/DOMAIN_TEMPLATES.md)), Humanities, or Social Sciences.
+- **Output language** — English or 中文.
+- **Target word count** — default ~3,000 words; range 2,000–4,000 (humanities may extend to ~10,000).
+- **Optional** — target institution/supervisor; existing materials or a Zotero library to draw on.
 
-1. **Research Topic/Direction**
-   - What is the core research question or area?
-   - Any specific problems to address?
-
-2. **Academic Domain**
-   - STEM (Science, Technology, Engineering, Mathematics)
-   - Humanities (History, Philosophy, Literature, Languages)
-   - Social Sciences (Sociology, Psychology, Economics, Political Science)
-
-3. **Output Language**
-   - English
-   - 中文 (Chinese)
-
-4. **Target Word Count**
-   - Default: 3,000 words
-   - Range: 2,000-4,000 words (humanities may extend to 10,000)
-
-### Optional Information
-
-5. **Target Institution(s)**
-   - University/research group names
-   - Specific faculty members of interest
-
-6. **Existing Materials**
-   - User's prior research or publications
-   - Relevant literature already collected in Zotero
-
-### Example Questions
-
-```
-Questions to ask the user:
-
-1. "What is your research topic or direction? Please describe the core question or problem you want to investigate."
-
-2. "Which academic domain does your research belong to?"
-   - STEM (Science, Technology, Engineering, Mathematics)
-   - Humanities (History, Philosophy, Literature)
-   - Social Sciences (Sociology, Psychology, Economics)
-
-3. "What language should the proposal be written in?"
-   - English
-   - 中文 (Chinese)
-
-4. "Do you have a target word count? (Default: ~3,000 words)"
-
-5. "Are you applying to specific institutions or working with particular faculty?"
-
-6. "Have you uploaded relevant literature to your Zotero library that I should reference?"
-```
+If the topic is too vague to scope a methodology, ask focused clarifying questions before proceeding.
 
 ---
 
-## Phase 2: Literature Collection
+## Phase 2: Literature Collection (with verification gate)
 
-### Literature Sources Strategy
+Read [references/LITERATURE_WORKFLOW.md](references/LITERATURE_WORKFLOW.md) for search strategy and organization.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Literature Sources                    │
-├─────────────────────────────────────────────────────────┤
-│  General Info    →  WebSearch (trends, news, reviews)   │
-│  Open Access     →  arXiv, PubMed (preprints, OA papers)│
-│  Closed Access   →  Zotero MCP (user's uploaded papers) │
-└─────────────────────────────────────────────────────────┘
-```
+**Tool portability.** Confirm which tools are available before using tool-specific names. Prefer the user's Zotero library (via the `mcp__zotero__*` tools) for closed-access papers; use `WebSearch` for landscape/trends and `WebFetch` to open DOI / PubMed / arXiv pages and confirm metadata. If a Zotero/arXiv/PubMed MCP is not connected, fall back to `WebSearch` + `WebFetch`. Remind the user to add relevant closed-access papers to Zotero.
 
-### Using WebSearch
+Sources by role: `WebSearch` for trends, reviews, and terminology; `WebFetch` on arXiv / PubMed / publisher pages for open-access primary sources and metadata; Zotero MCP for the user's own library, annotations, and notes. For journal articles the **Crossref REST API** (`WebFetch https://api.crossref.org/works/<DOI>`) is the highest-signal existence+metadata check — it returns clean JSON (title / first author / year / venue), more reliable than parsing a publisher HTML page.
 
-Search for:
-- Recent review articles and meta-analyses
-- Research trends and emerging topics
-- News about breakthroughs in the field
-- Methodological advances
+Organize candidates by role: background/context, current state-of-the-art, gap-identifying, methodology, and related work.
 
-Example searches:
-```
-"{topic} systematic review 2024 2025"
-"{topic} research trends future directions"
-"{topic} methodology recent advances"
-```
+### Verification gate (do not skip)
 
-### Using Zotero MCP
+Before any source is eligible to be cited:
 
-**IMPORTANT**: Remind users to upload relevant closed-access literature to Zotero before starting.
+1. Verify each candidate's **existence, first author, and year** against a first source (DOI/PMID/arXiv page, or Zotero metadata) — Rules 1, 2, 5 of [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md).
+2. Only take specific findings/numbers from sources whose full text or abstract you actually accessed. Do not write internal results for a paper you could not open.
+3. Present the **verified candidate list** (title, author, year, source/DOI) to the user for a quick sanity check before outlining.
 
-#### Search User's Library
+Anything that cannot be verified does not enter the reference pool; if the user insists on a half-remembered source, flag it `[UNVERIFIED]`.
 
-```
-# Search by topic keywords
-Use: mcp__zotero__zotero_search_items
-Parameters: query = "{research topic keywords}"
-
-# Advanced search with filters
-Use: mcp__zotero__zotero_advanced_search
-Parameters: conditions based on author, title, year, tags
-
-# Semantic search for related papers
-Use: mcp__zotero__zotero_semantic_search
-Parameters: query = "{research question}"
-```
-
-#### Retrieve Paper Content
-
-```
-# Get full text content
-Use: mcp__zotero__zotero_get_item_fulltext
-Parameters: item_key = "{item key from search}"
-
-# Get user's annotations and highlights
-Use: mcp__zotero__zotero_get_annotations
-Parameters: item_key = "{item key}"
-
-# Get user's notes
-Use: mcp__zotero__zotero_get_notes
-Parameters: item_key = "{item key}"
-```
-
-### Literature Organization
-
-Organize collected literature into categories:
-1. **Background/Context** - Foundational papers establishing the field
-2. **Current State** - Recent advances and state-of-the-art
-3. **Research Gap** - Papers identifying limitations or open questions
-4. **Methodology** - Papers with relevant methods to adopt/adapt
-5. **Related Work** - Adjacent research areas for comparison
+**Non-interactive / headless runs.** If the skill is invoked without an interactive user (a background agent or pipeline), do not deadlock on step 3: record the verified candidate list inline in the deliverable (or a companion `citation_verification_log.md`) and continue. The recorded list is the audit trail in lieu of a live sanity check.
 
 ---
 
 ## Phase 3: Outline Generation
 
-### Proposal Structure by Domain
+Read [references/STRUCTURE_GUIDE.md](references/STRUCTURE_GUIDE.md) and [references/DOMAIN_TEMPLATES.md](references/DOMAIN_TEMPLATES.md) for section-by-section and domain guidance.
 
-Read the reference file for domain-specific guidance:
-- `references/STRUCTURE_GUIDE.md` - Detailed section guidelines
-- `references/DOMAIN_TEMPLATES.md` - STEM vs Humanities differences
-
-### Standard Outline Template
+### Standard Outline (default scenario)
 
 ```markdown
 # [Research Title]
 
-## Abstract (150-300 words, 5-10%)
-- Research problem summary
-- Research questions/objectives
-- Methodology overview
-- Expected significance
-
-## 1. Introduction (500-800 words, 15-20%)
-### 1.1 Background and Context
-### 1.2 Problem Statement
-### 1.3 Research Questions/Objectives
-### 1.4 Scope and Delimitations
-
-## 2. Literature Review (500-1000 words, 20-25%)
-### 2.1 Theoretical Framework
-### 2.2 Current State of Research
-### 2.3 Research Gap Analysis
-### 2.4 Positioning of This Study
-
-## 3. Methodology (500-800 words, 20-25%)
-### 3.1 Research Design
-### 3.2 Data Collection Methods
-### 3.3 Data Analysis Approach
-### 3.4 Validity and Limitations
-
-## 4. Timeline (200-300 words, 5-10%)
-### 4.1 Research Phases
-### 4.2 Key Milestones
-### 4.3 Gantt Chart (optional)
-
-## 5. Significance and Expected Contributions (200-400 words, 10-15%)
-### 5.1 Theoretical Contributions
-### 5.2 Practical Implications
-### 5.3 Broader Impact
-
-## References (minimum 40 references)
+## Abstract (150-300 words, 5-10%) — background, questions, methodology overview, significance
+## 1. Introduction (500-800 words, 15-20%) — background, problem, questions/objectives, scope
+## 2. Literature Review (500-1000 words, 20-25%) — framework, current state, gap, positioning
+## 3. Methodology (500-800 words, 20-25%) — design, data collection, analysis, validity/limitations
+## 4. Timeline (200-300 words, 5-10%) — phases, milestones, optional Gantt
+## 5. Significance and Expected Contributions (200-400 words, 10-15%) — theoretical, practical, broader impact
+## References — cite what the argument needs (see CITATION_INTEGRITY.md); no minimum, no padding
 ```
 
-**Note**: Do NOT include Appendix sections. All essential content should be integrated into the main body.
+Add a **Chapter Outline** section for humanities proposals. Do NOT include appendices — integrate essential content into the body.
 
-### User Confirmation
+### Approval gate (RED LINE)
 
-**CRITICAL**: Present the outline to the user and wait for confirmation before proceeding to content generation.
+**Present the outline and wait for explicit user approval before Phase 4. Do not start writing content on an unapproved outline.**
 
-```
-Present the generated outline and ask:
+Ask whether the structure, section emphasis, and scope are acceptable, and whether to add/remove/modify sections.
 
-"Here is the proposed outline for your research proposal:
+**If the user says "you decide" / "你看着办" / defers:** state the assumptions you are locking in (scenario, domain, section set, target length, language), present the concrete outline once more as the decision, and proceed only after that — treat silence-plus-deferral as approval of *that stated* outline, but still surface the assumptions so the user can veto.
 
-[Display outline with section titles and estimated word counts]
-
-Please review and let me know:
-1. Is the overall structure acceptable?
-2. Would you like to add, remove, or modify any sections?
-3. Should any section receive more/less emphasis?
-
-I will proceed with content generation once you approve the outline."
-```
+**If there is no interactive user at all** (headless/agent run): record the locked assumptions and the outline inline in the deliverable and treat that recorded outline as approved. This keeps the audit trail without deadlocking on an approval that no one can give.
 
 ---
 
-## Phase 4: Content Writing
+## Phase 4: Content Writing (write-with-verify)
 
-### Writing Style Guidelines
+Load the scaffold as the writing skeleton and fill it section by section:
 
-Read and apply: `references/WRITING_STYLE_GUIDE.md`
+- English → [assets/proposal_scaffold_en.md](assets/proposal_scaffold_en.md)
+- 中文 → [assets/proposal_scaffold_zh.md](assets/proposal_scaffold_zh.md)
 
-#### Key Principles
+Read [references/WRITING_STYLE_GUIDE.md](references/WRITING_STYLE_GUIDE.md) and apply it. Key hard rules from it: prose over lists; hedge to evidence; PEEL paragraphs (point → evidence+citation → explanation → link); define abbreviations on first use ("coronary CT angiography (CCTA)"); integrate citations into sentences.
 
-1. **Academic Register**
-   - Formal tone, avoid colloquialisms
-   - Third person preferred, limited first person plural ("we")
-   - Precise terminology
+**Write-with-verify loop — repeat per section:**
 
-2. **Prose-Based Writing Style** (CRITICAL)
+1. Draft the section as connected prose, placing `(Author, Year)` citations only from the Phase 2 verified pool.
+2. Immediately verify that section's citations: each in-text `(Author, Year)` has a matching References entry (Rule 3), and every directional/quantitative claim matches its source (Rule 4). See [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md).
+3. Self-check against the LLM tells (Core Principles) and the hallucination red flags in CITATION_INTEGRITY.md.
+4. Fix any failure in place before starting the next section. Do not accumulate unverified citations across sections.
 
-   **AVOID point-by-point enumeration.** Academic proposals should read as flowing, connected prose rather than bulleted lists or numbered items. Use transitional phrases and coherent paragraphs to present ideas.
+**Citation style by domain:** STEM/Social Sciences → APA (Author, Year); Humanities → MLA or Chicago; 中文 → GB/T 7714. Keep one style consistent throughout.
 
-   | Avoid | Use Instead |
-   |-------|-------------|
-   | Bullet points listing objectives | Integrated paragraph describing objectives with transitions |
-   | Numbered lists of contributions | Narrative prose explaining contributions in context |
-   | Tables for methodology steps | Flowing description of research design |
+**Figures:** suggest 3–5 figures at appropriate locations (not in the Abstract), each with a title, content description, and style note. Format and placement guidance is in [references/WRITING_STYLE_GUIDE.md](references/WRITING_STYLE_GUIDE.md).
 
-   **When lists ARE appropriate** (use sparingly):
-   - Research questions/objectives (as a focused set of 2-4 items)
-   - Timeline milestones (where tabular format aids clarity)
-   - Technical specifications that require precise enumeration
-
-   **Example transformation:**
-
-   ❌ Poor (point-by-point):
-   ```
-   The contributions include:
-   - Novel segmentation algorithm
-   - Multi-modal fusion framework
-   - Clinical validation study
-   ```
-
-   ✓ Good (prose-based):
-   ```
-   This research is expected to advance the field through several interconnected
-   contributions. First, the development of a novel segmentation algorithm will
-   enable automated plaque detection with accuracy surpassing current methods.
-   Building on this foundation, a multi-modal fusion framework will integrate
-   complementary imaging data to capture plaque characteristics inaccessible to
-   any single modality. Finally, rigorous clinical validation will establish
-   the prognostic value of these computational biomarkers for predicting
-   cardiovascular events.
-   ```
-
-3. **Hedging Language** (Academic Caution)
-
-   | Avoid | Use Instead |
-   |-------|-------------|
-   | "will prove" | "aims to demonstrate" |
-   | "definitely" | "likely", "potentially" |
-   | "is obvious" | "evidence suggests" |
-   | "proves" | "indicates", "demonstrates" |
-
-3. **Sentence Templates**
-
-   **Introducing Background:**
-   - "Over the past decade, [X] has emerged as a critical area of..."
-   - "Recent advances in [X] have opened new possibilities for..."
-
-   **Identifying Gaps:**
-   - "However, [X] remains poorly understood."
-   - "Despite these advances, significant challenges persist in..."
-   - "A critical gap exists in our understanding of..."
-
-   **Stating Objectives:**
-   - "This research aims to address [X] by..."
-   - "The primary objective of this study is to..."
-   - "This proposal seeks to investigate..."
-
-   **Methodology Justification:**
-   - "Building on previous work, this study proposes to..."
-   - "This approach was selected because..."
-   - "[Method] offers several advantages for studying [X]..."
-
-   **Expected Contributions:**
-   - "This work has the potential to advance..."
-   - "The findings may contribute to..."
-   - "This research could provide insights into..."
-
-4. **Transitions and Connectors**
-   - Addition: Moreover, Furthermore, In addition, Additionally
-   - Contrast: However, Nevertheless, Conversely, On the other hand
-   - Causation: Therefore, Consequently, As a result, Thus
-   - Emphasis: Importantly, Notably, Of particular significance
-   - Sequence: First, Subsequently, Finally, Following this
-
-5. **Paragraph Structure**
-   ```
-   Topic Sentence → Supporting Evidence (with citations) → Synthesis/Implications
-   ```
-   - 4-8 sentences per paragraph
-   - Clear logical progression
-   - Explicit transitions between paragraphs
-
-### Citation Formatting
-
-Based on domain:
-- **STEM**: APA style (Author, Year)
-- **Humanities**: MLA or Chicago style
-- **Social Sciences**: APA or Chicago style
-
-First mention of abbreviations: "coronary CT angiography (CCTA)"
-
-Integrate citations into text: "Recent studies (Smith et al., 2023; Jones, 2024) have demonstrated..."
-
-### Figure Suggestions
-
-**IMPORTANT**: Include suggestions for figures at appropriate locations throughout the proposal. Figures significantly enhance readability and demonstrate the applicant's ability to communicate complex ideas visually.
-
-#### Figure Placement Guidelines
-
-Insert figure suggestions using the following format:
-
-```markdown
-> **[Figure 1 Suggestion]** *Title: Overview of the proposed research framework*
-> Content: A flowchart or schematic diagram illustrating the three-phase research
-> design, showing data flow from imaging modalities through AI processing to
-> clinical outcomes. Include icons for CCTA/IVUS/OCT inputs, deep learning
-> modules, and output predictions.
-> Recommended style: Clean vector graphics with consistent color scheme.
-```
-
-#### Recommended Figure Types by Section
-
-| Section | Suggested Figure Type |
-|---------|----------------------|
-| **Introduction** | Conceptual diagram showing research scope and positioning |
-| **Literature Review** | Timeline of key developments; Taxonomy/classification of existing methods |
-| **Methodology** | Research framework flowchart; Network architecture diagram; Data processing pipeline |
-| **Timeline** | Gantt chart showing research phases and milestones |
-| **Significance** | Impact diagram showing theoretical and practical contributions |
-
-#### Figure Suggestion Principles
-
-1. **Strategic placement**: Suggest 3-5 figures for a 3,000-word proposal
-2. **Self-explanatory**: Each figure should convey key information without requiring extensive caption reading
-3. **Consistent style**: Recommend unified visual language (colors, fonts, icons)
-4. **Professional quality**: Suggest tools (e.g., Adobe Illustrator, draw.io, BioRender for biomedical)
-5. **Accessibility**: Recommend colorblind-friendly palettes and sufficient contrast
-
-### Language-Specific Considerations
-
-#### English Output
-- Follow standard academic English conventions
-- Use British or American English consistently
-- Maintain formal register throughout
-
-#### Chinese Output (中文)
-- 使用规范学术中文
-- 适当使用 hedging 语言:
-  - "本研究旨在探讨..." (not "本研究将证明...")
-  - "研究结果可能表明..." (not "研究结果必定显示...")
-  - "有望推进..." (not "肯定会推进...")
-- 保持正式学术语体
-- 参考文献格式遵循 GB/T 7714
+**中文 output:** 规范学术语体；hedging（"本研究旨在探讨…" 而非 "本研究将证明…"）；参考文献遵循 GB/T 7714。
 
 ---
 
 ## Phase 5: Output and Review
 
-### File Generation
+Save as `proposal_{topic_slug}_{YYYY-MM-DD}.md` in the user's working directory.
 
-Generate the proposal as a Markdown file:
+Verify against [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md). Before delivering, the **citation gate** must pass:
 
-```
-proposal_{topic_slug}_{YYYY-MM-DD}.md
-```
+- `grep -nE "xxx|XXXX|\[TBD\]|\[UNVERIFIED\]|10\.xxxx|\[.*占位.*\]"` returns 0 hits — or every remaining `[UNVERIFIED]` has been explicitly disclosed to the user and never presented as confirmed.
+- Every in-text `(Author, Year)` reconciles with the References list (no orphans either direction).
+- At least 20% of references, and every quantitative/directional claim, spot-checked against sources.
+- No placeholder `[brackets]` or "TBD" left in the body — **except** applicant-specific scaffold fields the user must personalize (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`) and `[Figure N Suggestion]` labels, which are intentional and may remain.
 
-Save to user's working directory or specified location.
-
-### Quality Checklist
-
-Read and apply: `references/QUALITY_CHECKLIST.md`
-
-Verify:
-
-#### Structure
-- [ ] All required sections present
-- [ ] Word counts within specified ranges
-- [ ] Logical flow between sections
-- [ ] Clear section headings
-
-#### Content
-- [ ] Research questions clearly stated
-- [ ] Literature review identifies specific gap
-- [ ] Methodology appropriate for research questions
-- [ ] Timeline realistic and detailed
-- [ ] Significance clearly articulated
-
-#### Academic Style
-- [ ] Formal academic tone throughout
-- [ ] Appropriate hedging language used
-- [ ] Smooth transitions between sections
-- [ ] No colloquialisms or informal expressions
-- [ ] **Prose-based writing** (minimal bullet points/lists)
-- [ ] Lists used ONLY where truly necessary (e.g., research questions, timeline)
-
-#### Figures
-- [ ] **3-5 figure suggestions** included at appropriate locations
-- [ ] Figure suggestions include title, content description, and style recommendations
-- [ ] Figures distributed across sections (not clustered)
-- [ ] Each figure serves a clear communicative purpose
-
-#### Citations
-- [ ] All claims supported by references
-- [ ] Citation format consistent
-- [ ] **Minimum 40 references** for PhD proposals
-- [ ] Recent literature included (~60% from last 5 years)
-- [ ] Seminal/foundational works cited where appropriate
-- [ ] Balance across different research groups/institutions
-
-#### Technical
-- [ ] No grammatical errors
-- [ ] Abbreviations defined on first use
-- [ ] Consistent terminology
-- [ ] Proper markdown formatting
-
-### Format Conversion Guidance
-
-Provide user with conversion instructions:
+Offer format conversion:
 
 ```bash
-# Convert to Word document
-pandoc proposal.md -o proposal.docx
-
-# Convert to PDF (requires LaTeX)
-pandoc proposal.md -o proposal.pdf
-
-# Convert to PDF with custom styling
-pandoc proposal.md -o proposal.pdf --template=academic.latex
+pandoc proposal.md -o proposal.docx        # Word
+pandoc proposal.md -o proposal.pdf         # PDF (needs LaTeX)
 ```
 
 ---
 
 ## Reference Files
 
-This skill uses the following reference documents:
-
-| File | Purpose |
-|------|---------|
-| `references/STRUCTURE_GUIDE.md` | Detailed section-by-section writing guide |
-| `references/DOMAIN_TEMPLATES.md` | STEM vs Humanities structural differences |
-| `references/WRITING_STYLE_GUIDE.md` | Nature Reviews academic writing style |
-| `references/QUALITY_CHECKLIST.md` | Complete quality verification checklist |
-| `references/LITERATURE_WORKFLOW.md` | Literature collection workflow details |
-| `assets/proposal_scaffold_en.md` | English template scaffold |
-| `assets/proposal_scaffold_zh.md` | Chinese template scaffold |
+| File | Read when |
+|------|-----------|
+| [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) | **Before Phase 2 and throughout Phase 4/5** — the 5 citation rules; non-negotiable |
+| [references/STRUCTURE_GUIDE.md](references/STRUCTURE_GUIDE.md) | Phase 3 — section-by-section writing guide |
+| [references/DOMAIN_TEMPLATES.md](references/DOMAIN_TEMPLATES.md) | Phase 1/3 — STEM (incl. computational/ML), humanities, social sciences differences |
+| [references/WRITING_STYLE_GUIDE.md](references/WRITING_STYLE_GUIDE.md) | Phase 4 — academic writing style, hedging, transitions, figures |
+| [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md) | Phase 5 — final verification before delivery |
+| [references/LITERATURE_WORKFLOW.md](references/LITERATURE_WORKFLOW.md) | Phase 2 — literature collection workflow |
+| [assets/proposal_scaffold_en.md](assets/proposal_scaffold_en.md) | Phase 4 — English writing skeleton |
+| [assets/proposal_scaffold_zh.md](assets/proposal_scaffold_zh.md) | Phase 4 — Chinese writing skeleton |
 
 ---
 
 ## Workflow Summary
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    Research Proposal Generation                   │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Phase 1: Requirements    [Interactive]                          │
-│     │     └─ Topic, Domain, Language, Word Count                 │
-│     ▼                                                            │
-│  Phase 2: Literature      [Automatic]                            │
-│     │     └─ WebSearch + Zotero MCP                              │
-│     ▼                                                            │
-│  Phase 3: Outline         [Interactive - User Approval Required] │
-│     │     └─ Generate outline → User confirms → Proceed          │
-│     ▼                                                            │
-│  Phase 4: Content         [Automatic - One-shot Generation]      │
-│     │     └─ Write all sections based on approved outline        │
-│     ▼                                                            │
-│  Phase 5: Output          [Delivery]                             │
-│           └─ Markdown file + Quality checklist + Conversion tips │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+Phase 1 Requirements (interactive) → Phase 2 Literature + verification gate → Phase 3 Outline + **approval red line** → Phase 4 Content, section-by-section **write-with-verify** → Phase 5 Output + citation gate + checklist.
 
 ---
 
 ## Error Handling
 
-### No Zotero Literature Found
-If user's Zotero library has no relevant papers:
-1. Inform user of the limitation
-2. Rely more heavily on WebSearch for open-access sources
-3. Suggest user upload relevant papers and retry
-
-### Insufficient Information
-If topic is too vague:
-1. Ask clarifying questions about specific aspects
-2. Suggest narrowing the research scope
-3. Provide examples of well-defined research questions
-
-### Word Count Constraints
-If content exceeds target:
-1. Prioritize essential sections (Introduction, Methodology)
-2. Condense literature review to key points
-3. Offer expanded version as separate file
+- **No Zotero results / MCP unavailable** — inform the user, fall back to `WebSearch` + `WebFetch` on open-access sources, suggest adding papers to Zotero and retrying.
+- **A reference cannot be verified / looks fabricated** — do not write it into the References list. Flag `[UNVERIFIED]` inline and tell the user; never invent a DOI or author list to complete it.
+- **Topic too vague** — ask clarifying questions; narrow scope; offer well-formed research-question examples.
+- **Over the word limit** — prioritize Introduction and Methodology; condense the literature review to the load-bearing citations; offer an expanded version as a separate file.
 
 ---
 
-## Notes
+## Version Notes
 
-- This skill is designed specifically for **PhD applications**
-- Default output is approximately **3,000 words**
-- Always **confirm outline with user** before content generation
-- Follow **Nature Reviews-style** academic writing conventions
-- Support **both English and Chinese** output
-- **Minimum 40 references** required for comprehensive literature coverage
-- **Include figure suggestions** at appropriate locations (3-5 figures recommended)
-- **NO appendices** in the output - keep all content in main body sections
-- **Prefer flowing prose** over bullet points and numbered lists
+v2.0.0 was rewritten after diagnosis found the v1.0.0 skill generated many references with **zero authenticity guardrails**, a one-shot generation step, a hard "minimum 40 references" gate that incentivized padding, and internally contradictory numbers.
+
+| Earlier failure (v1.0.0) | Current fix (v2.0.0) |
+|---|---|
+| No citation verification anywhere | Added [CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) with 5 rules; gates in Phase 2/4/5 |
+| Hard "minimum 40 references" | Removed; "cite what the argument needs; typically 25–50; never pad" |
+| Phase 4 = one-shot generation | Replaced with section-by-section write-with-verify |
+| No literature-verification gate before writing | Phase 2 verify-before-cite + user sanity check |
+| Contradictory numbers (40/30-50 refs, 60%/80% recency) | Unified: no minimum; ~60% recent where the field moves fast |
+| Scaffolds never loaded by the workflow | Phase 4 explicitly loads `assets/proposal_scaffold_{en,zh}.md` |
+| AI-tell sentence templates provided as models | Removed; added "avoid the LLM tells" guidance |
+| Outline approval implicit | Made a red line, with "你看着办" handling |
+| `Task` tool declared but unused; `WebFetch` missing | Removed `Task`; added `WebFetch` |
+| Coronary-imaging examples throughout | Diluted with cross-domain examples; added computational/ML sub-template |
+| Bulleted contributions in scaffolds vs prose-first rule | Scaffolds now demonstrate prose contributions/implications |

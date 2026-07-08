@@ -141,7 +141,7 @@ domain-tuned specialists has narrowed substantially but is not yet closed.
 
 ### Axis 3: Data regime
 - **Self-supervised pre-training**: masked-image-modeling on MRI
-- **Foundation models**: medSAM, BrainSAM
+- **Foundation models**: MedSAM / SAM-Med3D applied to brain MRI; brain-MRI-specific pretrained encoders
 - **Multi-modal fusion**: T1/T2/FLAIR fusion strategies
 - **Federated learning**: cross-institutional MRI federation
 
@@ -205,7 +205,7 @@ domain-tuned specialists has narrowed substantially but is not yet closed.
 
 ### Axis 3: Data regime
 - **Self-supervised pre-training**: SimCLR / MoCo / DINO on patches
-- **Foundation models**: PathLM, CONCH, UNI, Virchow
+- **Foundation models**: UNI, CONCH, Virchow, GigaPath, CHIEF (patch- and slide-level pathology FMs)
 - **Weakly-supervised**: from slide-level labels
 
 ### Tasks
@@ -279,6 +279,34 @@ When the domain is generic or your topic spans multiple modalities, use this uni
 - **Distance**: Hausdorff (HD, HD95), ASSD
 - **Topology**: clDice, Betti numbers
 - **Clinical**: Sensitivity, Specificity, AUC, PPV / NPV
+
+---
+
+## Generative & Multimodal Paradigms (2026 lens)
+
+The 3-axis structure above is segmentation-centric. Reviews written from 2025 onward increasingly need to treat the following as **first-class method/task families**, not footnotes. Fold them into the existing axes where they fit, or add them as their own §Methods subsection / a fourth "task paradigm" axis when the review is centrally about them.
+
+### Vision-language & multimodal LLMs
+- **Report generation**: image → structured radiology/pathology report (e.g. chest X-ray and CT report models).
+- **Visual question answering (VQA)** and interactive querying over medical images.
+- **Zero-/few-shot classification** via image-text contrastive models (CLIP-style medical encoders such as BiomedCLIP, PLIP/CONCH for pathology, CT/MRI-language models).
+- **Generalist medical multimodal LLMs**: models handling multiple modalities + text in one system (LLaVA-Med-style open models, and closed generalist systems).
+- Review caveats: benchmark contamination, hallucinated findings, and the report-generation metric problem (n-gram scores reward fluency, not clinical correctness — prefer clinical-efficacy / entity-level metrics).
+
+### Generative & diffusion models
+- **Image synthesis / augmentation**: diffusion and GAN generation for rare-class and cross-site augmentation.
+- **Cross-modality translation**: e.g. MRI↔CT, low-dose↔full-dose synthesis.
+- **Counterfactual / anomaly generation**: diffusion-based normative modeling for anomaly detection.
+- **Reconstruction & denoising**: diffusion priors for accelerated MRI / low-dose CT.
+- Review caveats: hallucinated anatomy in synthesized images, evaluation beyond FID (downstream-task utility, radiologist study), and data-leakage risk when synthetic and real data mix in splits.
+
+### Promptable / universal segmentation (SAM family)
+- Treat **promptable segmentation** as a distinct paradigm from task-specific U-Nets: SAM, MedSAM, SAM-Med2D/3D, SAM 2 (video/volumetric), and specialty adaptations.
+- Axes to compare: point/box/mask prompt modality, zero-shot vs fine-tuned, 2D-slice vs native 3D, interactive vs fully-automatic, and annotation-cost reduction claims.
+- Review caveat: "zero-shot" numbers are prompt-dependent — report the prompting protocol, not just the Dice.
+
+### Prognosis / outcome-prediction reviews
+Prognostic and outcome reviews rarely fit an architecture-first taxonomy. Prefer an **evidence-stage structure** (development → internal validation → external/multi-site validation → prospective/clinical-utility evidence → implementation), and appraise with TRIPOD+AI / PROBAST rather than segmentation metrics. Report discrimination *and* calibration (not AUC alone), and flag single-site development without external validation.
 
 ---
 

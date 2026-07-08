@@ -1,19 +1,12 @@
 ---
 name: scholar-slides
 description: >-
-  Generate faithful, presentation-ready academic slide decks from a research paper,
-  arXiv/DOI link, a topic, or an existing draft — with real vector equations (LaTeX/KaTeX),
-  extracted source figures and tables with citations, and a Zotero/BibTeX-grounded
-  reference slide. Use whenever the user wants to turn a paper or research topic into
-  slides for a lab meeting / journal club (组会), thesis or PhD defense (答辩), conference
-  talk, job talk, poster, or grant pitch; whenever they share a paper PDF / arXiv / DOI
-  and ask to "make slides / a talk / a presentation / 讲一下这篇论文 / 做成 PPT"; whenever
-  they mention 组会汇报 / 论文分享 / 文献分享 / 答辩幻灯片 / 会议报告 / 学术报告; whenever they
-  need equation-heavy or results-heavy slides where numbers, citations, and figures must
-  stay accurate and editable. Triggers on EN ("journal club deck", "slides for my
-  defense", "conference talk from this paper") and 中文 ("把这篇论文做成幻灯片", "组会 PPT",
-  "答辩幻灯片"). NOT for marketing/pitch decks with no scholarly source, and NOT for
-  writing the paper itself.
+  Use when the user wants a research paper, arXiv/DOI link, or research topic turned into
+  academic slides — journal club / lab meeting (组会汇报), thesis defense (答辩幻灯片),
+  conference or job talk (学术报告), poster, or grant pitch — or shares a paper and asks to
+  "make slides / 做成 PPT / 讲一下这篇论文", especially when equations, numbers, figures, and
+  citations must stay accurate and editable. NOT for marketing/pitch decks with no scholarly
+  source, and NOT for writing the paper itself.
 ---
 
 # scholar-slides
@@ -24,10 +17,12 @@ persuasion, editability > flash.** Equations, tables, numbers, figures, and cita
 **true text/vector and traceable to the source** — never rasterized by an image model,
 never fabricated.
 
-Design rationale and the survey it is built on live in `docs/` (landscape research,
-academic-needs analysis, design proposal). Build plan: `IMPLEMENTATION_PLAN.md`.
+This skill is self-contained: the runtime pipeline, references, and scripts below are all you
+need. Design rationale and the survey it grew from (landscape research, academic-needs analysis,
+design proposal, build log) live in the project repo under `docs/scholar-slides-design/` and are
+**not shipped inside the skill**.
 
-## Locked stack (see docs/03-design-proposal.md §0)
+## Locked stack
 - **Render backend:** reveal.js + KaTeX → vector PDF (Playwright). Editable PPTX / Beamer later.
 - **Default deck type:** lab meeting / journal club (组会) — reading-first, high density.
 - **Citations:** Zotero-first (`mcp__zotero__*`), Crossref/arXiv/DOI fallback.
@@ -125,8 +120,9 @@ Stage 5 (export = Node; charts = Python):
 - `export_pptx.mjs` — `deck.json` → **editable PPTX** (native text/tables/notes; figures+equations as images).
 - `make_chart.py` — chart spec → **data-bound** Okabe–Ito plot (values plotted verbatim).
 
-Tests: `./.venv/bin/python -m pytest` (Python) and
-`node --test tests/deck.test.mjs tests/qa.test.mjs tests/notes.test.mjs tests/pptx.test.mjs` (Node).
+Tests: `./.venv/bin/python -m pytest` (Python; integration tests self-skip when
+`tests/fixtures/attention.pdf` is absent) and `node --test tests/*.mjs` (Node — deck, qa, notes,
+pptx, emphasis).
 
 ## Build status
 **Stages 1–4 plus the core of Stage 5 are implemented and validated** on real papers:

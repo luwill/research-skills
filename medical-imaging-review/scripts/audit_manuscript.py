@@ -22,12 +22,28 @@ PLACEHOLDER_PATTERNS = [
     r"\bxxx\b",
     r"\[TBD\]",
     r"x\):xxx",
-    r"doi:10\.[A-Za-z0-9_.-]+/x",
+    r"doi:\s*10\.[A-Za-z0-9_.-]+/x{2,}",  # require >=2 trailing 'x' so real DOIs like /xyz123 are not flagged
     r"to be added",
     r"to be declared",
     r"figure placeholder",
     r"\[Figure placeholder\]",
 ]
+
+# Headings (case-insensitive) that mark the start of a reference/bibliography section.
+# Internationalised so Chinese ("参考文献") and other variants are recognised; without
+# this a Chinese manuscript parses refs={} and every [N] is mis-flagged as missing.
+REFERENCE_HEADING_TITLES = (
+    "references",
+    "reference list",
+    "reference",
+    "bibliography",
+    "works cited",
+    "literature cited",
+    "参考文献",
+    "引用文献",
+    "参考资料",
+    "参考书目",
+)
 
 LLM_TELLS = [
     "has shown promising",
@@ -85,10 +101,38 @@ def is_table_line(line: str) -> bool:
     return stripped.startswith("|") and stripped.endswith("|")
 
 
+def heading_text(line: str) -> str | None:
+    """Return the normalised text of a Markdown ATX heading, or None if not a heading."""
+    match = re.match(r"^\s*#{1,6}\s+(.+?)\s*$", line)
+    if not match:
+        return None
+    text = match.group(1).strip()
+    # Drop trailing numbering, colons and full-width colons so "References:" / "参考文献：" match.
+    text = text.strip("：: .")
+    return text.strip()
+
+
+def is_reference_heading(line: str) -> bool:
+    text = heading_text(line)
+    if text is None:
+        return False
+    normalized = text.lower()
+    for title in REFERENCE_HEADING_TITLES:
+        if title.isascii():
+            # Allow trailing words for Latin headings ("References and Notes").
+            if normalized == title or normalized.startswith(title + " "):
+                return True
+        else:
+            # CJK titles must match exactly to avoid catching "文献综述" (literature review).
+            if text == title:
+                return True
+    return False
+
+
 def split_body_and_refs(lines: list[str]) -> tuple[list[str], list[str]]:
     ref_start = None
     for idx, line in enumerate(lines):
-        if re.match(r"^#{1,4}\s+References\b", line.strip(), flags=re.I):
+        if is_reference_heading(line):
             ref_start = idx
             break
     if ref_start is None:
@@ -148,31 +192,52 @@ def citation_numbers(text: str) -> list[int]:
     return nums
 
 
-def sentence_containing(lines: list[str], line_index: int, citation: int) -> str:
-    line = lines[line_index].strip()
-    marker = f"[{citation}]"
-    if marker not in line:
-        return line
-    fragments = re.split(r"(?<=[.!?])\s+", line)
-    for fragment in fragments:
-        if marker in fragment:
-            return fragment
-    return line
+# A name token: capitalised initial + Latin letters (incl. accents), hyphen or apostrophe.
+_NAME = r"[A-Z][A-Za-zÀ-ɏ'`-]+"
+
+# Author mention anchored directly on the citation marker. Requires an explicit
+# connector ("et al." or "and <Name>/colleagues") so method/dataset names such as
+# "U-Net [12]" are NOT misread as an author. Works under the skill's own house
+# style "Author et al. [N]" (with the space before the bracket) as well as
+# "Author et al.[N]" and "Author and Li [N]".
+AUTHOR_CITATION_RE = re.compile(
+    rf"({_NAME})"
+    rf"\s+(?:et\s+al\.?|and\s+(?:colleagues|co-?workers|{_NAME}))"
+    rf"\s*\[(\d+)\]"
+)
+
+
+def author_citations_in_line(line: str) -> list[tuple[str, int]]:
+    """Yield (first-author-surname-lowercased, citation-number) anchored on each [N]."""
+    return [
+        (match.group(1).lower(), int(match.group(2)))
+        for match in AUTHOR_CITATION_RE.finditer(line)
+    ]
+
+
+def reference_author_tokens(entry: str) -> set[str]:
+    """Capitalised tokens from the leading author zone of a reference entry.
+
+    A leading window is used because the author list precedes the title. Membership
+    (rather than strict first-token equality) tolerates both "Xu C, ..." (surname
+    first) and "Chenchu Xu, ..." (given-name first) journal styles.
+    """
+    head = entry[:80]
+    return {token.lower() for token in re.findall(_NAME, head)}
+
+
+def reference_mentions_author(entry: str, surname: str) -> bool:
+    tokens = reference_author_tokens(entry)
+    if not tokens:
+        return True  # cannot tell — do not flag
+    return surname in tokens
 
 
 def first_author_from_ref(entry: str) -> str | None:
     if not entry:
         return None
-    first_chunk = entry.split(".", 1)[0]
-    match = re.match(r"\s*([A-Z][A-Za-z'`-]+)", first_chunk)
-    return match.group(1).lower() if match else None
-
-
-def mentioned_author(sentence: str) -> str | None:
-    match = re.search(r"\b([A-Z][A-Za-z'`-]+)\s+et\s+al\.", sentence)
-    if match:
-        return match.group(1).lower()
-    return None
+    match = re.match(rf"\s*({_NAME})", entry)
+    return match.group(1) if match else None
 
 
 def scan_placeholders(lines: list[str]) -> Iterable[Finding]:
@@ -209,12 +274,12 @@ def scan_vendor_mentions(body_lines: list[str], vendors: list[str]) -> Iterable[
 
 
 def scan_equations(lines: list[str]) -> Iterable[Finding]:
+    # Box context is determined solely by the CURRENT heading. A passing body
+    # mention of "Box 1" must not silence detection for the rest of the section.
     box_context = False
     for idx, line in enumerate(lines, start=1):
         if re.match(r"^#{1,4}\s+", line):
             box_context = "box" in line.lower()
-        if re.search(r"\bbox\s+\d+", line, flags=re.I):
-            box_context = True
         if "$$" in line and not box_context:
             yield Finding("medium", "display_equation_outside_box", idx, "Display equation outside an obvious Box context.", line_excerpt(line))
 
@@ -225,20 +290,44 @@ def scan_citations(body_lines: list[str], refs: dict[int, str]) -> Iterable[Find
         for num in citation_numbers(line):
             body_nums.append((idx, num))
 
+    # No reference section recognised: emit ONE triage note instead of flagging every
+    # [N] as a missing reference (which would bury real signal on e.g. Chinese drafts).
+    if not refs:
+        if body_nums:
+            yield Finding(
+                "low",
+                "references_not_detected",
+                0,
+                f"No reference/bibliography section detected, but the body contains "
+                f"{len(body_nums)} [N] citation marker(s). Add or rename a section such "
+                f"as '## References' / '## 参考文献' so body citations can be reconciled "
+                f"against the bibliography.",
+                "",
+            )
+        return
+
     for idx, num in body_nums:
         if num not in refs:
             yield Finding("high", "missing_reference", idx + 1, f"Body citation [{num}] has no bibliography entry.", line_excerpt(body_lines[idx]))
-            continue
-        sentence = sentence_containing(body_lines, idx, num)
-        author = mentioned_author(sentence)
-        bib_author = first_author_from_ref(refs.get(num, ""))
-        if author and bib_author and author != bib_author:
+
+    # Author↔citation mismatch, anchored on each marker (works under "Author et al. [N]").
+    for idx, line in enumerate(body_lines):
+        for surname, num in author_citations_in_line(line):
+            entry = refs.get(num)
+            if not entry:
+                continue  # missing_reference already reported above
+            if reference_mentions_author(entry, surname):
+                continue
+            bib_author = first_author_from_ref(entry)
+            starts = f" (reference begins '{bib_author} ...')" if bib_author else ""
             yield Finding(
                 "high",
                 "author_citation_mismatch",
                 idx + 1,
-                f"Sentence mentions {author.title()} et al. but reference [{num}] appears to start with {bib_author.title()}.",
-                line_excerpt(sentence),
+                f"Body cites {surname.title()} et al. [{num}], but reference [{num}] "
+                f"does not list a '{surname.title()}' author{starts}. Verify the "
+                f"author↔citation match.",
+                line_excerpt(line),
             )
 
     ref_nums = set(refs)
@@ -259,24 +348,62 @@ def scan_duplicate_dois(refs: dict[int, str]) -> Iterable[Finding]:
             yield Finding("high", "duplicate_doi", 0, f"Duplicate DOI {doi} appears in references {nums}.", "")
 
 
+SELF_SYSTEMATIC_CLAIM_RES = [
+    # "We conducted/performed/present ... a systematic review / meta-analysis"
+    re.compile(
+        r"\b(?:we|the\s+authors?)\b[^.\n]{0,80}?"
+        r"\b(?:conduct(?:ed)?|perform(?:ed)?|present(?:ed)?|report(?:ed)?|undert(?:ook|ake)|"
+        r"carr(?:y|ied)\s+out)\b[^.\n]{0,40}?\b(systematic\s+review|meta-?analysis)\b",
+        flags=re.I,
+    ),
+    # "This / the present / our systematic review ..." (tight — self-descriptive)
+    re.compile(r"\b(?:this|the\s+present|our)\s+(?:\w+\s+){0,2}?(systematic\s+review|meta-?analysis)\b", flags=re.I),
+    # "A systematic review was/were conducted/registered ..."
+    re.compile(
+        r"\b(systematic\s+review|meta-?analysis)\b[^.\n]{0,30}?\b(?:was|were)\s+"
+        r"(?:conducted|performed|undertaken|carried\s+out|registered)\b",
+        flags=re.I,
+    ),
+]
+
+
 def scan_systematic_support(lines: list[str]) -> Iterable[Finding]:
+    """Flag a systematic/meta-analysis *self-claim* that lacks methods support.
+
+    Only fires when the manuscript describes *itself* as systematic (title or an
+    explicit "we conducted a systematic review" statement). Merely referencing prior
+    systematic reviews ("earlier systematic reviews [3] focused on ...") is exempt.
+    """
     text = "\n".join(lines)
-    front_text = "\n".join(lines[:150])
-    lower = text.lower()
-    lower_for_claims = front_text.lower()
-    lower_for_claims = re.sub(r"\bnarrative\s+rather\s+than\s+a\s+systematic\s+review\b", "", lower_for_claims)
-    lower_for_claims = re.sub(r"\bnot\s+(?:intended\s+as\s+)?a\s+systematic\s+review\b", "", lower_for_claims)
-    lower_for_claims = re.sub(r"\bnot\s+(?:intended\s+as\s+)?a\s+meta-analysis\b", "", lower_for_claims)
-    lower_for_claims = re.sub(r"\bnot\s+(?:intended\s+as\s+)?a\s+scoping\s+review\b", "", lower_for_claims)
-    if not any(term in lower_for_claims for term in SYSTEMATIC_TERMS):
+    lower_full = text.lower()
+
+    # Strip negations first so "this is not a systematic review" is not a self-claim.
+    front = "\n".join(lines[:150])
+    for neg in (
+        r"not\s+(?:intended\s+as\s+)?(?:a\s+)?systematic\s+review",
+        r"not\s+(?:intended\s+as\s+)?(?:a\s+)?meta-?analysis",
+        r"rather\s+than\s+a\s+systematic\s+review",
+        r"narrative\s+rather\s+than",
+    ):
+        front = re.sub(neg, " ", front, flags=re.I)
+
+    title = lines[0].strip() if lines else ""
+    title_self_claim = bool(re.match(r"^#\s", title)) and bool(
+        re.search(r"\b(systematic\s+review|meta-?analysis)\b", title, flags=re.I)
+    )
+    body_self_claim = any(rgx.search(front) for rgx in SELF_SYSTEMATIC_CLAIM_RES)
+
+    if not (title_self_claim or body_self_claim):
         return
-    missing = [term for term in SYSTEMATIC_SUPPORT_TERMS if term.lower() not in lower]
+
+    missing = [term for term in SYSTEMATIC_SUPPORT_TERMS if term.lower() not in lower_full]
     if missing:
         yield Finding(
             "critical",
             "unsupported_systematic_claim",
             0,
-            "Systematic/meta-analysis language appears but methods support terms are missing: " + ", ".join(missing),
+            "Manuscript claims to be a systematic review / meta-analysis but methods "
+            "support terms are missing: " + ", ".join(missing),
             "",
         )
 
@@ -325,7 +452,21 @@ def main() -> int:
     parser.add_argument("--fail-on", choices=["none", "critical", "high", "medium", "low"], default="none")
     args = parser.parse_args()
 
-    text = args.manuscript.read_text(encoding="utf-8")
+    try:
+        text = args.manuscript.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        print(f"error: manuscript not found: {args.manuscript}", file=sys.stderr)
+        return 2
+    except IsADirectoryError:
+        print(f"error: expected a file but got a directory: {args.manuscript}", file=sys.stderr)
+        return 2
+    except UnicodeDecodeError:
+        print(f"error: manuscript is not valid UTF-8: {args.manuscript}", file=sys.stderr)
+        return 2
+    except OSError as exc:
+        print(f"error: could not read {args.manuscript}: {exc}", file=sys.stderr)
+        return 2
+
     lines = text.splitlines()
     body_lines, ref_lines = split_body_and_refs(lines)
     refs = parse_references(ref_lines)

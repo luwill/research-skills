@@ -1,3 +1,11 @@
+# Launcher / interface card for surfaces that advertise this skill (e.g. an
+# OpenAI-style assistant picker). It is metadata only — display name, one-line
+# blurb, and a suggested opening prompt — NOT a Claude Code sub-agent definition.
+#
+# It does NOT define the Phase 5 peer-review agents. Those are dispatched at
+# runtime with whatever agent/Task tool the environment provides; see
+# references/WORKFLOW.md "Phase 5: Multi-Perspective Peer Review" for the four
+# executable review passes and their checklists.
 interface:
   display_name: "Medical Imaging Review"
   short_description: "Write verified medical imaging AI reviews"

@@ -2,26 +2,57 @@
 generate-slides.py - Generate slide images using Gemini API
 
 Usage:
-    python generate-slides.py <slide-deck-dir> [--model MODEL]
+    python3 generate-slides.py <slide-deck-dir> [--model MODEL]
 
 Arguments:
-    slide-deck-dir    Directory containing prompts/ folder with slide prompts
+    slide-deck-dir    Directory containing a prompts/ folder with slide prompts
+                      (prompt files may be *.md or *.txt)
 
 Options:
-    --model MODEL     Gemini model to use (default: gemini-3-pro-image-preview)
+    --model MODEL     Gemini model to use (default: gemini-3-pro-image).
+                      Note: the older "gemini-3-pro-image-preview" id is
+                      deprecated now that Nano Banana Pro is GA — use the
+                      stable "gemini-3-pro-image" id instead.
 
 Environment:
     GOOGLE_API_KEY or GEMINI_API_KEY must be set
 
+Behaviour:
+    - Generated images are written to the deck ROOT directory (next to the
+      prompts/ folder), matching the SKILL.md file tree and the location where
+      extracted-figure slides are written, so a single merge step picks up both.
+    - Output extension follows the real image format returned by the model
+      (Gemini often returns image/jpeg even when PNG is requested), so JPEG
+      bytes are saved as .jpg — never mislabelled as .png.
+    - Idempotent: already-generated slides (any image ext, > 10 KB) are skipped.
+
 Example:
-    python generate-slides.py ./slide-deck/my-presentation --model gemini-3-pro-image-preview
+    python3 generate-slides.py ./slide-deck/my-presentation --model gemini-3-pro-image
 """
 
 import os
+import re
 import sys
 import time
 import argparse
 from pathlib import Path
+
+DEFAULT_MODEL = "gemini-3-pro-image"
+
+# Image extensions we consider a "generated slide"
+IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
+
+# Map response MIME type -> file extension
+MIME_TO_EXT = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/jpg": ".jpg",
+    "image/webp": ".webp",
+}
+
+# Slide image files look like: 01-slide-cover.png, 02-slide-intro.jpg, ...
+SLIDE_IMAGE_RE = re.compile(r"^\d+-slide-.*\.(png|jpg|jpeg|webp)$", re.IGNORECASE)
+
 
 def check_dependencies():
     """Check and install required dependencies."""
@@ -37,8 +68,44 @@ def check_dependencies():
         from google.genai import types
         return genai, types
 
-def generate_slide(client, types, model: str, prompt: str, output_path: Path, max_retries: int = 3) -> bool:
-    """Generate a single slide image with retry logic."""
+
+def ext_for_mime(mime_type: str) -> str:
+    """Return the correct file extension for a response MIME type."""
+    if not mime_type:
+        return ".png"
+    return MIME_TO_EXT.get(mime_type.strip().lower(), ".png")
+
+
+def output_with_ext(output_base: Path, ext: str) -> Path:
+    """Attach an extension to a base path whose slug may not contain dots."""
+    return output_base.parent / f"{output_base.name}{ext}"
+
+
+def existing_output(output_base: Path):
+    """Return an existing valid (>10KB) image for this slide, if any."""
+    for ext in IMAGE_EXTS:
+        candidate = output_with_ext(output_base, ext)
+        if candidate.exists() and candidate.stat().st_size > 10000:
+            return candidate
+    return None
+
+
+def list_prompt_files(prompts_dir: Path) -> list:
+    """List prompt files (*.md and *.txt), preferring .md when both exist."""
+    by_stem = {}
+    # Insert .txt first, then .md so .md overrides a same-named .txt.
+    for pattern in ("*.txt", "*.md"):
+        for prompt_file in prompts_dir.glob(pattern):
+            by_stem[prompt_file.stem] = prompt_file
+    return [by_stem[stem] for stem in sorted(by_stem)]
+
+
+def generate_slide(client, types, model: str, prompt: str, output_base: Path,
+                   max_retries: int = 3):
+    """Generate a single slide image with retry logic.
+
+    Returns the Path the image was written to on success, or None on failure.
+    """
 
     for attempt in range(max_retries):
         try:
@@ -53,6 +120,7 @@ def generate_slide(client, types, model: str, prompt: str, output_path: Path, ma
                 model=model,
                 contents=prompt,
                 config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE"],
                     image_config=types.ImageConfig(
                         aspect_ratio="16:9",
                         image_size="4K"
@@ -65,89 +133,115 @@ def generate_slide(client, types, model: str, prompt: str, output_path: Path, ma
                 for part in response.candidates[0].content.parts:
                     if hasattr(part, 'inline_data') and part.inline_data and part.inline_data.data:
                         image_data = part.inline_data.data
+                        mime_type = getattr(part.inline_data, "mime_type", None)
+                        ext = ext_for_mime(mime_type)
+                        output_path = output_with_ext(output_base, ext)
                         # Save image (data is already bytes)
                         output_path.parent.mkdir(parents=True, exist_ok=True)
                         with open(output_path, "wb") as f:
                             f.write(image_data)
                         size_kb = len(image_data) / 1024
-                        print(f"  Saved: {output_path.name} ({size_kb:.1f} KB)")
-                        return True
+                        print(f"  Saved: {output_path.name} ({size_kb:.1f} KB, {mime_type or 'image/png'})")
+                        return output_path
 
             print(f"  Warning: No image in response")
 
         except Exception as e:
             print(f"  Error: {e}")
             if attempt == max_retries - 1:
-                return False
+                return None
 
-    return False
+    return None
 
-def find_slides_to_generate(prompts_dir: Path, slides_dir: Path) -> list:
-    """Find slides that need generation (have prompts but no output or small output)."""
+
+def find_slides_to_generate(prompt_files: list, output_dir: Path) -> list:
+    """Find slides that need generation (prompts without a valid output)."""
     slides = []
 
-    for prompt_file in sorted(prompts_dir.glob("*.txt")):
+    for prompt_file in prompt_files:
         slide_name = prompt_file.stem
-        output_file = slides_dir / f"{slide_name}.png"
+        output_base = output_dir / slide_name
 
-        # Skip if output exists and is valid (> 10KB)
-        if output_file.exists() and output_file.stat().st_size > 10000:
+        # Skip if a valid output already exists (any image ext, > 10KB)
+        if existing_output(output_base):
             continue
 
         slides.append({
             "name": slide_name,
             "prompt_file": prompt_file,
-            "output_file": output_file,
+            "output_base": output_base,
         })
 
     return slides
 
+
+def list_existing_slides(output_dir: Path) -> list:
+    """List already-generated slide images in the output directory."""
+    return sorted(
+        p for p in output_dir.iterdir()
+        if p.is_file() and SLIDE_IMAGE_RE.match(p.name)
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate slide images using Gemini API")
     parser.add_argument("slide_deck_dir", help="Directory containing prompts/ folder")
-    parser.add_argument("--model", default="gemini-3-pro-image-preview",
-                        help="Gemini model to use (default: gemini-3-pro-image-preview)")
+    parser.add_argument("--model", default=DEFAULT_MODEL,
+                        help=(f"Gemini model to use (default: {DEFAULT_MODEL}). "
+                              "The '-preview' id is deprecated post-GA."))
     args = parser.parse_args()
 
-    # Check dependencies
-    genai, types = check_dependencies()
-
-    # Initialize paths
+    # Initialize paths. Generated images land in the deck ROOT so they sit
+    # alongside extracted-figure slides and are found by the merge scripts.
     deck_dir = Path(args.slide_deck_dir)
     prompts_dir = deck_dir / "prompts"
-    slides_dir = deck_dir / "slides"
+    output_dir = deck_dir
 
     if not prompts_dir.exists():
         print(f"Error: Prompts directory not found: {prompts_dir}")
         sys.exit(1)
 
+    # Enumerate prompt files (.md / .txt) and report what was found FIRST, so
+    # even an error-exit run tells the user which prompts were discovered.
+    prompt_files = list_prompt_files(prompts_dir)
+    print(f"Found {len(prompt_files)} prompt file(s) in {prompts_dir}:")
+    for prompt_file in prompt_files:
+        print(f"  - {prompt_file.name}")
+
+    if not prompt_files:
+        print("\nError: No prompt files found (expected *.md or *.txt in the "
+              "prompts/ directory). Nothing to generate.")
+        sys.exit(1)
+
     # Get API key
     api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("Error: GOOGLE_API_KEY or GEMINI_API_KEY environment variable not set")
+        print("\nError: GOOGLE_API_KEY or GEMINI_API_KEY environment variable not set")
         sys.exit(1)
 
-    # Initialize client
-    client = genai.Client(api_key=api_key)
-
-    # Create output directory
-    slides_dir.mkdir(parents=True, exist_ok=True)
-
     # Find slides to generate
-    slides = find_slides_to_generate(prompts_dir, slides_dir)
+    slides = find_slides_to_generate(prompt_files, output_dir)
 
     if not slides:
-        print("All slides already generated. Nothing to do.")
-        # List existing slides
-        existing = sorted(slides_dir.glob("*.png"))
+        print("\nAll slides already generated. Nothing to do.")
+        existing = list_existing_slides(output_dir)
         print(f"\nExisting slides ({len(existing)}):")
         for slide in existing:
             size_kb = slide.stat().st_size / 1024
             print(f"  - {slide.name} ({size_kb:.1f} KB)")
         return
 
-    print(f"Generating {len(slides)} slides using {args.model}...")
-    print(f"Output directory: {slides_dir}\n")
+    # Check dependencies only once we know there is work and a key is present.
+    genai, types = check_dependencies()
+
+    # Initialize client
+    client = genai.Client(api_key=api_key)
+
+    # Ensure output directory exists
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"\nGenerating {len(slides)} slides using {args.model}...")
+    print(f"Output directory: {output_dir}\n")
 
     success_count = 0
     failed_slides = []
@@ -159,7 +253,7 @@ def main():
         prompt = slide["prompt_file"].read_text(encoding="utf-8")
 
         # Generate slide
-        if generate_slide(client, types, args.model, prompt, slide["output_file"]):
+        if generate_slide(client, types, args.model, prompt, slide["output_base"]):
             success_count += 1
         else:
             failed_slides.append(slide["name"])
@@ -170,13 +264,16 @@ def main():
         print(f"\nFailed slides ({len(failed_slides)}):")
         for name in failed_slides:
             print(f"  - {name}")
+        print("Re-run this script to retry only the failed slides "
+              "(completed slides are skipped automatically).")
 
     # List all slides in output directory
-    all_slides = sorted(slides_dir.glob("*.png"))
+    all_slides = list_existing_slides(output_dir)
     print(f"\nTotal slides in output: {len(all_slides)}")
     for slide in all_slides:
         size_kb = slide.stat().st_size / 1024
         print(f"  - {slide.name} ({size_kb:.1f} KB)")
+
 
 if __name__ == "__main__":
     main()

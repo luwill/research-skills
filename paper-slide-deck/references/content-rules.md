@@ -86,10 +86,8 @@ Throughout the deck:
 | `bold-editorial` | High contrast, dark backgrounds, magazine impact |
 | `vector-illustration` | Flat vector, black outlines, retro colors |
 | `minimal` | Maximum whitespace, single accent, zen-like |
-| `storytelling` | Full-bleed imagery, cinematic, emotional |
-| `warm` | Soft gradients, rounded shapes, wellness palette |
 | `notion` | Dashboard aesthetic, clean data viz, SaaS-inspired |
 | `corporate` | Navy/gold, structured layouts, business polish |
-| `playful` | Vibrant coral/teal/yellow, dynamic, energetic |
 
-Full style specifications: `references/styles/<style>.md`
+Full style specifications: `references/styles/<style>.md` (17 styles — see the Style
+Gallery in SKILL.md for the complete list).

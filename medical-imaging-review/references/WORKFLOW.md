@@ -264,34 +264,46 @@ Every 5-6 paragraphs, pause and scan for the hallucination patterns (see [HALLUC
 
 ---
 
-## Phase 5: Multi-Agent Peer Review
+## Phase 5: Multi-Perspective Peer Review
 
 **Goal:** Before delivering to the user, run a 4-perspective audit.
 
-**Why:** Single-author self-review misses patterns. The 4 specialized agents catch what a single writer doesn't.
+**Why:** Single-pass self-review blends perspectives and misses patterns. Running four *separate* passes — each with one job and one lens — catches what a single read-through doesn't.
 
-**Actions:**
+**How to run (executable, not aspirational):**
 
-Launch a 4-perspective audit with multi-agent tools if available. If not, run the four passes serially and save each report.
+First run the bundled triage script and save its report — it seeds the ref-checker pass:
 
-| Teammate | Focus |
+```
+python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md \
+  --output review_outputs/audit_report.md --json
+```
+
+Then run the four passes below. These are not pre-defined sub-agents — dispatch them with whatever agent/Task tool the current environment provides (e.g. four parallel `general-purpose` sub-agents, one per row, each given the manuscript path + the focus checklist as its prompt). **If no sub-agent tool is available, run the four passes serially yourself**, one focused read per pass, saving each report separately. Do not collapse them into one blended read — the point is four disciplined single-lens passes.
+
+| Pass | Focus + concrete checklist to hand the agent (or run yourself) |
 |---|---|
-| `style-reviewer` | Compare against PARADIGM.md spec; identify register / structural drift |
-| `ref-checker` | Verify every `[N]` body↔bib match; spot-check author lists and DOIs |
-| `peer-reviewer` | Roleplay as flagship-tier journal reviewer; identify missing controversies, weak verdicts, scope drift |
-| `fact-checker` | Cross-check every quantitative claim (Dice, HR, sample size, p-value) against first-source |
+| **style-reviewer** | Compare against `PARADIGM.md`. Check heading depth ≤2, no numbered headings (`grep -nE "^#{2,4} [0-9]"`), no H4 in body (`grep -n "^#### "`), 3-5 verdict sentences present, no LLM-tell phrases, no neutral-catalogue stretch >3 paragraphs. Report register/structural drift. |
+| **ref-checker** | Start from `audit_report.md`. For a random 15-20 `[N]`: confirm body↔bib match, first/last author verbatim, DOI resolves (Crossref/PubMed), no placeholder strings. Resolve every `missing_reference`, `author_citation_mismatch`, and `duplicate_doi` the script flagged. |
+| **peer-reviewer** | Roleplay a flagship-tier journal reviewer. Identify missing controversies, negative/failed trials omitted, weak or absent verdicts, scope drift, and claims stronger than the cited evidence. Write a reviewer-style report with major/minor comments. |
+| **fact-checker** | Cross-check every quantitative claim (Dice, HR, OR, sample size, p-value) and every directional claim (higher/lower, increased/decreased) against the first-source. Flag any number or direction not verifiable in the cited paper. |
 
-For systematic/scoping reviews, add a fifth pass: `methods-reviewer`, focused on PRISMA items, search reproducibility, screening/extraction transparency, and risk-of-bias fit.
+For systematic/scoping reviews, add a fifth pass — **methods-reviewer** — focused on PRISMA/PRISMA-ScR items, search-string reproducibility, screening/extraction transparency, and risk-of-bias fit.
 
-After all reports return, synthesize into `review_outputs/00_team_synthesis.md`. For any issue flagged by at least 2 reviewers, treat as a hard fix. For single-reviewer flags, judge based on severity.
+After the passes return, synthesize into `review_outputs/00_team_synthesis.md`. Any issue flagged by ≥2 passes is a hard fix; judge single-pass flags by severity.
 
-**If the issues are minor** (handful of style nits, 1-2 minor citation issues): fix them in place and ship.
+**Delivery gate — hard factual errors are zero-tolerance.** A "hard factual error" is any citation to a nonexistent paper, wrong-author attribution on a real paper, fabricated or mismatched quantitative result, flipped directional claim, placeholder DOI, or a systematic-review label without systematic methods. **Every single one must be fixed before delivery — there is no acceptable count above zero.** These are reviewer-facing trust-killers; even one survives to reject the manuscript.
 
-**If the issues are major** (5 or more hard factual errors, 10 or more citation drift instances, missing major controversies, or a systematic-review claim without systematic methods): stop delivery and run a factual/method reset before continuing.
+Use the *number* of hard errors only to choose the repair strategy, never to decide whether to ship with some unfixed:
 
-**Deliverable:** 4 review reports + synthesis + a final-quality draft.
+- **Few, localized** (a handful of style nits, 1-2 isolated citation fixes): fix in place, re-run the audit script, then ship.
+- **Many or systemic** (5+ hard factual errors, 10+ citation-drift instances, missing major controversies, or a systematic-review claim without systematic methods): the draft has a systemic problem — stop and run a full factual/method reset before continuing, rather than patching case by case.
 
-**Time budget:** 1 day for the multi-agent review, plus fix time depending on findings.
+Either way, the draft ships only when the count of unfixed hard factual errors is **zero**.
+
+**Deliverable:** 4 review reports + synthesis + a draft with zero unfixed hard factual errors.
+
+**Time budget:** 1 day for the review passes, plus fix time depending on findings.
 
 ---
 
@@ -305,7 +317,7 @@ Prepare:
 - Presubmission inquiry templates
 - Cover letter template
 - Box vs body duplication scan
-- Figure realization (no placeholders at submission)
+- Figure realization (no `[Figure placeholder]` strings at submission — use the `paper-figures` skill if it is installed to render PRISMA flow diagrams, method taxonomies, architecture diagrams, forest/ROC plots, and graphical abstracts)
 - Citation format conversion (`[N]` → `<sup>N</sup>` depending on journal)
 - Self-check checklist
 - PRISMA / PRISMA-ScR / CLAIM / TRIPOD / QUADAS checklist files when the route requires them

@@ -9,6 +9,12 @@
  *   --pdf     Path to source PDF file (required)
  *   --output  Output JSON file path (optional, prints to stdout if omitted)
  *
+ * Detection is heuristic (text-based): it locates "Figure N"/"Table N" caption
+ * lines. To reduce false positives from inline references (e.g. "as shown in
+ * Figure 3"), when a label appears more than once the candidate with the
+ * longest caption text is chosen — real captions are descriptive, inline
+ * mentions are short. Always eyeball the page numbers before extracting.
+ *
  * Output JSON format:
  * {
  *   "figures": [
@@ -20,9 +26,7 @@
  */
 
 import { existsSync, writeFileSync } from "fs";
-import { resolve } from "path";
-// Use legacy build for Node.js compatibility
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import { resolve, join } from "path";
 
 interface FigureInfo {
   type: "figure" | "table";
@@ -41,6 +45,28 @@ interface DetectionResult {
 interface Args {
   pdf: string;
   output: string | null;
+}
+
+// Below this caption length a match is treated as a likely inline reference
+// rather than a real caption (used only when a richer candidate exists).
+const MIN_CAPTION_LENGTH = 12;
+
+/**
+ * Dynamically load a third-party dependency, printing an actionable install
+ * hint (instead of an opaque stack trace) if node_modules is missing.
+ */
+async function loadDep<T>(name: string, load: () => Promise<T>): Promise<T> {
+  try {
+    return await load();
+  } catch (err: any) {
+    const msg = String(err?.message ?? err);
+    if (err?.code === "ERR_MODULE_NOT_FOUND" || /Cannot find (module|package)/i.test(msg)) {
+      console.error(`\nError: missing Node dependency "${name}".`);
+      console.error(`Install the script dependencies first:\n  cd ${import.meta.dir} && npm install`);
+      process.exit(1);
+    }
+    throw err;
+  }
 }
 
 function parseArgs(): Args {
@@ -110,7 +136,8 @@ async function getPageText(page: any): Promise<string> {
 }
 
 /**
- * Parse figure and table references from text
+ * Parse figure and table references from text. Returns ALL candidate matches on
+ * the page (deduplication/selection happens globally in detectFigures).
  */
 function parseFiguresFromText(text: string, pageNum: number): FigureInfo[] {
   const figures: FigureInfo[] = [];
@@ -125,58 +152,44 @@ function parseFiguresFromText(text: string, pageNum: number): FigureInfo[] {
   // Patterns for table captions
   // Match: "Table I", "TABLE 1", "Table 1:"
   const tablePatterns = [
-    /(?:^|\n)\s*(?:Table|TABLE)\s+([IVX\d]+)[.:\s]+([^\n]+(?:\n(?![A-Z]{2,}|\d+\.|Fig|Table)[^\n]+)*)/gi,
+    /(?:^|\n)\s*(?:Table|TABLE)\s+([IVXLCDM\d]+)[.:\s]+([^\n]+(?:\n(?![A-Z]{2,}|\d+\.|Fig|Table)[^\n]+)*)/gi,
   ];
 
-  // Extract figures
-  for (const pattern of figurePatterns) {
-    let match;
-    while ((match = pattern.exec(text)) !== null) {
-      const number = match[1];
-      const caption = match[2].trim().replace(/\s+/g, " ").substring(0, 300);
-      const label = `Figure ${number}`;
-
-      // Avoid duplicates
-      if (!figures.some(f => f.label === label)) {
-        figures.push({
-          type: "figure",
-          number,
-          page: pageNum,
-          caption,
-          label,
-        });
+  const pushMatches = (patterns: RegExp[], type: "figure" | "table") => {
+    for (const pattern of patterns) {
+      let match;
+      while ((match = pattern.exec(text)) !== null) {
+        const number = match[1];
+        const caption = match[2].trim().replace(/\s+/g, " ").substring(0, 300);
+        const label = `${type === "figure" ? "Figure" : "Table"} ${number}`;
+        figures.push({ type, number, page: pageNum, caption, label });
       }
     }
-  }
+  };
 
-  // Extract tables
-  for (const pattern of tablePatterns) {
-    let match;
-    while ((match = pattern.exec(text)) !== null) {
-      const number = match[1];
-      const caption = match[2].trim().replace(/\s+/g, " ").substring(0, 300);
-      const label = `Table ${number}`;
-
-      // Avoid duplicates
-      if (!figures.some(f => f.label === label)) {
-        figures.push({
-          type: "table",
-          number,
-          page: pageNum,
-          caption,
-          label,
-        });
-      }
-    }
-  }
+  pushMatches(figurePatterns, "figure");
+  pushMatches(tablePatterns, "table");
 
   return figures;
+}
+
+/**
+ * Pick the best candidate for a label: prefer descriptive captions (>= MIN
+ * length); among the eligible pool, the longest caption wins. This favours the
+ * real caption line over short inline references on earlier pages.
+ */
+function pickBest(candidates: FigureInfo[]): FigureInfo {
+  const rich = candidates.filter(c => c.caption.trim().length >= MIN_CAPTION_LENGTH);
+  const pool = rich.length > 0 ? rich : candidates;
+  return pool.reduce((best, c) => (c.caption.length > best.caption.length ? c : best), pool[0]);
 }
 
 /**
  * Detect all figures and tables in a PDF
  */
 async function detectFigures(pdfPath: string): Promise<DetectionResult> {
+  const pdfjsLib = await loadDep("pdfjs-dist", () => import("pdfjs-dist/legacy/build/pdf.mjs"));
+
   const absolutePath = resolve(pdfPath);
 
   if (!existsSync(absolutePath)) {
@@ -185,10 +198,13 @@ async function detectFigures(pdfPath: string): Promise<DetectionResult> {
 
   console.error(`Loading PDF: ${absolutePath}`);
 
+  // Resolve the bundled standard fonts relative to THIS script, not the CWD.
+  const standardFontDataUrl = join(import.meta.dir, "node_modules", "pdfjs-dist", "standard_fonts") + "/";
+
   const loadingTask = pdfjsLib.getDocument({
     url: absolutePath,
     useSystemFonts: true,
-    standardFontDataUrl: "node_modules/pdfjs-dist/standard_fonts/",
+    standardFontDataUrl,
   });
 
   const pdfDoc = await loadingTask.promise;
@@ -197,8 +213,8 @@ async function detectFigures(pdfPath: string): Promise<DetectionResult> {
   console.error(`PDF loaded: ${totalPages} pages`);
   console.error("Scanning for figures and tables...\n");
 
-  const allFigures: FigureInfo[] = [];
-  const seenLabels = new Set<string>();
+  // Collect every candidate per label, then choose the best.
+  const candidatesByLabel = new Map<string, FigureInfo[]>();
 
   for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
     const page = await pdfDoc.getPage(pageNum);
@@ -206,13 +222,18 @@ async function detectFigures(pdfPath: string): Promise<DetectionResult> {
     const pageFigures = parseFiguresFromText(text, pageNum);
 
     for (const fig of pageFigures) {
-      // Only add if not already seen (captions may span pages)
-      if (!seenLabels.has(fig.label)) {
-        seenLabels.add(fig.label);
-        allFigures.push(fig);
-        console.error(`  Found: ${fig.label} on page ${fig.page}`);
-      }
+      const list = candidatesByLabel.get(fig.label) ?? [];
+      list.push(fig);
+      candidatesByLabel.set(fig.label, list);
     }
+  }
+
+  const allFigures: FigureInfo[] = [];
+  for (const [label, candidates] of candidatesByLabel) {
+    const best = pickBest(candidates);
+    allFigures.push(best);
+    const extra = candidates.length > 1 ? ` (chosen from ${candidates.length} mentions)` : "";
+    console.error(`  Found: ${label} on page ${best.page}${extra}`);
   }
 
   // Sort by type then number

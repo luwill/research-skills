@@ -335,11 +335,13 @@ PyMuPDF is more reliable for complex PDFs with embedded images.
 
 ### Gemini API Image Generation
 
-**Model**: `gemini-3-pro-image-preview`
+**Model**: `gemini-3-pro-image` (Nano Banana Pro, GA). The older
+`gemini-3-pro-image-preview` id is deprecated.
 
 **Config**:
 ```python
 config=types.GenerateContentConfig(
+    response_modalities=["IMAGE"],
     image_config=types.ImageConfig(
         aspect_ratio="16:9",
         image_size="4K"
@@ -350,7 +352,9 @@ config=types.GenerateContentConfig(
 **Response Handling**:
 - Image data is returned as raw bytes in `part.inline_data.data`
 - Do NOT base64 decode - write bytes directly to file
-- MIME type is `image/jpeg` even when requesting PNG output
+- MIME type is often `image/jpeg` even when requesting PNG output — save with the
+  **real** extension from `part.inline_data.mime_type` (JPEG → `.jpg`). Never write
+  JPEG bytes into a `.png` filename, or the PDF merge step will fail to embed it.
 
 **Network Issues**:
 - Server disconnections are common for large image generation
@@ -370,15 +374,23 @@ slide-deck/{topic-slug}/
 ├── source-paper.pdf          # Original PDF
 ├── figures.json              # Detection results
 ├── outline.md                # Final outline with IMAGE_SOURCE
-├── extracted/                # Raw PDF page extractions
+├── extracted/                # Raw PDF page extractions (pre-template)
 │   └── page-{N}.png
-├── prompts/                  # Generation prompts
-│   └── {NN}-slide-{name}.txt
-├── slides/                   # Final slide images
-│   └── {NN}-slide-{name}.png
+├── figures/                  # Extracted figure crops (pre-template)
+│   └── figure-{N}.png
+├── prompts/                  # Generation prompts (*.md)
+│   └── {NN}-slide-{name}.md
+├── {NN}-slide-{name}.png     # Final slide images live in the deck ROOT
+│                             # (both AI-generated and extracted-figure slides;
+│                             #  ext may be .jpg if the model returned JPEG)
 ├── {topic-slug}.pptx         # Merged PPTX
-└── generate-slides.py        # Generated script (optional)
+└── {topic-slug}.pdf          # Merged PDF
 ```
+
+**Important**: Generated slides and extracted-figure slides both land in the deck
+**root** (not a `slides/` subdirectory), so a single `merge-to-pptx.ts`/`merge-to-pdf.ts`
+call picks up everything. (The merge scripts also scan an optional `slides/` subdir for
+backward compatibility.)
 
 ### Common Issues and Solutions
 
@@ -388,5 +400,6 @@ slide-deck/{topic-slug}/
 | pdfjs "Image or Canvas expected" | Use PyMuPDF fallback |
 | Gemini "Server disconnected" | Retry with delay |
 | Small output files (~600 bytes) | Fix: Don't base64 decode response |
-| pdf-lib "Cannot embed PNG" | Check actual image format (may be JPEG) |
+| pdf-lib "Cannot embed PNG" | Save with real extension (JPEG→.jpg); merge now sniffs magic bytes |
+| `missing Node dependency "<name>"` | Run `cd scripts && npm install` |
 | merge-to-pdf fails | Use PPTX as primary output, convert externally |

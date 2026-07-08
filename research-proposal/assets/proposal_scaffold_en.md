@@ -268,9 +268,7 @@ This study employs a [quantitative/qualitative/mixed methods] approach, specific
 
 [Note any methodological innovations]
 
-This research is expected to contribute to [field] by:
-1. [Theoretical contribution 1]
-2. [Theoretical contribution 2]
+[Write this as connected prose, not a list. Narrate the contributions in context — e.g.: "This research is expected to advance [field] in two connected ways. First, [theoretical contribution 1, with why it matters]. Building on this, [theoretical contribution 2, and how it follows]."]
 
 ### 5.2 Practical Implications
 
@@ -282,9 +280,7 @@ This research is expected to contribute to [field] by:
 
 [Connect to real-world problems or needs]
 
-The findings may have implications for:
-- [Stakeholder/domain 1]: [How they benefit]
-- [Stakeholder/domain 2]: [How they benefit]
+[Write as prose, not bullets. Name the beneficiaries and how they benefit within a paragraph — e.g.: "The findings may inform [stakeholder 1]'s [decision/practice] by [mechanism], while offering [stakeholder 2] [specific benefit]."]
 
 ### 5.3 Broader Impact
 
@@ -302,9 +298,9 @@ The findings may have implications for:
 
 [Follow appropriate citation style: APA, MLA, or Chicago]
 
-**[Minimum 40 references for PhD proposal]**
+**[No minimum and no padding — cite what the argument needs; a PhD proposal typically cites 25–50 sources, humanities often more. Every entry must be verified to exist (DOI/PMID/arXiv or Zotero) with author and year matching the source. See references/CITATION_INTEGRITY.md.]**
 
-[Include mix of foundational works (~40%) and recent publications (last 5 years, ~60%)]
+[Include a mix of foundational works and recent publications (~60% from the last 5 years where the field moves fast)]
 
 [Ensure balance across different research groups and institutions]
 
