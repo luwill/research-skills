@@ -10,7 +10,7 @@ node scripts/qa_report.mjs out/<stem>/deck out/<stem>     # deckDir + sourceDir
 Writes `out/<stem>/deck/qa_report.json` and prints the report. Exit: `2` if any **P0**, `1`
 if any **P1** (review required), `0` if only P2/P3.
 
-## The three layers
+## The four layers
 1. **Integrity scan** (`lib/qa.mjs`, deck.json vs source paper text):
    - **Ungrounded number** — every number on a content slide must appear in the source paper
      text (`ingest.json` full_text). A number that does not is a likely fabrication
@@ -22,7 +22,15 @@ if any **P1** (review required), `0` if only P2/P3.
      unrendered `$math$` (P2), missing figure files (P1).
 3. **Render verification** (`verify_slides.mjs`, Playwright, per slide):
    - content overflow beyond the 1080 stage (P1), broken/empty images (P1), KaTeX errors
-     actually rendered (P1), sub-legible font (< 18px on stage — P2).
+     actually rendered (P1), sub-legible font (< 18px on stage — P2);
+   - deterministic aesthetics geometry (`lib/render_checks.mjs`): figure text projected below
+     the 12px legibility floor (P2, exact via figures.json `min_font_pt`, else a compression
+     heuristic) and canvas voids on fill-the-canvas layouts (P3) — details in
+     `references/aesthetics-review.md`.
+4. **Render review gate** (`renderReviewFindings` in `qa_report.mjs`):
+   - the 6-dimension rubric loop must have run and written `<deckDir>/aesthetics_report.json`;
+     a missing report is P3 `aesthetics-not-run`, a non-empty `rework` list is P2
+     `aesthetics-rework-open`. The rubric itself lives in `references/aesthetics-review.md`.
 
 ## Severity → action
 | sev | meaning | action |

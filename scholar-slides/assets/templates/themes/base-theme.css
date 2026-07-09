@@ -10,7 +10,7 @@
 .slide-inner { background: var(--paper); }
 
 /* ---- action title: a full-sentence assertion, not a label ---- */
-.s-title-bar { flex: 0 0 auto; margin-bottom: var(--s5); }
+.s-title-bar { flex: 0 0 auto; margin-bottom: var(--s4); }
 .s-action-title {
   font-family: var(--title-font);
   font-weight: 600;
@@ -57,8 +57,11 @@
 }
 /* Content hangs from the header (editorial top-anchor) — vertical centering created a dead band
    under the title on every text-light slide. Layouts that center on purpose (.s-ae, .s-equation,
-   .s-paper-title, .s-section) override this locally. */
+   .s-paper-title, .s-section, .s-results, .s-references, .s-critique) override this locally. */
 .s-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: flex-start; padding-top: var(--s2); }
+/* Lists own their spacing on the 8pt grid — the UA's 1em block margins would stack an extra
+   dead band between the title rule and the first item. */
+.s-body ul, .s-body ol { margin-block: 0; }
 .s-source { flex: 0 0 auto; margin-top: var(--s3); font-size: var(--fs-fine); color: var(--ink-soft); }
 .s-source .cite { font-variant-numeric: tabular-nums; }
 
@@ -111,6 +114,17 @@
 .s-ae .s-body { align-items: center; justify-content: center; gap: var(--s2); padding-top: 0; }
 .s-ae .s-figure { flex: 1 1 auto; }
 .s-ae .s-figure img { height: var(--fig-cap-ae, 560px); }   /* leave room for caption + annotation */
+/* hero mode (figure.hero): the caption folds into the source footer and annotations are banned
+   (validateSpec) — the reclaimed vertical budget goes straight to the image, and the
+   remaining chrome tightens to its minimum stand-off. */
+.s-ae--hero .s-figure img { height: var(--fig-cap-hero, 700px); }
+.s-ae--hero .s-title-bar { margin-bottom: var(--s2); }
+.s-ae--hero .s-body { gap: var(--s1); }
+/* Banner crops (aspect >= 2.2, probed at build → class "wide" + --fig-ar): the height-driven
+   default starves them, so size by the width budget instead; the min() keeps normal caps binding. */
+.s-figure img.wide { height: min(var(--fig-cap, 640px), calc(var(--fig-wide-w, 1382px) / var(--fig-ar, 2.2))); }
+.s-ae .s-figure img.wide { height: min(var(--fig-cap-ae, 620px), calc(var(--fig-wide-w, 1382px) / var(--fig-ar, 2.2))); }
+.s-ae--hero .s-figure img.wide { height: min(var(--fig-cap-hero, 700px), calc(var(--fig-wide-w, 1382px) / var(--fig-ar, 2.2))); }
 .s-annotation {
   flex: 0 0 auto; font-size: var(--fs-small); line-height: var(--lh-snug); color: var(--ink);
   background: var(--accent-soft); border-left: 5px solid var(--accent);
@@ -124,8 +138,12 @@
 .s-equation .eq-num { color: var(--ink-soft); font-size: var(--fs-small); }
 .s-equation .note { font-size: var(--fs-small); color: var(--ink-soft); max-width: var(--measure); text-align: center; }
 
-/* ---- results table (real data, never a picture) ---- */
+/* ---- results table (real data, never a picture) ----
+   The table centers in the body band (a top-hung table left a 400px void under it), and a
+   small table (rows<=6 AND cols<=5, classed by the renderer) gets the roomier type ramp. */
+.s-results .s-body { justify-content: center; }
 table.results { border-collapse: collapse; font-size: var(--fs-small); font-variant-numeric: tabular-nums; margin: 0 auto; }
+table.results.roomy { font-size: 30px; }
 table.results caption { caption-side: top; font-size: var(--fs-caption); color: var(--ink-soft); text-align: left; margin-bottom: var(--s2); }
 table.results th, table.results td { padding: var(--s1) var(--s3); text-align: right; }
 table.results thead th { border-bottom: 2px solid var(--ink); font-weight: 700; }
@@ -142,10 +160,14 @@ table.results tfoot td { border-top: 2px solid var(--ink); font-size: var(--fs-f
 .s-two-col .col-fig .s-figure { max-height: 100%; }
 .s-two-col .col-fig .s-figure img { height: auto; max-height: 720px; }  /* grid cell governs; no forced height */
 
-/* ---- critique / concerns (required for journal club) ---- */
+/* ---- critique / concerns (required for journal club) ----
+   Full-canvas 2-column grid: a single measure-capped column left half the stage empty
+   (horizontal void) and ran the last stanza into the footer. align-content centers the
+   rows in the body band, so short lists don't hang from the title either. */
+.s-critique .s-body { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--s6); row-gap: var(--s4); align-content: center; }
 .s-critique .pt { padding: var(--s2) 0; border-bottom: var(--hair-weight) solid var(--rule); }
 .s-critique .pt .head { font-size: 32px; font-weight: 700; color: var(--accent); }
-.s-critique .pt .body { font-size: var(--fs-small); color: var(--ink); margin-top: var(--s1); line-height: var(--lh-snug); max-width: var(--measure); }
+.s-critique .pt .body { font-size: var(--fs-small); color: var(--ink); margin-top: var(--s1); line-height: var(--lh-snug); }
 
 /* ---- discussion questions (required for journal club) ---- */
 .s-discussion ul { list-style: none; padding: 0; }
@@ -157,9 +179,14 @@ table.results tfoot td { border-top: 2px solid var(--ink); font-size: var(--fs-f
 .s-bullets ul { font-size: 32px; line-height: var(--lh-body); padding-left: var(--s5); max-width: var(--measure); }
 .s-bullets li { margin: var(--s2) 0; }
 
-/* ---- references ---- */
+/* ---- references ----
+   Vertically centered (a short list top-left in an empty canvas reads abandoned, not
+   restrained). Bottom-only li margins keep the two column tops on the same baseline;
+   ol.single (< 4 entries, set by the renderer) drops to one column. */
+.s-references .s-body { justify-content: center; }
 .s-references ol { font-size: 22px; line-height: var(--lh-body); columns: 2; column-gap: var(--s6); padding-left: var(--s4); }
-.s-references li { margin: var(--s1) 0; break-inside: avoid; }
+.s-references ol.single { columns: 1; max-width: 62%; }
+.s-references li { margin: 0 0 var(--s2); break-inside: avoid; }
 .s-references .flag { color: var(--c2); font-weight: 700; }
 
 /* integrity flags rendered inline must be visible, never hidden */

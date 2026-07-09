@@ -5,11 +5,17 @@ __pycache__/
 node_modules/
 # working output (crops, rendered decks) — regenerated, not source. But deck.json is the durable
 # SPEC (the benchmark manifest points at it), so keep those tracked while ignoring build products,
-# so a fresh clone can rebuild + regress every benchmark deck.
+# so a fresh clone can rebuild + regress every benchmark deck. figures.json (crop metadata incl.
+# min_font_pt for the QA legibility projection) and aesthetics_report.json (the render-review
+# gate's input) are likewise inputs to the regression, not build products.
 /out/*
 !/out/*/
 /out/*/*
 !/out/*/deck.json
+!/out/*/figures.json
+!/out/*/deck/
+/out/*/deck/*
+!/out/*/deck/aesthetics_report.json
 /tests/fixtures/*.pdf
 /tests/fixtures/*_source/
 .DS_Store

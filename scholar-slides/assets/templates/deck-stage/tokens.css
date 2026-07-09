@@ -67,6 +67,8 @@
      independent of the crop's pixel size or embedded DPI metadata). Flavors override. */
   --fig-cap:     640px;   /* figure-only slides */
   --fig-cap-ae:  620px;   /* assertion-evidence ceiling; flex-shrink yields when caption/annotation need room */
+  --fig-cap-hero: 700px;  /* hero mode: caption folded into the footer, annotation banned */
+  --fig-wide-w:  1382px;  /* width budget for banner crops (aspect >= 2.2; 80% of the content width) */
   --fig-bg:      #ffffff;
   --fig-mat:     #f5f6f8;   /* mat behind imported crops so varied bg edges don't jar */
   --fig-hair:    1px solid var(--rule, #d7dbe0);

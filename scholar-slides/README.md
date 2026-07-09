@@ -4,10 +4,9 @@ Turn a research paper (or an arXiv/DOI link, or a topic) into a **fidelity-first
 deck — one where every equation, table, number, figure, and citation stays **true vector/text and
 traceable to the source**, never rasterized by an image model and never fabricated.
 
-It is a Claude *skill*: the entry point and pipeline live in [`SKILL.md`](SKILL.md). The design
-rationale, the survey it grew from, and the build plan are development-history docs kept in the
-project repo under [`docs/scholar-slides-design/`](../docs/scholar-slides-design/) — outside the
-installable skill, which is self-contained.
+It is a Claude *skill*: the entry point and pipeline live in [`SKILL.md`](SKILL.md); the design
+rationale and the survey it grew from are in [`docs/`](docs/); the build plan is in
+[`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md).
 
 ## Why it exists
 
@@ -41,10 +40,10 @@ with a bilingual timing estimate, and data-bound charts. Bilingual EN / 中文.
 ## Worked examples (`out/`)
 
 <p align="center">
-  <img src="../docs/scholar-slides-design/gallery/glm5-cover.png" width="46%">
-  <img src="../docs/scholar-slides-design/gallery/glm5-scoreboard-table.png" width="46%"><br>
-  <img src="../docs/scholar-slides-design/gallery/glm5-pipeline-figure.png" width="46%">
-  <img src="../docs/scholar-slides-design/gallery/deepseek-conf-cover.png" width="46%">
+  <img src="docs/gallery/glm5-cover.png" width="46%">
+  <img src="docs/gallery/glm5-scoreboard-table.png" width="46%"><br>
+  <img src="docs/gallery/glm5-pipeline-figure.png" width="46%">
+  <img src="docs/gallery/deepseek-conf-cover.png" width="46%">
 </p>
 
 | deck (`out/`) | register | what it shows |
@@ -80,7 +79,7 @@ PingFang/Songti/YaHei). `install.sh` lists the manual steps if you'd rather run 
 ./.venv/bin/python scripts/prepare_source.py <pdf | arXiv-id | arXiv-URL> --out out/<name>
 # after authoring out/<name>/deck.json:
 node scripts/build_deck.mjs   out/<name>/deck.json out/<name>/deck      # reveal.js + print HTML
-node scripts/render_deck.mjs  out/<name>/deck/deck.html pdf out/<name>/deck/deck.pdf
+node scripts/render_deck.mjs  out/<name>/deck/deck.print.html pdf out/<name>/deck/deck.pdf
 node scripts/export_pptx.mjs  out/<name>/deck.json out/<name>/deck/deck.pptx
 node scripts/qa_report.mjs    out/<name>/deck                            # integrity + aesthetics gate
 ```
@@ -114,4 +113,4 @@ PPTX-parity regression + benchmark harness → two-axis scorecard). Hardened for
 first-day bugs are fixed (browser presenter view, graceful no-Chromium PPTX export, space-safe
 `file://` paths, deck.json spec validation), CJK renders cross-platform, and a clean-machine install
 is verified. Next: external blind eval, growing the benchmark toward 15+ papers. Deferred: Beamer
-export, OCR for scanned PDFs. See [`docs/scholar-slides-design/IMPLEMENTATION_PLAN.md`](../docs/scholar-slides-design/IMPLEMENTATION_PLAN.md).
+export, OCR for scanned PDFs. See [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md).

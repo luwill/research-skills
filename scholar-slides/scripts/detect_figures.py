@@ -324,6 +324,38 @@ def _page_letter_spans(page):
     return spans
 
 
+def _page_sized_spans(page):
+    """All text spans on a page with bbox + font size (pt) — legibility metadata."""
+    spans = []
+    for b in page.get_text("dict").get("blocks", []):
+        if b.get("type", 0) != 0:
+            continue
+        for line in b.get("lines", []):
+            for s in line.get("spans", []):
+                if (s.get("text") or "").strip() and s.get("size"):
+                    spans.append({"bbox": tuple(s["bbox"]), "size": float(s["size"])})
+    return spans
+
+
+def min_font_in_bbox(spans, bbox):
+    """Smallest font size (pt) among text spans whose center lies inside `bbox`.
+
+    Emitted as `min_font_pt` in figures.json so QA can project it to on-slide pixels
+    (min_font_pt * rendered_px / bbox_pt_width) and flag figures whose smallest embedded
+    label would render below the legibility floor. None when the figure has no text.
+    """
+    if not bbox:
+        return None
+    x0, y0, x1, y1 = bbox
+    sizes = []
+    for s in spans:
+        bx0, by0, bx1, by1 = s["bbox"]
+        cx, cy = (bx0 + bx1) / 2, (by0 + by1) / 2
+        if x0 <= cx <= x1 and y0 <= cy <= y1 and s.get("size"):
+            sizes.append(s["size"])
+    return round(min(sizes), 1) if sizes else None
+
+
 def _content_rects(page):
     """All localizable content on a page: text blocks + raster images + vector drawings.
 
@@ -366,6 +398,7 @@ def detect(pdf_path):
         # Drop running head/foot so a crop never carries the paper's "Article"/DOI band.
         cand = strip_margin_bands(_content_rects(page), prect)
         letter_spans = _page_letter_spans(page)
+        sized_spans = _page_sized_spans(page)
         page_h = prect[3] - prect[1]
         for c in caps:
             kind = c["kind"]
@@ -393,6 +426,7 @@ def detect(pdf_path):
                 "render_as": "data" if kind == "table" else "image",
                 "caption_bbox": list(c["caption_bbox"]),
                 "figure_bbox": list(bbox) if bbox else None,
+                "min_font_pt": min_font_in_bbox(sized_spans, bbox),
                 "panels": [{"label": p["label"], "bbox": list(p["bbox"])} for p in panels],
                 "bbox_source": "region" if bbox else "none",
                 "factual": True,  # figures/tables default factual: reuse, never redraw

@@ -2,7 +2,7 @@
 name = "scholar-slides"
 version = "0.1.0"
 description = "Academic slide-deck Claude skill — fidelity-first paper-to-slides"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 [tool.pytest.ini_options]
 pythonpath = ["scripts"]

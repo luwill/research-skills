@@ -30,11 +30,9 @@ regression signal. P1 (REVIEW) and P3 (nudges) are reported, not failed.
 
 ## The current set (seed)
 
-Six real decks across register and language (see `manifest.json`): a Transformer NLP deck
-(equation + real BLEU table); DeepSeek-V3.2 in two cuts — a dense journal-club deck (emphasis
-layer, figures, results table, critique) and a conference-theme re-cut (0% bullets, section
-rhythm, dark dividers); GLM-5 in English and 中文 journal-club form (ablation + scoreboard tables,
-CJK typography); and a 中文 smoke deck for full-width punctuation.
+Four real decks across register and language (see `manifest.json`): a Transformer NLP deck
+(equation + real BLEU table), and the PANDA medical paper in three forms — English journal-club,
+中文 journal-club (CJK), and a conference-theme cut (0% bullets, section rhythm).
 
 ## Growing toward 15+
 

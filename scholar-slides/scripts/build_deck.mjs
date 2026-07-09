@@ -35,11 +35,12 @@ function copyAssets(deckDir) {
 // Registered theme flavors. A deck picks one via meta.theme; unknown -> journal-club (never throw).
 const THEMES = { "journal-club": "journal-club.css", conference: "conference.css" };
 
-export function buildHtml(deck, mode = "interactive") {
+export function buildHtml(deck, mode = "interactive", ctx) {
   const lang = deck.meta?.language || "en";
   const title = (deck.meta?.title || "scholar-slides").replace(/[<>]/g, "");
   const themeCss = THEMES[deck.meta?.theme] || THEMES["journal-club"];
-  const slides = (deck.slides || []).map(renderSlide).join("\n");
+  // ctx.baseDir lets renderers probe copied figure files (e.g. wide-crop sizing).
+  const slides = (deck.slides || []).map((s) => renderSlide(s, ctx)).join("\n");
   const isPrint = mode === "print";
   const links = [
     isPrint ? "" : `<link rel="stylesheet" href="assets/reveal.css">`,
@@ -98,8 +99,8 @@ export function buildDeck(deckJsonPath, outDir) {
 
   const htmlPath = path.join(deckDir, "deck.html");
   const printPath = path.join(deckDir, "deck.print.html");
-  fs.writeFileSync(htmlPath, buildHtml(deck, "interactive"));
-  fs.writeFileSync(printPath, buildHtml(deck, "print"));
+  fs.writeFileSync(htmlPath, buildHtml(deck, "interactive", { baseDir: deckDir }));
+  fs.writeFileSync(printPath, buildHtml(deck, "print", { baseDir: deckDir }));
   return { deckDir, htmlPath, printPath, nSlides: (deck.slides || []).length };
 }
 

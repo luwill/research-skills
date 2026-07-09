@@ -1,0 +1,377 @@
+[
+  {
+    "id": "figure-1",
+    "kind": "figure",
+    "number": "1",
+    "label": "Figure 1",
+    "caption": "Figure 1 | Benchmark of DeepSeek-V3.2 and its counterparts. For HMMT 2025, we report the February competition, consistent with the baselines. For HLE, we report the text-only subset.",
+    "page": 1,
+    "render_as": "image",
+    "caption_bbox": [
+      73.94999694824219,
+      726.6682739257812,
+      521.3321533203125,
+      752.2816772460938
+    ],
+    "figure_bbox": [
+      56.35799789428711,
+      116.29412078857422,
+      526.2301025390625,
+      726.6682739257812
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-2",
+    "kind": "figure",
+    "number": "2",
+    "label": "Figure 2",
+    "caption": "Figure 2 | Attention architecture of DeepSeek-V3.2, where DSA is instantiated under MLA. The green part illustrates how DSA selects the top-k key-value entries according to the indexer.",
+    "page": 4,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      319.6993103027344,
+      524.4149780273438,
+      345.3126525878906
+    ],
+    "figure_bbox": [
+      70.86599731445312,
+      85.58688354492188,
+      524.4149780273438,
+      319.6993103027344
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-3",
+    "kind": "figure",
+    "number": "3",
+    "label": "Figure 3",
+    "caption": "Figure 3 | Inference costs of DeepSeek-V3.1-Terminus and DeepSeek-V3.2 on H800 clusters.",
+    "page": 6,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      283.1262512207031,
+      509.20458984375,
+      295.19061279296875
+    ],
+    "figure_bbox": [
+      70.86599731445312,
+      90.0206298828125,
+      518.6718139648438,
+      283.1262512207031
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-4",
+    "kind": "figure",
+    "number": "4",
+    "label": "Figure 4",
+    "caption": "Figure 4 | Thinking retention mechanism in tool-calling scenarios.",
+    "page": 9,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      642.6792602539062,
+      386.7498474121094,
+      654.74365234375
+    ],
+    "figure_bbox": [
+      70.53900146484375,
+      88.06920623779297,
+      524.4138793945312,
+      642.6792602539062
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-1",
+    "kind": "table",
+    "number": "1",
+    "label": "Table 1",
+    "caption": "Table 1 | The description of different agent tasks, including the number of tasks, environment type (real or synthesized), and prompt source (extracted or synthesized).",
+    "page": 10,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      387.97027587890625,
+      524.408203125,
+      413.5836486816406
+    ],
+    "figure_bbox": [
+      70.40799713134766,
+      413.5836486816406,
+      526.2164916992188,
+      725.1266479492188
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-2",
+    "kind": "table",
+    "number": "2",
+    "label": "Table 2",
+    "caption": "Table 2 | Comparison between DeepSeek-V3.2 and closed/open models. For open models, we just compare with models supports thinking in tooluse. Numbers in bold represent the best scores within each model class (open-source and closed-source). The 𝜏 2 -Bench result is computed by the average of each category. Regarding BrowseComp, the performance with the context management technique is noted with *.",
+    "page": 13,
+    "render_as": "data",
+    "caption_bbox": [
+      70.40799713134766,
+      274.1263122558594,
+      525.7689208984375,
+      340.38763427734375
+    ],
+    "figure_bbox": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-3",
+    "kind": "table",
+    "number": "3",
+    "label": "Table 3",
+    "caption": "Table 3 demonstrates that DeepSeek-V3.2-Speciale achieves superior performance by leveraging increased reasoning tokens, surpassing the state-of-the-art Gemini-3.0-Pro across multiple benchmarks. Remarkably, as shown in Table 4, this general-purpose model attains gold-medal level performance in the 2025 International Olympiad in Informatics (IOI) and the ICPC World Finals (ICPC WF) without targeted training. Furthermore, by incorporating techniques from Shao et al. (2025), the model excels in complex proof tasks, reaching gold-medal thresholds in the 2025 International Mathematical Olympiad (IMO) and China Mathematical Olympiad (CMO) 5 . Detailed evaluation protocols are provided in Appendix D.",
+    "page": 14,
+    "render_as": "data",
+    "caption_bbox": [
+      70.50599670410156,
+      570.480224609375,
+      524.4140625,
+      676.1586303710938
+    ],
+    "figure_bbox": [
+      70.50599670410156,
+      676.1586303710938,
+      524.4150390625,
+      789.8246459960938
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-4",
+    "kind": "table",
+    "number": "4",
+    "label": "Table 4",
+    "caption": "Table 4 | Performance of DeepSeek-V3.2-Speciale in top-tier mathematics and coding compe- titions. For ICPC WF 2025, we report the number of submissions for each successfully solved problem. DeepSeek-V3.2-Speciale ranked 2nd in ICPC WF 2025 and 10th in IOI 2025.",
+    "page": 15,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      330.1272888183594,
+      526.2224731445312,
+      369.2896423339844
+    ],
+    "figure_bbox": [
+      70.32099914550781,
+      369.2896423339844,
+      526.3232421875,
+      789.8246459960938
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-5",
+    "kind": "figure",
+    "number": "5",
+    "label": "Figure 5",
+    "caption": "Figure 5 | RL training of DeepSeek-V3.2-SFT using exclusively synthetic general agent data.",
+    "page": 16,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      506.0043029785156,
+      510.9827575683594,
+      518.0686645507812
+    ],
+    "figure_bbox": [
+      70.86599731445312,
+      85.54524993896484,
+      513.0794677734375,
+      506.0043029785156
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-5",
+    "kind": "table",
+    "number": "5",
+    "label": "Table 5",
+    "caption": "Table 5 | Accuracy of general synthesized tasks on different models.",
+    "page": 16,
+    "render_as": "data",
+    "caption_bbox": [
+      134.71800231933594,
+      85.54524993896484,
+      460.2237243652344,
+      97.60961151123047
+    ],
+    "figure_bbox": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-6",
+    "kind": "figure",
+    "number": "6",
+    "label": "Figure 6",
+    "caption": "Figure 6 | Accuracy of Browsecomp with different test-time compute expansion strategies.",
+    "page": 17,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      310.9402770996094,
+      504.2408752441406,
+      323.004638671875
+    ],
+    "figure_bbox": [
+      70.86599731445312,
+      85.03790283203125,
+      513.0731811523438,
+      310.9402770996094
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-7",
+    "kind": "figure",
+    "number": "7",
+    "label": "Figure 7",
+    "caption": "Figure 7 | Illustration of the MHA and MQA modes of MLA. For DeepSeek-V3.1-Terminus, the MHA mode is used for training and prefilling, while the MQA mode is used for decoding.",
+    "page": 20,
+    "render_as": "image",
+    "caption_bbox": [
+      70.86599731445312,
+      536.8262939453125,
+      524.41455078125,
+      562.4396362304688
+    ],
+    "figure_bbox": [
+      70.86599731445312,
+      288.03564453125,
+      524.41455078125,
+      536.8262939453125
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-6",
+    "kind": "table",
+    "number": "6",
+    "label": "Table 6",
+    "caption": "Table 6 | An example of the reasoning data system prompt. The system prompt requires the model to output the reasoning process in the tag <think></think>.",
+    "page": 21,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      91.45125579833984,
+      524.4130249023438,
+      117.06566619873047
+    ],
+    "figure_bbox": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-7",
+    "kind": "table",
+    "number": "7",
+    "label": "Table 7",
+    "caption": "Table 7 | {TOOL-DESCRIPTIONS} and {TOOLCALL-FORMAT} will be replaced with the specific tools and our designed toolcall format.",
+    "page": 21,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      256.5232849121094,
+      524.4088745117188,
+      282.13763427734375
+    ],
+    "figure_bbox": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-8",
+    "kind": "table",
+    "number": "8",
+    "label": "Table 8",
+    "caption": "Table 8 | The model executes tool calls in thinking process.",
+    "page": 21,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      469.4162902832031,
+      350.90277099609375,
+      481.48065185546875
+    ],
+    "figure_bbox": [
+      70.52799987792969,
+      481.48065185546875,
+      501.3096923828125,
+      789.8246459960938
+    ],
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-9",
+    "kind": "table",
+    "number": "9",
+    "label": "Table 9",
+    "caption": "Table 9 | Comparison between DeepSeek-V3.2 non-thinking and thinking modes. The terminal bench scores are evaluated with the Claude Code framework in the table. Non-thinking score of Terminal Bench 2.0 with Terminus framework is 39.3.",
+    "page": 22,
+    "render_as": "data",
+    "caption_bbox": [
+      70.52799987792969,
+      117.6252670288086,
+      524.4139404296875,
+      156.7876434326172
+    ],
+    "figure_bbox": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  }
+]

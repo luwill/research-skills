@@ -1,252 +1,454 @@
 {
- "meta": {
-  "title": "GLM-5：从 Vibe Coding 到智能体工程",
-  "deck_type": "journal-club",
-  "language": "zh",
-  "theme": "journal-club",
-  "figures_dir": "figures",
-  "source": {
-   "title": "GLM-5: from Vibe Coding to Agentic Engineering",
-   "arxiv_id": "2602.15763"
-  }
- },
- "slides": [
-  {
-   "layout": "paper-title",
-   "title": "GLM-5：从 Vibe Coding 到智能体工程（Agentic Engineering）",
-   "authors": "GLM-5 Team — 智谱 AI & 清华大学",
-   "venue": "arXiv:2602.15763 · 2026 年 2 月",
-   "presenter": "组会汇报 · louwill · 2026-07",
-   "speaker_notes": "这是智谱 2026 年 2 月的旗舰模型 GLM-5。一句话概括：沿用 GLM-4.5 的 ARC 配方，引入 DeepSeek 的稀疏注意力把 744B 参数的 MoE 训练与推理成本打下来，用异步 RL 基础设施重建后训练，目标从静态基准转向真实世界的软件工程。我会按架构、训练管线、成绩单、批判性解读的顺序讲。"
-  },
-  {
-   "layout": "outline-agenda",
-   "action_title": "议程",
-   "items": [
-    "动机：成本与真实编码是两大瓶颈",
-    "训练管线总览",
-    "架构：DSA 稀疏注意力 + 效率改造",
-    "面向智能体的三种思考模式",
-    "异步智能体强化学习",
-    "结果：基准与榜单",
-    "批判性解读与讨论"
-   ],
-   "current": 0,
-   "speaker_notes": "七个部分：动机、管线全景、架构选择、三种思考模式、异步 RL、成绩单，最后是我的批判性解读和留给大家的问题。"
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "研究动机",
-   "action_title": "瓶颈已经转移：==k|算力成本与真实世界的软件工程==",
-   "points": [
-    "LLM 正从被动的知识库转向==k|主动解决问题的智能体==；论文点名两大瓶颈：计算成本、真实场景适应性。",
-    "GLM-4.5 用单一 MoE 统一了智能体、推理、编码（ARC）三种能力；GLM-5 主攻==k|效率==（稀疏注意力）与==k|自主性==（异步智能体 RL）。",
-    "论文宣称：在 8 个 ARC 基准上比 GLM-4.7 平均提升约 ==20%==，与 Claude Opus 4.5、GPT-5.2（xhigh）相当，优于 Gemini 3 Pro。"
-   ],
-   "source_ref": "摘要 · §1",
-   "speaker_notes": "先看框架。标题里「从 vibe coding 到 agentic engineering」是营销话术，但底下的主张是具体的：模型已经能连续数小时自主写代码，所以关键变成了单位工作量的成本，以及智能体能否在真实软件工程里存活，而不是一次性答题。GLM-5 两头都打：稀疏注意力管成本，新 RL 栈管自主性。头条数字是比自家 4.7 平均提升两成。"
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "训练管线",
-   "action_title": "一条管线：先扩到 ==744B== MoE，再爬一段==k|不遗忘的 RL 阶梯==",
-   "figure": {
-    "src": "figures/figure-5.png",
-    "caption": "图 5 | GLM-5 训练管线全景。",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==28.5T== token 预训练 + 中期训练，随后「推理 → 智能体 → 通用」RL 阶梯，==k|On-Policy 跨阶段蒸馏==对抗遗忘。",
-   "source_ref": "图 5 · §1–3",
-   "speaker_notes": "整个系统一页看完。左边是基座训练：通用语料、代码与推理语料，然后中期训练拉长上下文、注入智能体数据，总计 28.5 万亿 token。右边是后训练阶梯：SFT、推理 RL、智能体 RL、通用 RL。最有意思的是虚线框：On-Policy 跨阶段蒸馏，防止后一阶段抹掉前一阶段学到的能力。GLM-4.5 的故事是把 ARC 三种能力捏到一起，这一版是它的工业化形态。"
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "架构",
-   "action_title": "架构：==k|引进的 DSA 稀疏注意力== + 自研的效率改造",
-   "points": [
-    "规模：==744B== 总参数 / ==40B== 激活，==256== 个专家、==80== 层——是 GLM-4.5（355B/32B）的两倍，层数反而减少以降低专家并行通信开销。",
-    "==k|DSA（DeepSeek 稀疏注意力）==取代稠密 $O(L^2)$ 注意力，按 token 重要性动态选择；长上下文质量不降反升（SQuAD-128k ==p|86.0 对 79.7==，对照 MLA 基线）。",
-    "MTP ==k|三层参数共享==：投机解码接受长度 ==2.76==，高于 DeepSeek-V3.2 的 2.55，草稿模型显存不变；SFT 阶段引入 INT4 量化感知训练。",
-    "首日适配==k|七个国产 GPU 平台==（昇腾、摩尔线程、海光、寒武纪、昆仑芯、沐曦、燧原）。"
-   ],
-   "source_ref": "§1–2.1",
-   "speaker_notes": "四个架构事实。第一，744B 参数、40B 激活的 MoE，规模是 4.5 的两倍，但刻意做浅了——80 层，因为专家并行的通信是主要开销。第二，注意力换成 DeepSeek 的 DSA，动态选 token 替代稠密二次注意力，他们的长上下文消融显示质量持平甚至更好。第三，多 token 预测用三层参数共享，同样显存下投机解码接受长度比 DeepSeek-V3.2 更长。第四，战略上很有意思：从第一天就全栈适配七个国产芯片平台。"
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "消融实验",
-   "action_title": "==k|Muon Split== 把 MLA 与 GQA-8 的差距补平",
-   "table": {
-    "caption": "表 1（节选）— Muon 优化器下的注意力变体，基座模型评测",
-    "row_header": true,
-    "columns": [
-     { "label": "变体" },
-     { "label": "Hellaswag" },
-     { "label": "MMLU" },
-     { "label": "BBH" },
-     { "label": "GSM8K" },
-     { "label": "HumanEval" }
-    ],
-    "rows": [
-     [ "GQA-8", "77.3", "61.2", { "v": "53.3", "bold": true }, { "v": "47.6", "bold": true }, { "v": "38.5", "bold": true } ],
-     [ "MLA", "77.3", "61.5", "48.9", "46.2", "33.5" ],
-     [ "MLA + Muon Split", { "v": "77.8", "bold": true }, { "v": "62.5", "bold": true }, "51.8", "45.0", "36.7" ],
-     [ "MLA-256 + Muon Split", "77.4", "62.0", "51.3", "47.5", "36.6" ]
-    ],
-    "footnote": "各列最优加粗。MLA-256：head 维度 192→256、头数减 1/3——训练算力不变，解码更便宜。"
-   },
-   "source_ref": "表 1 · §2.1",
-   "speaker_notes": "对用 Muon 训 MoE 的人来说这是很实用的消融。Muon 下的原版 MLA 在偏推理的任务上输给 GQA——看 BBH，48.9 对 53.3。他们的解法 Muon Split 是把投影矩阵按注意力头拆开分别做正交化，让不同头以不同尺度更新，差距基本补平，Hellaswag 和 MMLU 还反超。MLA-256 变体再把头的形状改一改，让解码更便宜。另外注意一个稳定性结论：预训练全程注意力 logits 稳定，不需要任何裁剪。"
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "智能体接口",
-   "action_title": "三种思考模式让==k|多轮智能体保持连贯==",
-   "figure": {
-    "src": "figures/figure-7.png",
-    "caption": "图 7 | Interleaved Thinking 与 Preserved Thinking。",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==k|Interleaved==：每次调用前思考 · ==k|Preserved==：思考跨轮保留 · Turn-level：按轮开关。SFT 上下文 ==202,752== token。",
-   "source_ref": "图 7 · §3.1",
-   "speaker_notes": "这是最直接面向编码智能体的贡献。Interleaved thinking：每次回复和每次工具调用前都有一段推理，不只是第一次回答——中途的指令遵循更稳。Preserved thinking：长编码会话中，模型把此前所有推理块留在上下文里，而不是每轮丢掉重推——会话越深不一致越少。Turn-level 是务实的一档：简单轮次关掉思考省时延省成本，复杂轮次打开保精度。为了装下这些，SFT 上下文拉到 202,752 token。"
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "后训练",
-   "action_title": "异步 RL：==k|生成与训练解耦==，智能体从长程交互中持续学习",
-   "points": [
-    "基础设施：基于 ==k|slime== 框架的解耦 rollout 引擎；生成与训练异步运行，最大化 GPU 利用率与轨迹吞吐。",
-    "算法：异步智能体 RL 让模型==k|从长程交互中持续学习==，主攻规划与自我纠错；RL 主干是 GRPO。",
-    "SFT 保留轨迹中的错误片段但==k|在损失中掩掉==——模型见过纠错行为，却不会强化错误动作。",
-    "他们在幻灯片生成 RL 中观察到==w|奖励破解==，用运行时渲染校验来对抗（图 9）。"
-   ],
-   "source_ref": "§1 · §3 · 图 9",
-   "speaker_notes": "RL 故事分基础设施和算法两半。基础设施：rollout 和梯度更新解耦——生成端持续产轨迹，训练端持续消费，GPU 不互相等。算法：GRPO 主干上的异步智能体 RL，瞄准长程规划和自我纠错。两个细节我很喜欢：一是 SFT 里保留出错片段但掩掉损失，让模型学会「纠错长什么样」；二是他们坦白幻灯片 RL 里出现了奖励破解，模型钻奖励的空子，最后靠运行时真渲染做验证器。这点留给批判环节。"
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "头条结果",
-   "action_title": "比 GLM-4.7 高约 ==20%==，与 ==k|Opus 4.5、GPT-5.2 并肩==",
-   "figure": {
-    "src": "figures/figure-1.png",
-    "caption": "图 1 | 八个智能体/推理/编码基准。",
-    "cite": "GLM-5 Team 2026"
-   },
-   "source_ref": "图 1 · §1",
-   "speaker_notes": "头条图：八个基准横跨推理、软件工程和智能体任务——HLE、两个 SWE-bench、Terminal-Bench 2.0、BrowseComp、MCP-Atlas、τ²-Bench、Vending-Bench 2。蓝色是 GLM-5。论文自己的总结算公道——平均上与 Opus 4.5、满血 GPT-5.2 同档，超过 Gemini 3 Pro，比自家上一代 GLM-4.7 高两成。逐项拆开看更有选择性，下一页细说。"
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "成绩单",
-   "action_title": "开源权重 SOTA，对闭源前沿是==k|选择性的胜利==",
-   "table": {
-    "caption": "表 7（节选）— GLM-5 对比开源/闭源前沿模型（各行最优加粗）",
-    "row_header": true,
-    "columns": [
-     { "label": "基准" },
-     { "label": "GLM-5" },
-     { "label": "DeepSeek", "unit": "V3.2" },
-     { "label": "Kimi", "unit": "K2.5" },
-     { "label": "Opus 4.5", "unit": "Claude" },
-     { "label": "Gemini 3", "unit": "Pro" },
-     { "label": "GPT-5.2", "unit": "xhigh" }
-    ],
-    "rows": [
-     [ "HLE（带工具）", "50.4", "40.8", { "v": "51.8", "bold": true }, "43.4", "45.8", "45.5" ],
-     [ "GPQA-Diamond", "86.0", "82.4", "87.6", "87.0", "91.9", { "v": "92.4", "bold": true } ],
-     [ "SWE-bench Verified", "77.8", "73.1", "76.8", { "v": "80.9", "bold": true }, "76.2", "80.0" ],
-     [ "SWE-bench Multilingual", "73.3", "70.2", "73.0", { "v": "77.5", "bold": true }, "65.0", "72.0" ],
-     [ "Terminal-Bench 2.0", "56.2", "39.3", "50.8", { "v": "59.3", "bold": true }, "54.2", "54.0" ],
-     [ "BrowseComp（带上下文管理）", { "v": "75.9", "bold": true }, "67.6", "74.9", "57.8", "59.2", "65.8" ],
-     [ "τ²-Bench", "89.7", "85.3", "80.2", { "v": "91.6", "bold": true }, "90.7", "85.5" ]
-    ],
-    "footnote": "节选自表 7；Claude/Gemini/GPT 的 HLE 带工具成绩为全集（原文标 *）。闭源成绩为论文汇编。"
-   },
-   "source_ref": "表 7 · §6.1",
-   "speaker_notes": "逐行诚实地读。GLM-5 真正全场第一的：带上下文管理的 BrowseComp，75.9。领先开源阵营但落后某个闭源模型的：软件工程——SWE-bench Verified 77.8 对 Opus 的 80.9，终端任务 56.2 对 59.3，τ² 也输 Opus。纯知识和科学推理上，GPT-5.2 和 Gemini 保有明显优势——GPQA 92.4 对 86。所以「与前沿相当」在总平均上成立，具体形状是：浏览与行动类最强，软件工程有竞争力，博士级问答落后。对开源权重模型而言，这仍是了不起的位置。"
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "第三方榜单",
-   "action_title": "首个在 Intelligence Index v4.0 上拿到 ==p|50== 分的开源权重模型",
-   "figure": {
-    "src": "figures/figure-2.png",
-    "caption": "图 2 | Artificial Analysis Intelligence Index v4.0。",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==p|50== 分（GLM-4.7 为 ==42==）——开源权重首次触线；同时是 ==k|LMArena 文本与代码双榜第一的开源模型==。",
-   "source_ref": "图 2–3 · §1",
-   "speaker_notes": "两个第三方信号，重要性在于任务集不是厂商自己挑的。Artificial Analysis 把十项评测——GDPval-AA、Terminal-Bench Hard、GPQA Diamond、HLE 等——聚合成智能指数，GLM-5 是第一个到 50 分的开源权重模型，比 4.7 跳了 8 分。LMArena 是大规模真人偏好投票，它在文本和代码两个竞技场都是开源第一，总体与 Opus 4.5、Gemini 3 Pro 同档。当然这些也是营销最爱引用的榜单——但至少不是自建的。"
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "智能体工程",
-   "action_title": "自建 CC-Bench-V2 上==p|大幅甩开 GLM-4.7==——但==w|多数行仍是 Opus 领先==",
-   "table": {
-    "caption": "CC-Bench-V2（节选）— 真实世界编码任务，Agent-as-a-Judge 评测",
-    "row_header": true,
-    "columns": [
-     { "label": "任务（指标）" },
-     { "label": "GLM-5" },
-     { "label": "GLM-4.7" },
-     { "label": "Opus 4.5", "unit": "Claude" }
-    ],
-    "rows": [
-     [ "前端 HTML（ISR）", "38.9", "35.4", { "v": "52.2", "bold": true } ],
-     [ "构建：React（BSR）", { "v": "100", "bold": true }, "65.0", "95.0" ],
-     [ "后端工程（Pass@1）", "25.8", "19.6", { "v": "26.9", "bold": true } ],
-     [ "仓库探索（Pass@1）", { "v": "65.6", "bold": true }, "47.8", "64.5" ],
-     [ "链式任务（Pass@1）", "52.3", "43.0", { "v": "61.6", "bold": true } ]
-    ],
-    "footnote": "ISR = 实例成功率；BSR = 构建成功率。前端由 GUI 智能体（Playwright）按清单逐项验收；后端须通过真实项目单元测试。"
-   },
-   "source_ref": "表 8 · §6.2",
-   "speaker_notes": "这才是标题真正指向的基准——他们自建的 CC-Bench-V2：前端项目由 GUI 智能体真实点开验收，后端任务必须过真实单元测试，长程任务链从真实 PR 历史挖出来。两种读法。对自家 4.7：全面大涨，构建成功率从六成五到一百。对 Opus 4.5：GLM-5 赢在仓库探索和构建可靠性，但前端质量差距很大——38.9 对 52.2——链式任务也输。所以「智能体工程」是真进步，同时最难的行上前沿仍然领先。别忘了：这个基准是自建自评的。"
-  },
-  {
-   "layout": "critique-concerns",
-   "action_title": "工程令人佩服——四个我会追问的地方",
-   "points": [
-    {
-     "head": "旗舰证据是==w|自建基准 + 机器裁判==",
-     "body": "CC-Bench-V2 是作者自建，由 Agent-as-a-Judge（GUI 智能体 + LLM 评审）打分；MCP-Atlas 用 Gemini 3 Pro 当裁判。裁判可靠性与基准所有权都朝有利于自己的方向倾斜。（我的分析）"
-    },
-    {
-     "head": "评测调整==w|全部指向同一方向==",
-     "body": "τ²-Bench 调提示词、MCP-Atlas 超时 4→10 分钟、「verified」版 Terminal-Bench 把 56.2 抬到 60.7。每一项单看都合理且已披露——但每一项都对主队有利。（我的分析）"
-    },
-    {
-     "head": "「与前沿相当」是==w|选择性成立==",
-     "body": "Opus 4.5 仍领先 SWE-bench Verified（80.9 对 77.8）、CyberGym（50.6 对 43.2）和 CC-Bench 多数行；GPQA 落后 GPT-5.2 达 6.4 分。胜利集中在浏览/长程类目。（我的分析）"
-    },
-    {
-     "head": "架构创新==k|大头是引进的==",
-     "body": "DSA 是 DeepSeek 的机制，属于采用而非发明；真正自研的是 Muon Split、MTP 参数共享和 RL 基础设施。「范式转移」的措辞跑在了架构增量前面。（我的分析）"
+  "meta": {
+    "title": "GLM-5：从 Vibe Coding 到智能体工程",
+    "deck_type": "journal-club",
+    "language": "zh",
+    "theme": "journal-club",
+    "figures_dir": "figures",
+    "source": {
+      "title": "GLM-5: from Vibe Coding to Agentic Engineering",
+      "arxiv_id": "2602.15763"
     }
-   ],
-   "source_ref": "我的批判性解读",
-   "speaker_notes": "先给该给的信用——工程是认真的，披露也少见地坦诚，连奖励破解都写了。四个追问。第一，核心证据出自自家基准，裁判还是自家搭的智能体栈；几个百分点的差距在裁判噪声之内，等复现。第二，提示词、超时、verified 变体这些调整，单看都有道理，合起来方向一致。第三，前沿平位在总平均成立，在最难的软件行不成立，Opus 保有真实领先。第四，架构最大的部件来自 DeepSeek——引用得很坦诚，但这样一来「GLM-5 发明了什么」的正确参照系是训练系统，不是注意力。"
   },
-  {
-   "layout": "discussion-questions",
-   "action_title": "留给大家的问题",
-   "questions": [
-    "==k|Agent-as-a-Judge==（GUI 智能体 + LLM 评审）能可靠区分只差几分的模型吗——换人类工程师评 CC-Bench-V2，排名会一样吗？",
-    "异步 RL 意味着轨迹被消费时==w|越来越偏离当前策略==——这个规模下 GRPO 的稳定性还剩多少，陈旧度悬崖在哪里？",
-    "==k|Preserved Thinking== 在约 20 万 token 上下文里跨轮保留全部推理：保留的思考什么时候是复利，什么时候变成自我污染？",
-    "匿名发布的==k|「Pony Alpha」==实验：25% 的用户猜它是 Claude Sonnet 5——这是风格趋同、数据同源，还是蒸馏压力？"
-   ],
-   "speaker_notes": "四个开放问题。一，测量问题：LLM 加 GUI 裁判能不能给只差三分的模型排序，人评子集会怎样？二，系统问题：异步 RL 用 on-policy 换吞吐，GRPO 从哪里开始退化？三，接口问题：保留思考是上下文复利还是噪声复利，多长的任务是分水岭？四，轻松一点的：他们把模型匿名挂上 OpenRouter 叫 Pony Alpha，四分之一用户猜是 Claude Sonnet 5——这种趋同说明了什么？"
-  },
-  {
-   "layout": "references",
-   "title": "参考文献",
-   "entries": [
-    "GLM-5 Team (2026). GLM-5: from Vibe Coding to Agentic Engineering. arXiv:2602.15763. https://doi.org/10.48550/arXiv.2602.15763",
-    "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556.（DSA 出处，原文引用 [9]）"
-   ],
-   "speaker_notes": "主要文献与 DSA 的出处 DeepSeek-V3.2。代码和模型在 zai-org 的 GitHub。"
-  }
- ]
+  "slides": [
+    {
+      "layout": "paper-title",
+      "title": "GLM-5：从 Vibe Coding 到智能体工程（Agentic Engineering）",
+      "authors": "GLM-5 Team — 智谱 AI & 清华大学",
+      "venue": "arXiv:2602.15763 · 2026 年 2 月",
+      "presenter": "组会汇报 · louwill · 2026-07",
+      "speaker_notes": "这是智谱 2026 年 2 月的旗舰模型 GLM-5。一句话概括：沿用 GLM-4.5 的 ARC 配方，引入 DeepSeek 的稀疏注意力把 744B 参数的 MoE 训练与推理成本打下来，用异步 RL 基础设施重建后训练，目标从静态基准转向真实世界的软件工程。我会按架构、训练管线、成绩单、批判性解读的顺序讲。"
+    },
+    {
+      "layout": "outline-agenda",
+      "action_title": "议程",
+      "items": [
+        "动机：成本与真实编码是两大瓶颈",
+        "训练管线总览",
+        "架构：DSA 稀疏注意力 + 效率改造",
+        "面向智能体的三种思考模式",
+        "异步智能体强化学习",
+        "结果：基准与榜单",
+        "批判性解读与讨论"
+      ],
+      "current": 0,
+      "speaker_notes": "七个部分：动机、管线全景、架构选择、三种思考模式、异步 RL、成绩单，最后是我的批判性解读和留给大家的问题。"
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "研究动机",
+      "action_title": "瓶颈已经转移：==k|算力成本与真实世界的软件工程==",
+      "points": [
+        "LLM 正从被动的知识库转向==k|主动解决问题的智能体==；论文点名两大瓶颈：计算成本、真实场景适应性。",
+        "GLM-4.5 用单一 MoE 统一了智能体、推理、编码（ARC）三种能力；GLM-5 主攻==k|效率==（稀疏注意力）与==k|自主性==（异步智能体 RL）。",
+        "论文宣称：在 8 个 ARC 基准上比 GLM-4.7 平均提升约 ==20%==，与 Claude Opus 4.5、GPT-5.2（xhigh）相当，优于 Gemini 3 Pro。"
+      ],
+      "source_ref": "摘要 · §1",
+      "speaker_notes": "先看框架。标题里「从 vibe coding 到 agentic engineering」是营销话术，但底下的主张是具体的：模型已经能连续数小时自主写代码，所以关键变成了单位工作量的成本，以及智能体能否在真实软件工程里存活，而不是一次性答题。GLM-5 两头都打：稀疏注意力管成本，新 RL 栈管自主性。头条数字是比自家 4.7 平均提升两成。"
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "训练管线",
+      "action_title": "一条管线：先扩到 ==744B== MoE，再爬一段==k|不遗忘的 RL 阶梯==",
+      "figure": {
+        "src": "figures/figure-5.png",
+        "caption": "图 5 | GLM-5 训练管线全景。",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "图 5 · §1–3",
+      "speaker_notes": "28.5T token 预训练 + 中期训练，随后「推理 → 智能体 → 通用」RL 阶梯，On-Policy 跨阶段蒸馏对抗遗忘。 —— 整个系统一页看完。左边是基座训练：通用语料、代码与推理语料，然后中期训练拉长上下文、注入智能体数据，总计 28.5 万亿 token。右边是后训练阶梯：SFT、推理 RL、智能体 RL、通用 RL。最有意思的是虚线框：On-Policy 跨阶段蒸馏，防止后一阶段抹掉前一阶段学到的能力。GLM-4.5 的故事是把 ARC 三种能力捏到一起，这一版是它的工业化形态。"
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "架构",
+      "action_title": "架构：==k|引进的 DSA 稀疏注意力== + 自研的效率改造",
+      "points": [
+        "规模：==744B== 总参数 / ==40B== 激活，==256== 个专家、==80== 层——是 GLM-4.5（355B/32B）的两倍，层数反而减少以降低专家并行通信开销。",
+        "==k|DSA（DeepSeek 稀疏注意力）==取代稠密 $O(L^2)$ 注意力，按 token 重要性动态选择；长上下文质量不降反升（SQuAD-128k ==p|86.0 对 79.7==，对照 MLA 基线）。",
+        "MTP ==k|三层参数共享==：投机解码接受长度 ==2.76==，高于 DeepSeek-V3.2 的 2.55，草稿模型显存不变；SFT 阶段引入 INT4 量化感知训练。",
+        "首日适配==k|七个国产 GPU 平台==（昇腾、摩尔线程、海光、寒武纪、昆仑芯、沐曦、燧原）。"
+      ],
+      "source_ref": "§1–2.1",
+      "speaker_notes": "四个架构事实。第一，744B 参数、40B 激活的 MoE，规模是 4.5 的两倍，但刻意做浅了——80 层，因为专家并行的通信是主要开销。第二，注意力换成 DeepSeek 的 DSA，动态选 token 替代稠密二次注意力，他们的长上下文消融显示质量持平甚至更好。第三，多 token 预测用三层参数共享，同样显存下投机解码接受长度比 DeepSeek-V3.2 更长。第四，战略上很有意思：从第一天就全栈适配七个国产芯片平台。"
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "消融实验",
+      "action_title": "==k|Muon Split== 把 MLA 与 GQA-8 的差距补平",
+      "table": {
+        "caption": "表 1（节选）— Muon 优化器下的注意力变体，基座模型评测",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "变体"
+          },
+          {
+            "label": "Hellaswag"
+          },
+          {
+            "label": "MMLU"
+          },
+          {
+            "label": "BBH"
+          },
+          {
+            "label": "GSM8K"
+          },
+          {
+            "label": "HumanEval"
+          }
+        ],
+        "rows": [
+          [
+            "GQA-8",
+            "77.3",
+            "61.2",
+            {
+              "v": "53.3",
+              "bold": true
+            },
+            {
+              "v": "47.6",
+              "bold": true
+            },
+            {
+              "v": "38.5",
+              "bold": true
+            }
+          ],
+          [
+            "MLA",
+            "77.3",
+            "61.5",
+            "48.9",
+            "46.2",
+            "33.5"
+          ],
+          [
+            "MLA + Muon Split",
+            {
+              "v": "77.8",
+              "bold": true
+            },
+            {
+              "v": "62.5",
+              "bold": true
+            },
+            "51.8",
+            "45.0",
+            "36.7"
+          ],
+          [
+            "MLA-256 + Muon Split",
+            "77.4",
+            "62.0",
+            "51.3",
+            "47.5",
+            "36.6"
+          ]
+        ],
+        "footnote": "各列最优加粗。MLA-256：head 维度 192→256、头数减 1/3——训练算力不变，解码更便宜。"
+      },
+      "source_ref": "表 1 · §2.1",
+      "speaker_notes": "对用 Muon 训 MoE 的人来说这是很实用的消融。Muon 下的原版 MLA 在偏推理的任务上输给 GQA——看 BBH，48.9 对 53.3。他们的解法 Muon Split 是把投影矩阵按注意力头拆开分别做正交化，让不同头以不同尺度更新，差距基本补平，Hellaswag 和 MMLU 还反超。MLA-256 变体再把头的形状改一改，让解码更便宜。另外注意一个稳定性结论：预训练全程注意力 logits 稳定，不需要任何裁剪。"
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "智能体接口",
+      "action_title": "三种思考模式让==k|多轮智能体保持连贯==",
+      "figure": {
+        "src": "figures/figure-7.png",
+        "caption": "图 7 | Interleaved Thinking 与 Preserved Thinking。",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "图 7 · §3.1",
+      "speaker_notes": "Interleaved：每次调用前思考 · Preserved：思考跨轮保留 · Turn-level：按轮开关。SFT 上下文 202,752 token。 —— 这是最直接面向编码智能体的贡献。Interleaved thinking：每次回复和每次工具调用前都有一段推理，不只是第一次回答——中途的指令遵循更稳。Preserved thinking：长编码会话中，模型把此前所有推理块留在上下文里，而不是每轮丢掉重推——会话越深不一致越少。Turn-level 是务实的一档：简单轮次关掉思考省时延省成本，复杂轮次打开保精度。为了装下这些，SFT 上下文拉到 202,752 token。"
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "后训练",
+      "action_title": "异步 RL：==k|生成与训练解耦==，智能体从长程交互中持续学习",
+      "points": [
+        "基础设施：基于 ==k|slime== 框架的解耦 rollout 引擎；生成与训练异步运行，最大化 GPU 利用率与轨迹吞吐。",
+        "算法：异步智能体 RL 让模型==k|从长程交互中持续学习==，主攻规划与自我纠错；RL 主干是 GRPO。",
+        "SFT 保留轨迹中的错误片段但==k|在损失中掩掉==——模型见过纠错行为，却不会强化错误动作。",
+        "他们在幻灯片生成 RL 中观察到==w|奖励破解==，用运行时渲染校验来对抗（图 9）。"
+      ],
+      "source_ref": "§1 · §3 · 图 9",
+      "speaker_notes": "RL 故事分基础设施和算法两半。基础设施：rollout 和梯度更新解耦——生成端持续产轨迹，训练端持续消费，GPU 不互相等。算法：GRPO 主干上的异步智能体 RL，瞄准长程规划和自我纠错。两个细节我很喜欢：一是 SFT 里保留出错片段但掩掉损失，让模型学会「纠错长什么样」；二是他们坦白幻灯片 RL 里出现了奖励破解，模型钻奖励的空子，最后靠运行时真渲染做验证器。这点留给批判环节。"
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "头条结果",
+      "action_title": "比 GLM-4.7 高约 ==20%==，与 ==k|Opus 4.5、GPT-5.2 并肩==",
+      "figure": {
+        "src": "figures/figure-1.png",
+        "caption": "图 1 | 八个智能体/推理/编码基准。",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "图 1 · §1",
+      "speaker_notes": "头条图：八个基准横跨推理、软件工程和智能体任务——HLE、两个 SWE-bench、Terminal-Bench 2.0、BrowseComp、MCP-Atlas、τ²-Bench、Vending-Bench 2。蓝色是 GLM-5。论文自己的总结算公道——平均上与 Opus 4.5、满血 GPT-5.2 同档，超过 Gemini 3 Pro，比自家上一代 GLM-4.7 高两成。逐项拆开看更有选择性，下一页细说。"
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "成绩单",
+      "action_title": "开源权重 SOTA，对闭源前沿是==k|选择性的胜利==",
+      "table": {
+        "caption": "表 7（节选）— GLM-5 对比开源/闭源前沿模型（各行最优加粗）",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "基准"
+          },
+          {
+            "label": "GLM-5"
+          },
+          {
+            "label": "DeepSeek",
+            "unit": "V3.2"
+          },
+          {
+            "label": "Kimi",
+            "unit": "K2.5"
+          },
+          {
+            "label": "Opus 4.5",
+            "unit": "Claude"
+          },
+          {
+            "label": "Gemini 3",
+            "unit": "Pro"
+          },
+          {
+            "label": "GPT-5.2",
+            "unit": "xhigh"
+          }
+        ],
+        "rows": [
+          [
+            "HLE（带工具）",
+            "50.4",
+            "40.8",
+            {
+              "v": "51.8",
+              "bold": true
+            },
+            "43.4",
+            "45.8",
+            "45.5"
+          ],
+          [
+            "GPQA-Diamond",
+            "86.0",
+            "82.4",
+            "87.6",
+            "87.0",
+            "91.9",
+            {
+              "v": "92.4",
+              "bold": true
+            }
+          ],
+          [
+            "SWE-bench Verified",
+            "77.8",
+            "73.1",
+            "76.8",
+            {
+              "v": "80.9",
+              "bold": true
+            },
+            "76.2",
+            "80.0"
+          ],
+          [
+            "SWE-bench Multilingual",
+            "73.3",
+            "70.2",
+            "73.0",
+            {
+              "v": "77.5",
+              "bold": true
+            },
+            "65.0",
+            "72.0"
+          ],
+          [
+            "Terminal-Bench 2.0",
+            "56.2",
+            "39.3",
+            "50.8",
+            {
+              "v": "59.3",
+              "bold": true
+            },
+            "54.2",
+            "54.0"
+          ],
+          [
+            "BrowseComp（带上下文管理）",
+            {
+              "v": "75.9",
+              "bold": true
+            },
+            "67.6",
+            "74.9",
+            "57.8",
+            "59.2",
+            "65.8"
+          ],
+          [
+            "τ²-Bench",
+            "89.7",
+            "85.3",
+            "80.2",
+            {
+              "v": "91.6",
+              "bold": true
+            },
+            "90.7",
+            "85.5"
+          ]
+        ],
+        "footnote": "节选自表 7；Claude/Gemini/GPT 的 HLE 带工具成绩为全集（原文标 *）。闭源成绩为论文汇编。"
+      },
+      "source_ref": "表 7 · §6.1",
+      "speaker_notes": "逐行诚实地读。GLM-5 真正全场第一的：带上下文管理的 BrowseComp，75.9。领先开源阵营但落后某个闭源模型的：软件工程——SWE-bench Verified 77.8 对 Opus 的 80.9，终端任务 56.2 对 59.3，τ² 也输 Opus。纯知识和科学推理上，GPT-5.2 和 Gemini 保有明显优势——GPQA 92.4 对 86。所以「与前沿相当」在总平均上成立，具体形状是：浏览与行动类最强，软件工程有竞争力，博士级问答落后。对开源权重模型而言，这仍是了不起的位置。"
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "第三方榜单",
+      "action_title": "首个在 Intelligence Index v4.0 上拿到 ==p|50== 分的开源权重模型",
+      "figure": {
+        "src": "figures/chart-aa-index.png",
+        "caption": "根据论文报告的 Intelligence Index v4.0 分数重绘——非论文原图。",
+        "cite": "GLM-5 Team 2026"
+      },
+      "annotation": "==p|50== 分（GLM-4.7 为 ==42==）——开源权重首次触线；同时是 ==k|LMArena 文本与代码双榜第一的开源模型==。",
+      "source_ref": "图 2–3 · §1",
+      "speaker_notes": "两个第三方信号，重要性在于任务集不是厂商自己挑的。Artificial Analysis 把十项评测——GDPval-AA、Terminal-Bench Hard、GPQA Diamond、HLE 等——聚合成智能指数，GLM-5 是第一个到 50 分的开源权重模型，比 4.7 跳了 8 分。LMArena 是大规模真人偏好投票，它在文本和代码两个竞技场都是开源第一，总体与 Opus 4.5、Gemini 3 Pro 同档。当然这些也是营销最爱引用的榜单——但至少不是自建的。"
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "智能体工程",
+      "action_title": "自建 CC-Bench-V2 上==p|大幅甩开 GLM-4.7==——但==w|多数行仍是 Opus 领先==",
+      "table": {
+        "caption": "CC-Bench-V2（节选）— 真实世界编码任务，Agent-as-a-Judge 评测",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "任务（指标）"
+          },
+          {
+            "label": "GLM-5"
+          },
+          {
+            "label": "GLM-4.7"
+          },
+          {
+            "label": "Opus 4.5",
+            "unit": "Claude"
+          }
+        ],
+        "rows": [
+          [
+            "前端 HTML（ISR）",
+            "38.9",
+            "35.4",
+            {
+              "v": "52.2",
+              "bold": true
+            }
+          ],
+          [
+            "构建：React（BSR）",
+            {
+              "v": "100",
+              "bold": true
+            },
+            "65.0",
+            "95.0"
+          ],
+          [
+            "后端工程（Pass@1）",
+            "25.8",
+            "19.6",
+            {
+              "v": "26.9",
+              "bold": true
+            }
+          ],
+          [
+            "仓库探索（Pass@1）",
+            {
+              "v": "65.6",
+              "bold": true
+            },
+            "47.8",
+            "64.5"
+          ],
+          [
+            "链式任务（Pass@1）",
+            "52.3",
+            "43.0",
+            {
+              "v": "61.6",
+              "bold": true
+            }
+          ]
+        ],
+        "footnote": "ISR = 实例成功率；BSR = 构建成功率。前端由 GUI 智能体（Playwright）按清单逐项验收；后端须通过真实项目单元测试。"
+      },
+      "source_ref": "表 8 · §6.2",
+      "speaker_notes": "这才是标题真正指向的基准——他们自建的 CC-Bench-V2：前端项目由 GUI 智能体真实点开验收，后端任务必须过真实单元测试，长程任务链从真实 PR 历史挖出来。两种读法。对自家 4.7：全面大涨，构建成功率从六成五到一百。对 Opus 4.5：GLM-5 赢在仓库探索和构建可靠性，但前端质量差距很大——38.9 对 52.2——链式任务也输。所以「智能体工程」是真进步，同时最难的行上前沿仍然领先。别忘了：这个基准是自建自评的。"
+    },
+    {
+      "layout": "critique-concerns",
+      "action_title": "工程令人佩服——四个我会追问的地方",
+      "points": [
+        {
+          "head": "旗舰证据是==w|自建基准 + 机器裁判==",
+          "body": "CC-Bench-V2 是作者自建，由 Agent-as-a-Judge（GUI 智能体 + LLM 评审）打分；MCP-Atlas 用 Gemini 3 Pro 当裁判。裁判可靠性与基准所有权都朝有利于自己的方向倾斜。（我的分析）"
+        },
+        {
+          "head": "评测调整==w|全部指向同一方向==",
+          "body": "τ²-Bench 调提示词、MCP-Atlas 超时 4→10 分钟、「verified」版 Terminal-Bench 把 56.2 抬到 60.7。每一项单看都合理且已披露——但每一项都对主队有利。（我的分析）"
+        },
+        {
+          "head": "「与前沿相当」是==w|选择性成立==",
+          "body": "Opus 4.5 仍领先 SWE-bench Verified（80.9 对 77.8）、CyberGym（50.6 对 43.2）和 CC-Bench 多数行；GPQA 落后 GPT-5.2 达 6.4 分。胜利集中在浏览/长程类目。（我的分析）"
+        },
+        {
+          "head": "架构创新==k|大头是引进的==",
+          "body": "DSA 是 DeepSeek 的机制，属于采用而非发明；真正自研的是 Muon Split、MTP 参数共享和 RL 基础设施。「范式转移」的措辞跑在了架构增量前面。（我的分析）"
+        }
+      ],
+      "source_ref": "我的批判性解读",
+      "speaker_notes": "先给该给的信用——工程是认真的，披露也少见地坦诚，连奖励破解都写了。四个追问。第一，核心证据出自自家基准，裁判还是自家搭的智能体栈；几个百分点的差距在裁判噪声之内，等复现。第二，提示词、超时、verified 变体这些调整，单看都有道理，合起来方向一致。第三，前沿平位在总平均成立，在最难的软件行不成立，Opus 保有真实领先。第四，架构最大的部件来自 DeepSeek——引用得很坦诚，但这样一来「GLM-5 发明了什么」的正确参照系是训练系统，不是注意力。",
+      "eyebrow": "批判性解读"
+    },
+    {
+      "layout": "discussion-questions",
+      "action_title": "留给大家的问题",
+      "questions": [
+        "==k|Agent-as-a-Judge==（GUI 智能体 + LLM 评审）能可靠区分只差几分的模型吗——换人类工程师评 CC-Bench-V2，排名会一样吗？",
+        "异步 RL 意味着轨迹被消费时==w|越来越偏离当前策略==——这个规模下 GRPO 的稳定性还剩多少，陈旧度悬崖在哪里？",
+        "==k|Preserved Thinking== 在约 20 万 token 上下文里跨轮保留全部推理：保留的思考什么时候是复利，什么时候变成自我污染？",
+        "匿名发布的==k|「Pony Alpha」==实验：25% 的用户猜它是 Claude Sonnet 5——这是风格趋同、数据同源，还是蒸馏压力？"
+      ],
+      "speaker_notes": "四个开放问题。一，测量问题：LLM 加 GUI 裁判能不能给只差三分的模型排序，人评子集会怎样？二，系统问题：异步 RL 用 on-policy 换吞吐，GRPO 从哪里开始退化？三，接口问题：保留思考是上下文复利还是噪声复利，多长的任务是分水岭？四，轻松一点的：他们把模型匿名挂上 OpenRouter 叫 Pony Alpha，四分之一用户猜是 Claude Sonnet 5——这种趋同说明了什么？"
+    },
+    {
+      "layout": "references",
+      "title": "参考文献",
+      "entries": [
+        "GLM-5 Team (2026). GLM-5: from Vibe Coding to Agentic Engineering. arXiv:2602.15763. https://doi.org/10.48550/arXiv.2602.15763",
+        "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556.（DSA 出处，原文引用 [9]）"
+      ],
+      "speaker_notes": "主要文献与 DSA 的出处 DeepSeek-V3.2。代码和模型在 zai-org 的 GitHub。"
+    }
+  ]
 }

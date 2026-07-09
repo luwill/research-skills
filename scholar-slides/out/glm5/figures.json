@@ -1,0 +1,648 @@
+[
+  {
+    "id": "figure-1",
+    "kind": "figure",
+    "number": "1",
+    "label": "Figure 1",
+    "caption": "Figure 1: Results of GLM-5, DeepSeek-V3.2, Claude Opus 4.5, Gemini 3 Pro, and GPT-5.2 (xhigh) on 8 agentic, reasoning, and coding benchmarks: Humanity’s Last Exam, SWE-bench Verified, SWE- bench Multilingual, Terminal-Bench 2.0, BrowseComp, MCP-Atlas, τ 2 -Bench, Vending Bench 2.",
+    "page": 1,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      675.0263671875,
+      505.6514892578125,
+      706.7880249023438
+    ],
+    "figure_bbox": [
+      108.0,
+      161.1605224609375,
+      505.6514892578125,
+      675.0263671875
+    ],
+    "min_font_pt": 4.2,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-2",
+    "kind": "figure",
+    "number": "2",
+    "label": "Figure 2",
+    "caption": "Figure 2: Artificial Analysis Intelligence Index v4.0 incorporates 10 evaluations: GDPval-AA, τ 2 - Bench Telecom, Terminal-Bench Hard, SciCode, AA-LCR, AA-Omniscience, IFBench, Humanity’s Last Exam, GPQA Diamond, CritPt.",
+    "page": 2,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      195.02870178222656,
+      505.654296875,
+      228.32009887695312
+    ],
+    "figure_bbox": [
+      108.0,
+      71.99478912353516,
+      505.654296875,
+      195.02870178222656
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-3",
+    "kind": "figure",
+    "number": "3",
+    "label": "Figure 3",
+    "caption": "Figure 3: On LMArena, GLM-5 is the #1 open model in both Text Arena and Code Arena.",
+    "page": 3,
+    "render_as": "image",
+    "caption_bbox": [
+      125.44300079345703,
+      241.4004669189453,
+      486.55731201171875,
+      251.36306762695312
+    ],
+    "figure_bbox": [
+      109.28099822998047,
+      71.99522399902344,
+      502.708984375,
+      241.4004669189453
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-4",
+    "kind": "figure",
+    "number": "4",
+    "label": "Figure 4",
+    "caption": "Figure 4: Results on several long-horizon tasks. Left: Vending-Bench 2; Right: CC-Bench-V2.",
+    "page": 3,
+    "render_as": "image",
+    "caption_bbox": [
+      116.69702911376953,
+      400.678466796875,
+      495.3055725097656,
+      410.6410827636719
+    ],
+    "figure_bbox": [
+      108.68299865722656,
+      71.99522399902344,
+      503.3689880371094,
+      400.678466796875
+    ],
+    "min_font_pt": 10.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-5",
+    "kind": "figure",
+    "number": "5",
+    "label": "Figure 5",
+    "caption": "Figure 5: Overall training pipeline of GLM-5.",
+    "page": 4,
+    "render_as": "image",
+    "caption_bbox": [
+      214.3249969482422,
+      301.72344970703125,
+      397.67657470703125,
+      311.6860656738281
+    ],
+    "figure_bbox": [
+      108.0,
+      72.0008544921875,
+      503.9950866699219,
+      301.72344970703125
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-1",
+    "kind": "table",
+    "number": "1",
+    "label": "Table 1",
+    "caption": "Table 1: Evaluation results for GQA-8 and variants of MLA.",
+    "page": 5,
+    "render_as": "data",
+    "caption_bbox": [
+      185.0050048828125,
+      79.05445861816406,
+      426.68768310546875,
+      89.01705932617188
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-2",
+    "kind": "table",
+    "number": "2",
+    "label": "Table 2",
+    "caption": "Table 2: Comparison of accept lengths of DeepSeek-V3.2 and GLM-5.",
+    "page": 5,
+    "render_as": "data",
+    "caption_bbox": [
+      345.29400634765625,
+      392.227294921875,
+      504.0018615722656,
+      413.174072265625
+    ],
+    "figure_bbox": [
+      345.29400634765625,
+      413.174072265625,
+      504.0018615722656,
+      461.7920837402344
+    ],
+    "min_font_pt": 10.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-3",
+    "kind": "table",
+    "number": "3",
+    "label": "Table 3",
+    "caption": "Table 3: Comparison of long-context benchmarks between MLA and DSA base models.",
+    "page": 5,
+    "render_as": "data",
+    "caption_bbox": [
+      130.04100036621094,
+      577.552490234375,
+      481.65106201171875,
+      587.5150756835938
+    ],
+    "figure_bbox": [
+      107.53199768066406,
+      587.5150756835938,
+      505.6546936035156,
+      752.2950439453125
+    ],
+    "min_font_pt": 7.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-6",
+    "kind": "figure",
+    "number": "6",
+    "label": "Figure 6",
+    "caption": "Figure 6: SFT loss curves comparison between MLA and DSA training. Results are smoothed by Running Average with a window size of 50.",
+    "page": 6,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      220.75631713867188,
+      504.3530578613281,
+      241.70309448242188
+    ],
+    "figure_bbox": [
+      108.0,
+      71.68263244628906,
+      504.3530578613281,
+      220.75631713867188
+    ],
+    "min_font_pt": 3.2,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-4",
+    "kind": "table",
+    "number": "4",
+    "label": "Table 4",
+    "caption": "Table 4: RULER benchmark results for the GLM-9B baseline and two SWA variants without any additional training . Both SWA methods use a 1:1 ratio of full-attention to SWA layers with a 4096-token window size. The search-based SWA pattern is discovered once at 16k context length and applied uniformly across all input lengths.",
+    "page": 7,
+    "render_as": "data",
+    "caption_bbox": [
+      107.6510009765625,
+      179.30404663085938,
+      504.0041198730469,
+      222.24710083007812
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-5",
+    "kind": "table",
+    "number": "5",
+    "label": "Table 5",
+    "caption": "Table 5: Long-context benchmark results. All efficient attention variants are continual-trained from the GLM-9B full-attention baseline. SWA pattern denotes search-based layer selection; SWA interleave denotes the fixed alternating pattern. ∆ @64K and ∆ @128K show the difference relative to the full-attention baseline at 64K and 128K context lengths, respectively.",
+    "page": 7,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      354.7153015136719,
+      504.3592529296875,
+      397.4810791015625
+    ],
+    "figure_bbox": [
+      107.25299835205078,
+      397.4810791015625,
+      505.6499938964844,
+      752.2950439453125
+    ],
+    "min_font_pt": 5.1,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-6",
+    "kind": "table",
+    "number": "6",
+    "label": "Table 6",
+    "caption": "Table 6: RULER benchmark results for the GLM-4.7-Flash with DSA. The warmup-only variant trains only the indexer while keeping the base model frozen, the full DSA variant jointly trains both for 150B tokens.",
+    "page": 8,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      78.97927856445312,
+      504.0034484863281,
+      110.83505249023438
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-7",
+    "kind": "figure",
+    "number": "7",
+    "label": "Figure 7",
+    "caption": "Figure 7: Illustration of Interleaved Thinking and Preserved Thinking.",
+    "page": 10,
+    "render_as": "image",
+    "caption_bbox": [
+      166.0760040283203,
+      290.2464599609375,
+      445.92535400390625,
+      300.2090759277344
+    ],
+    "figure_bbox": [
+      109.60652923583984,
+      73.91863250732422,
+      501.9930725097656,
+      290.2464599609375
+    ],
+    "min_font_pt": 4.4,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-8",
+    "kind": "figure",
+    "number": "8",
+    "label": "Figure 8",
+    "caption": "Figure 8: Accuracy of BrowseComp with different context management strategies from GLM-4.7 (gray baselines) to GLM-5 (colored strategies).",
+    "page": 19,
+    "render_as": "image",
+    "caption_bbox": [
+      107.6709976196289,
+      252.22830200195312,
+      504.4952392578125,
+      273.1750793457031
+    ],
+    "figure_bbox": [
+      107.6709976196289,
+      71.99798583984375,
+      504.4952392578125,
+      252.22830200195312
+    ],
+    "min_font_pt": 5.3,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-9",
+    "kind": "figure",
+    "number": "9",
+    "label": "Figure 9",
+    "caption": "Figure 9: Examples of reward hacking in the slides RL training. Our runtime rendering obtains grounded attribute values, making the evaluation robust to such hacking behaviors.",
+    "page": 20,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      662.4092407226562,
+      503.9973449707031,
+      683.3560180664062
+    ],
+    "figure_bbox": [
+      107.53199768066406,
+      74.31652069091797,
+      505.74530029296875,
+      662.4092407226562
+    ],
+    "min_font_pt": 4.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-7",
+    "kind": "table",
+    "number": "7",
+    "label": "Table 7",
+    "caption": "Table 7: Comparison between GLM-5 and open-source/proprietary models. Results marked with * are from the full set of HLE. Results marked with † are evaluated on a verified version of Terminal- Bench 2.0, fixing some ambiguous instructions. The GDPval-AA Elo scores are recorded on 15th Feb., 2026. The highest score for each benchmark is bolded , and the second highest is underlined.",
+    "page": 23,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      79.04312896728516,
+      505.65020751953125,
+      121.74404907226562
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-10",
+    "kind": "figure",
+    "number": "10",
+    "label": "Figure 10",
+    "caption": "Figure 10: Agent-as-a-Judge evaluation pipeline. Each generated frontend project is first built to verify static correctness. Successfully built instances are then interactively tested by an autonomous Judge Agent, which determines the functional correctness of each check item.",
+    "page": 25,
+    "render_as": "image",
+    "caption_bbox": [
+      107.7509994506836,
+      636.3562622070312,
+      503.99725341796875,
+      668.2120361328125
+    ],
+    "figure_bbox": [
+      107.64099884033203,
+      78.88741302490234,
+      505.38555908203125,
+      636.3562622070312
+    ],
+    "min_font_pt": 4.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-8",
+    "kind": "table",
+    "number": "8",
+    "label": "Table 8",
+    "caption": "Table 8: CC-Bench-V2 evaluation results across frontend, backend, and long-horizon tasks. BSR : Build Success Rate; ISR : Instance Success Rate; CSR : Check-item Success Rate.",
+    "page": 25,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      78.88741302490234,
+      505.38555908203125,
+      99.92605590820312
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-9",
+    "kind": "table",
+    "number": "9",
+    "label": "Table 9",
+    "caption": "Table 9: Performance on SWE-rebench, January 2026. Model Resolved Rate (%) Resolved Rate SEM ( ± , %) Pass@5 (%)",
+    "page": 27,
+    "render_as": "data",
+    "caption_bbox": [
+      132.6230010986328,
+      79.05445861816406,
+      476.8906555175781,
+      103.63705444335938
+    ],
+    "figure_bbox": [
+      132.6230010986328,
+      103.63705444335938,
+      476.8906555175781,
+      196.11502075195312
+    ],
+    "min_font_pt": 10.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-11",
+    "kind": "figure",
+    "number": "11",
+    "label": "Figure 11",
+    "caption": "Figure 11: Performance comparison between GLM-4.7 and GLM-5 across five real-world general ability domains.",
+    "page": 28,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      333.5022888183594,
+      504.00323486328125,
+      354.43408203125
+    ],
+    "figure_bbox": [
+      108.0,
+      71.99603271484375,
+      504.0065002441406,
+      333.5022888183594
+    ],
+    "min_font_pt": 3.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-10",
+    "kind": "table",
+    "number": "10",
+    "label": "Table 10",
+    "caption": "Table 10: Model architecture of GLM-4.5 and GLM-5. When counting parameters, for all models we include the parameters of MTP layers but not word embeddings and the output layer.",
+    "page": 36,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      201.2464141845703,
+      503.9950866699219,
+      222.04208374023438
+    ],
+    "figure_bbox": [
+      107.69100189208984,
+      222.04208374023438,
+      503.9950866699219,
+      475.6650695800781
+    ],
+    "min_font_pt": 10.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-11",
+    "kind": "table",
+    "number": "11",
+    "label": "Table 11",
+    "caption": "Table 11: Comparison among GLM-5-Base, GLM-4.5-Base and other representative open-source base models.",
+    "page": 37,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      78.97927856445312,
+      504.00360107421875,
+      99.92605590820312
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-12",
+    "kind": "figure",
+    "number": "12",
+    "label": "Figure 12",
+    "caption": "Figure 12: The optimized user prompt for τ 2 -Bench Telecom.",
+    "page": 38,
+    "render_as": "image",
+    "caption_bbox": [
+      182.50900268554688,
+      299.09173583984375,
+      429.4910583496094,
+      310.5650634765625
+    ],
+    "figure_bbox": [
+      108.0,
+      71.99867248535156,
+      504.00506591796875,
+      299.09173583984375
+    ],
+    "min_font_pt": 9.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-13",
+    "kind": "figure",
+    "number": "13",
+    "label": "Figure 13",
+    "caption": "Figure 13: The optimized user prompt for τ 2 -Bench Retail.",
+    "page": 39,
+    "render_as": "image",
+    "caption_bbox": [
+      187.69000244140625,
+      348.19476318359375,
+      424.3109130859375,
+      359.6680908203125
+    ],
+    "figure_bbox": [
+      108.0,
+      71.99603271484375,
+      504.00506591796875,
+      348.19476318359375
+    ],
+    "min_font_pt": 9.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-12",
+    "kind": "table",
+    "number": "12",
+    "label": "Table 12",
+    "caption": "Table 12: Distribution of frontend application scenarios.",
+    "page": 39,
+    "render_as": "data",
+    "caption_bbox": [
+      193.84201049804688,
+      479.4364929199219,
+      417.8509521484375,
+      489.39910888671875
+    ],
+    "figure_bbox": [
+      108.0,
+      489.39910888671875,
+      505.6531677246094,
+      752.2940673828125
+    ],
+    "min_font_pt": 9.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-13",
+    "kind": "table",
+    "number": "13",
+    "label": "Table 13",
+    "caption": "Table 13: Statistics of technology stacks and evaluation units. Category Description # Tasks # Checkitems",
+    "page": 39,
+    "render_as": "data",
+    "caption_bbox": [
+      136.8560028076172,
+      654.0274658203125,
+      475.1460876464844,
+      678.5191040039062
+    ],
+    "figure_bbox": [
+      136.8560028076172,
+      678.5191040039062,
+      475.1460876464844,
+      752.2940673828125
+    ],
+    "min_font_pt": 10.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  }
+]

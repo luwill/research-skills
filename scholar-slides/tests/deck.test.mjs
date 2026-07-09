@@ -68,7 +68,7 @@ test("renderTable builds a real <table>, bolds best, puts units in header", () =
     rows: [["Transformer", { v: "28.4", bold: true }]],
     footnote: "WMT 2014",
   });
-  assert.match(html, /<table class="results">/);
+  assert.match(html, /<table class="results roomy">/); // 1 row x 2 cols: small tables set roomy
   assert.match(html, /<th>BLEU<span class="u">EN-DE<\/span><\/th>/);
   assert.match(html, /<th>Transformer<\/th>/); // row header
   assert.match(html, /<td><strong>28\.4<\/strong><\/td>/); // best bolded

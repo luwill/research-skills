@@ -1,0 +1,194 @@
+[
+  {
+    "id": "figure-1",
+    "kind": "figure",
+    "number": "1",
+    "label": "Figure 1",
+    "caption": "Figure 1: Diagram of how FlashAttention forward pass is performed, when the key K is partitioned into two blocks and the value V is also partitioned into two blocks. By computing attention with respect to each block and rescaling the output, we get the right answer at the end, while avoiding expensive memory reads/writes of the intermediate matrices S and P . We simplify the diagram, omitting the step in softmax that subtracts each element by the row-wise max.",
+    "page": 4,
+    "render_as": "image",
+    "caption_bbox": [
+      72.0,
+      626.6782836914062,
+      540.3164672851562,
+      686.4244995117188
+    ],
+    "figure_bbox": [
+      72.0,
+      74.85389709472656,
+      541.9310302734375,
+      626.6782836914062
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-2",
+    "kind": "figure",
+    "number": "2",
+    "label": "Figure 2",
+    "caption": "Figure 2: In the forward pass (left), we parallelize the workers (thread blocks) where each worker takes care of a block of rows of the attention matrix. In the backward pass (right), each worker takes care of a block of columns of the attention matrix.",
+    "page": 8,
+    "render_as": "image",
+    "caption_bbox": [
+      72.0,
+      608.5899047851562,
+      540.0326538085938,
+      642.4635009765625
+    ],
+    "figure_bbox": [
+      72.0,
+      74.62425231933594,
+      541.38720703125,
+      608.5899047851562
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-3",
+    "kind": "figure",
+    "number": "3",
+    "label": "Figure 3",
+    "caption": "Figure 3: Work partitioning between different warps in the forward pass",
+    "page": 9,
+    "render_as": "image",
+    "caption_bbox": [
+      148.32400512695312,
+      435.7478942871094,
+      463.679931640625,
+      445.71051025390625
+    ],
+    "figure_bbox": [
+      71.62100219726562,
+      73.49242401123047,
+      541.9208374023438,
+      435.7478942871094
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-4",
+    "kind": "figure",
+    "number": "4",
+    "label": "Figure 4",
+    "caption": "Figure 4: Attention forward + backward speed on A100 GPU",
+    "page": 10,
+    "render_as": "image",
+    "caption_bbox": [
+      171.00498962402344,
+      709.2208862304688,
+      441.0013427734375,
+      719.1834716796875
+    ],
+    "figure_bbox": [
+      70.83499908447266,
+      72.87134552001953,
+      541.88525390625,
+      709.2208862304688
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-5",
+    "kind": "figure",
+    "number": "5",
+    "label": "Figure 5",
+    "caption": "Figure 5: Attention forward speed on A100 GPU",
+    "page": 11,
+    "render_as": "image",
+    "caption_bbox": [
+      198.82398986816406,
+      411.29290771484375,
+      413.18914794921875,
+      421.2555236816406
+    ],
+    "figure_bbox": [
+      77.8499984741211,
+      72.86114501953125,
+      534.1513061523438,
+      411.29290771484375
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-6",
+    "kind": "figure",
+    "number": "6",
+    "label": "Figure 6",
+    "caption": "Figure 6: Attention backward speed on A100 GPU",
+    "page": 12,
+    "render_as": "image",
+    "caption_bbox": [
+      194.82598876953125,
+      411.29290771484375,
+      417.17120361328125,
+      421.2555236816406
+    ],
+    "figure_bbox": [
+      77.8499984741211,
+      72.86114501953125,
+      534.1513061523438,
+      411.29290771484375
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-1",
+    "kind": "table",
+    "number": "1",
+    "label": "Table 1",
+    "caption": "Table 1: Training speed (TFLOPs/s/GPU) of GPT-style models on 8 × A100 GPUs. FlashAttention-2 reaches up to 225 TFLOPs/s (72% model FLOPs utilization). We compare against a baseline running without FlashAttention .",
+    "page": 12,
+    "render_as": "data",
+    "caption_bbox": [
+      71.64099884033203,
+      433.11126708984375,
+      540.2716674804688,
+      469.0755310058594
+    ],
+    "figure_bbox": [
+      71.64099884033203,
+      469.0755310058594,
+      540.3448486328125,
+      668.3284912109375
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-7",
+    "kind": "figure",
+    "number": "7",
+    "label": "Figure 7",
+    "caption": "Figure 7: Attention forward + backward speed on H100 GPU",
+    "page": 13,
+    "render_as": "image",
+    "caption_bbox": [
+      171.00498962402344,
+      411.326904296875,
+      441.0013427734375,
+      421.2895202636719
+    ],
+    "figure_bbox": [
+      77.8499984741211,
+      72.86135864257812,
+      534.1532592773438,
+      411.326904296875
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  }
+]

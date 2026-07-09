@@ -5,9 +5,36 @@
 import fs from "node:fs";
 import path from "node:path";
 import { groundNumbers, collectFlags, layoutMix, emphasisAudit, figureCrowding } from "./lib/qa.mjs";
+import { buildFigMeta } from "./lib/render_checks.mjs";
 import { timingReport } from "./lib/notes.mjs";
 import { validateDeck } from "./validate_deck.mjs";
 import { verifySlides } from "./verify_slides.mjs";
+
+// render-review stage (aesthetics program M6a): the 6-dimension rubric loop
+// (references/aesthetics-review.md) must RUN and spend its rework list down before CKPT-3.
+// The loop itself is a model task; this gate makes skipping it, or leaving rework slides
+// open, visible in the report instead of silent.
+export function renderReviewFindings(deckDir) {
+  const p = path.join(deckDir, "aesthetics_report.json");
+  if (!fs.existsSync(p)) {
+    return [{ stage: "render-review", check: "aesthetics-not-run", severity: "P3",
+      detail: "no aesthetics_report.json — run the 6-dimension rubric on the rendered slides (references/aesthetics-review.md) and write the report next to deck.html" }];
+  }
+  let report;
+  try {
+    report = JSON.parse(fs.readFileSync(p, "utf-8"));
+    if (typeof report !== "object" || report === null || !Array.isArray(report.rework)) throw new Error("missing rework list");
+  } catch (e) {
+    return [{ stage: "render-review", check: "aesthetics-report-invalid", severity: "P2",
+      detail: `aesthetics_report.json unreadable (${e.message}) — regenerate it from the rubric loop` }];
+  }
+  if (report.rework.length) {
+    const slides = report.rework.map((r) => r.slide).join(", ");
+    return [{ stage: "render-review", check: "aesthetics-rework-open", severity: "P2",
+      detail: `${report.rework.length} slide(s) below the rubric floor (dim <=2 or total <18): ${slides} — fix, re-render, re-score` }];
+  }
+  return [];
+}
 
 export async function qaReport(deckDir, sourceDir) {
   sourceDir = sourceDir || path.resolve(deckDir, "..");
@@ -55,7 +82,17 @@ export async function qaReport(deckDir, sourceDir) {
       detail: `slide(s) ${emph.over.join(", ")} use >${emph.maxAdded} added emphasis treatments — reads as over-marked; keep metric/positive/warn to <=2 per slide (key/accent is free)` });
   }
   for (const v of validateDeck(deckDir)) findings.push({ stage: "validate", ...v });
-  for (const v of await verifySlides(path.join(deckDir, "deck.html"))) findings.push({ stage: "verify", ...v });
+  // Exact figure-legibility projection needs the crop metadata detect_figures emitted.
+  const figuresPath = path.join(sourceDir, "figures.json");
+  const figMeta = fs.existsSync(figuresPath)
+    ? buildFigMeta(JSON.parse(fs.readFileSync(figuresPath, "utf-8")))
+    : new Map();
+  for (const v of await verifySlides(path.join(deckDir, "deck.html"), { figMeta })) findings.push({ stage: "verify", ...v });
+  for (const v of renderReviewFindings(deckDir)) findings.push(v);
+  const aesPath = path.join(deckDir, "aesthetics_report.json");
+  if (fs.existsSync(aesPath)) {
+    try { findings._aesthetics = { mean: JSON.parse(fs.readFileSync(aesPath, "utf-8")).mean }; } catch { /* reported above */ }
+  }
   findings._timing = timing; // carried for the summary line (non-finding metadata)
   return findings;
 }

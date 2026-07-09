@@ -94,7 +94,7 @@ This is where Nature/Science decks are won or lost.
   is a smell — the deck is telling, not showing. Prefer assertion-evidence, results-table, and
   redrawn charts over bullets. This is enforced deterministically: `qa.layoutMix(deck)` computes the
   ratio and `qa_report` emits a P3 nudge when bullet-ratio > 1/3 (and when ≥4 identical layouts run
-  consecutively). The worked conference deck (`out/deepseek_conf/`) is 0% bullets.
+  consecutively). The worked conference deck (`out/pancreatic_conf/`) is 0% bullets.
 - **Rhythm.** No 3 consecutive slides of the same layout; section dividers break long runs.
 - **Cover & close.** Title and references/questions slides get the same design care as the middle —
   they book-end the talk and set expectation.
@@ -113,6 +113,37 @@ top defects (ranked, each -> concrete fix):
   1. <defect>  ->  <fix>  (dimension, severity)
   ...
 ```
+
+**Persist the scores as `<deckDir>/aesthetics_report.json`** — this is what makes the loop a
+gate instead of a suggestion. `qa_report.mjs` reads it (render-review stage): missing report →
+P3 `aesthetics-not-run`; non-empty `rework` → P2 `aesthetics-rework-open`; the benchmark
+dashboard surfaces `mean` in its `aes/24` column. Minimum schema (extra fields welcome):
+
+```json
+{ "deck": "<name>", "mean": 21.4, "outOf": 24,
+  "slides": [ { "slide": 1, "dims": { "hierarchy": 4, "...": 3 }, "total": 19, "outOf": 20 } ],
+  "weakest3": [ { "slide": 11, "total": 18, "worst": "figures" } ],
+  "rework":   [ { "slide": 7, "reason": "figures 1 — smallest text projects ~9px" } ] }
+```
+
+Slides with no figure/data element score 5 dimensions (`"figures": null`, `outOf: 20`); a real
+worked example lives at `out/glm5/deck/aesthetics_report.json`.
+
+## Deterministic geometry checks (run automatically, before you score)
+
+The render-verification pass measures what needs no judgment, so your scoring pass can spend
+attention on what does. Emitted by `verify_slides.mjs` via `lib/render_checks.mjs`:
+
+- **`figure-text-illegible` (P2, exact):** smallest source-text span inside the crop
+  (`min_font_pt` in figures.json, from `detect_figures.py`) projected to stage px
+  (`min_font_pt × rendered_px / bbox_pt_width`) falls below **12px**. DPI cancels out.
+- **`figure-compressed` (P2, fallback):** no crop metadata (e.g. a manual crop) and a ≥1600px
+  source is displayed below **45%** of its native pixels — labels almost certainly illegible.
+- **`vertical-void` / `horizontal-void` (P3):** body content ends > **400px** above the stage
+  bottom, or reaches < **62%** of the stage width, on layouts that are supposed to fill the
+  canvas (covers, dividers, equations, references are exempt — their whitespace is composition).
+
+These are floors, not the rubric: a slide can pass all four and still be flat. Score it.
 
 Severity maps to the same ladder as code review: **CRITICAL** (collision, illegible figure,
 captured page furniture, placeholder leak) blocks; **HIGH** (off-grid, title mis-wrap, bullet

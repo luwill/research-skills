@@ -1,12 +1,12 @@
 ---
 name: scholar-slides
 description: >-
-  Use when the user wants a research paper, arXiv/DOI link, or research topic turned into
-  academic slides — journal club / lab meeting (组会汇报), thesis defense (答辩幻灯片),
-  conference or job talk (学术报告), poster, or grant pitch — or shares a paper and asks to
-  "make slides / 做成 PPT / 讲一下这篇论文", especially when equations, numbers, figures, and
-  citations must stay accurate and editable. NOT for marketing/pitch decks with no scholarly
-  source, and NOT for writing the paper itself.
+  Use when the user wants a research paper, arXiv/DOI link, or research topic turned
+  into academic slides — journal club / lab meeting (组会汇报), thesis defense (答辩幻灯片),
+  conference or job talk (学术报告), poster, or grant pitch — or shares a paper and asks
+  to "make slides / 做成 PPT / 讲一下这篇论文", especially when equations, numbers,
+  figures, and citations must stay accurate and editable. NOT for marketing/pitch decks
+  with no scholarly source, and NOT for writing the paper itself.
 ---
 
 # scholar-slides
@@ -17,12 +17,9 @@ persuasion, editability > flash.** Equations, tables, numbers, figures, and cita
 **true text/vector and traceable to the source** — never rasterized by an image model,
 never fabricated.
 
-This skill is self-contained: the runtime pipeline, references, and scripts below are all you
-need. Design rationale and the survey it grew from (landscape research, academic-needs analysis,
-design proposal, build log) live in the project repo under `docs/scholar-slides-design/` and are
-**not shipped inside the skill**.
+Design rationale and the survey it is built on live in `docs/`; build plan in `IMPLEMENTATION_PLAN.md`.
 
-## Locked stack
+## Locked stack (see docs/03-design-proposal.md §0)
 - **Render backend:** reveal.js + KaTeX → vector PDF (Playwright). Editable PPTX / Beamer later.
 - **Default deck type:** lab meeting / journal club (组会) — reading-first, high density.
 - **Citations:** Zotero-first (`mcp__zotero__*`), Crossref/arXiv/DOI fallback.
@@ -65,9 +62,13 @@ INPUT → 1.INGEST/DIGEST → [CKPT-1] → 2.DECK-TYPE → 3.OUTLINE → [CKPT-2
    (`journal-club` default / `conference`).
 6. **Self-review QA** — `references/qa-self-review.md` + `references/integrity.md`, then the
    **aesthetics loop** in `references/aesthetics-review.md`. Integrity scan + static validator +
-   render screenshots + narrative/timing checks; then score the rendered *pixels* on the
-   6-dimension rubric (adversarial persona) and rework any slide with a dimension ≤ 2. The QA report
-   also nudges on bullet-ratio and layout monotony.
+   render screenshots + narrative/timing checks; the render pass also measures geometry
+   deterministically (canvas voids, figure-text projected below the 12px legibility floor). Then
+   score the rendered *pixels* on the 6-dimension rubric (adversarial persona), **write the scores
+   to `<deck>/aesthetics_report.json`** (schema in aesthetics-review.md), and rework any slide with
+   a dimension ≤ 2 or total < 18 until the report's `rework` list is empty — the QA gate flags a
+   missing report (P3) and an unspent rework list (P2). It also nudges on bullet-ratio and layout
+   monotony.
    **→ [CKPT-3]** truth sign-off: review every `[MISSING]`/`[UNVERIFIED]` and generated asset.
 7. **Export** — `references/export.md`. Vector PDF (projection) + speaker notes + editable PPTX;
    verify the PPTX preserves the spec natively with `scripts/verify_pptx_parity.py` (protects the
@@ -77,60 +78,35 @@ Read **only** the reference file for the stage you are in (progressive disclosur
 `references/`). Each stage reads the **confirmed artifact of the prior stage** — the digest
 (Stage 1, user-confirmed at CKPT-1) and then `deck.json` — rather than re-deriving from the paper.
 
-## References routing table
-
-| Concern | File | Status |
-|---|---|---|
-| Source ingestion + the typed digest schema + CKPT-1 | `references/ingestion.md` | **live (Stage 1)** |
-| Integrity guardrails + MISSING/UNVERIFIED taxonomy | `references/integrity.md` | **live** |
-| Deck types: time→budget, arc, density, archetypes | `references/deck-types.md` | 组会 **live**; conf/答辩 guidance |
-| Narrative: paper-section→slide-role, arc-tension | `references/narrative.md` | **live (Stage 3)** |
-| Deck spec (deck.json) + rendering + registered layouts + CKPT-2 | `references/slide-spec.md` | **live (Stage 2)** |
-| Design system: type/color/layouts, anti-AI-slop, CJK, speaker notes | `references/design-system.md` | **live (Stage 4)** |
-| Equations: KaTeX/LaTeX, numbering, theorems | `references/math.md` | **live (Stage 2)** |
-| Figures & tables: furniture-stripped bbox crop, panel extraction, provenance, real tables | `references/figures-tables.md` | **live** |
-| Citations: Zotero-first, Crossref fallback, refs slide | `references/citations.md` | **live (Stage 3)** |
-| Data-bound charts from extracted numbers | `references/charts.md` | **live (Stage 5)** |
-| QA self-review gate (integrity + static + render) + CKPT-3 | `references/qa-self-review.md` | **live (Stage 3)** |
-| Aesthetics review: 6-dimension scoreable rubric (Nature/Science figure-editor) | `references/aesthetics-review.md` | **live** |
-| Themes: journal-club (default) / conference; token architecture | `references/design-system.md` | **live** |
-| Export: vector PDF + editable PPTX + PPTX-parity regression (Beamer deferred) | `references/export.md` | **live (Stage 2/5)** |
-
 ## Scripts (`scripts/`)
-Stage 1 (Python, via `./.venv/bin/python`; deps in `requirements.txt`):
+Ingestion — pipeline stage 1 (Python, via `./.venv/bin/python`; deps in `requirements.txt`):
 - `prepare_source.py` — **Stage 1 entry point**: PDF/arXiv → digest-input bundle.
 - `ingest_pdf.py` — PyMuPDF text+layout extraction; arXiv-id detection.
 - `detect_figures.py` — figure/table caption inventory + bounding-box localization.
 - `crop_figure.py` — clean single-figure bbox crop (no neighbor columns).
 
-Stage 2 (Node, via `node`; deps in `package.json`, `npm install` + `npx playwright install chromium`):
-- `build_deck.mjs` — **Stage 2 entry point**: `deck.json` → self-contained reveal.js deck.
+Deck build & render — pipeline stage 5 (Node, via `node`; deps in `package.json`, `npm install` + `npx playwright install chromium`):
+- `build_deck.mjs` — **render entry point**: `deck.json` → self-contained reveal.js deck.
 - `render_deck.mjs` — deck → one-page-per-slide **vector PDF** (and per-slide PNGs for QA).
 - `lib/` — `layouts` (registered-layout lock), `math` (KaTeX), `table`, `figure`, `escape`, `qa`.
 
-Stage 3 (citations = Python; QA = Node):
+Citations & QA — pipeline stages 5–6 (citations = Python; QA = Node):
 - `fetch_bib.py` — citation resolver (arXiv/DOI/Crossref) with order-sensitive title verification.
 - `qa_report.mjs` — **CKPT-3 gate**: integrity scan + `validate_deck.mjs` + `verify_slides.mjs` + timing.
 
-Stage 4 (Node):
+Speaker notes (Node):
 - `speaker_notes.mjs` — `deck.json` → `notes.md` handout + bilingual talk-length estimate.
 - `lib/notes.mjs` — timing + handout pure logic; design system in `assets/templates/themes/`.
 
-Stage 5 (export = Node; charts = Python):
+Export & charts — pipeline stage 7 (export = Node; charts = Python):
 - `export_pptx.mjs` — `deck.json` → **editable PPTX** (native text/tables/notes; figures+equations as images).
 - `make_chart.py` — chart spec → **data-bound** Okabe–Ito plot (values plotted verbatim).
 
-Tests: `./.venv/bin/python -m pytest` (Python; integration tests self-skip when
-`tests/fixtures/attention.pdf` is absent) and `node --test tests/*.mjs` (Node — deck, qa, notes,
-pptx, emphasis).
+Tests: `./.venv/bin/python -m pytest` (Python) and
+`node --test tests/deck.test.mjs tests/qa.test.mjs tests/notes.test.mjs tests/pptx.test.mjs` (Node).
 
 ## Build status
-**Stages 1–4 plus the core of Stage 5 are implemented and validated** on real papers:
-ingestion → typed digest (1); digest → vector reveal.js + KaTeX deck + one-page-per-slide
-vector PDF (2); citation resolver + automated QA/integrity gate catching fabricated numbers,
-broken figures, KaTeX errors, overflow, surfacing `[UNVERIFIED]` (3); academic design system +
-speaker notes/timing + bilingual EN/中文 CJK (4); **editable PPTX export** (native
-text/tables/notes) + **data-bound charts** (5). Still deferred from Stage 5: conference/答辩 deck
-types are authoring guidance (no new code needed), and Beamer export, OCR for scanned PDFs, and
-draft-deck ingestion are not built. A deck is "done" only after the CKPT-3 human truth sign-off;
-the gate surfaces defects but cannot certify truth.
+The whole pipeline is implemented and validated on real papers. Not built: Beamer export,
+OCR for scanned PDFs, draft-deck ingestion; conference/答辩 deck types are authoring guidance
+in `references/deck-types.md` (no dedicated code). A deck is "done" only after the CKPT-3
+human truth sign-off — the gate surfaces defects but cannot certify truth.

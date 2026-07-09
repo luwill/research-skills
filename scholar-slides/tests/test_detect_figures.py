@@ -221,3 +221,26 @@ class TestDetectPanels:
         # a,b present but the third labelled letter is 'e' (c,d missing) -> run stops at b -> not multipanel
         labels = [self.span("a", 39.9, 53.7), self.span("b", 39.9, 169.8), self.span("e", 39.9, 285.4)]
         assert df.detect_panels(labels, self.FIG) == []
+
+
+class TestMinFontInBbox:
+    """Smallest embedded text size inside a figure region -> figures.json `min_font_pt`.
+    QA projects it to on-slide pixels (min_font_pt * rendered_px / bbox_pt_width) and flags
+    figures whose smallest label would render below the legibility floor."""
+
+    FIG = (100, 50, 500, 300)
+
+    def span(self, size, x=200, y=100):
+        return {"text": "label", "bbox": (x, y, x + 30, y + size), "size": size}
+
+    def test_returns_smallest_size_of_spans_inside(self):
+        spans = [self.span(9.0), self.span(6.5), self.span(12.0)]
+        assert df.min_font_in_bbox(spans, self.FIG) == 6.5
+
+    def test_ignores_spans_outside_the_bbox(self):
+        spans = [self.span(4.0, x=600, y=400), self.span(8.0)]  # 4pt span lies outside
+        assert df.min_font_in_bbox(spans, self.FIG) == 8.0
+
+    def test_returns_none_for_textless_figures(self):
+        assert df.min_font_in_bbox([], self.FIG) is None
+        assert df.min_font_in_bbox([self.span(7.0)], None) is None

@@ -38,14 +38,7 @@ Scored on rendered pixels against the 6-dimension rubric. **Caveat: this is a se
 builder — directional, not a blind rating.** Each score is justified by concrete before/after
 evidence (the audit + screenshots across M1–M4). True calibration needs the external raters below.
 
-> **Historical baseline.** The M1→M4 arc below was measured on the original PANDA/pancreatic
-> development decks, which have since been retired from the benchmark corpus (now DeepSeek-V3.2 +
-> GLM-5; see `manifest.json`). The full audit is archived at
-> `docs/scholar-slides-design/04-panda-aesthetic-audit.md`. The scores are kept as the record of the
-> design program's before/after gains; re-score the *current* corpus decks with the loop in
-> `references/aesthetics-review.md` when a fresh rating is needed.
-
-**PANDA journal-club deck (historical — original `pancreatic` dev deck):**
+**PANDA journal-club deck (`out/pancreatic`):**
 
 | dimension | M1 baseline | after M4 | what moved it |
 |-----------|:-----------:|:--------:|---------------|
@@ -57,9 +50,8 @@ evidence (the audit + screenshots across M1–M4). True calibration needs the ex
 | Consistency & finish | 3 | 4 | one system via tokens/base-theme; PPTX parity verified |
 | **total** | **~15 / 24** | **~22 / 24** | |
 
-**PANDA conference cut (historical):** ~23/24 — same gains plus 0% bullets, section-divider
-rhythm, and full-bleed cover/dividers give hierarchy 4 and space 4. The current-corpus analogue is
-`out/deepseek_conf` (conference theme, 0% bullets).
+**PANDA conference cut (`out/pancreatic_conf`):** ~23/24 — same gains plus 0% bullets, section-divider
+rhythm, and full-bleed cover/dividers give hierarchy 4 and space 4.
 
 The biggest single lever was **Figures** (1.5 → 3.5): the M2 furniture-strip + panel extraction turned
 "screenshots of a PDF" into figures. Space (2 → 4) came from the M1 collision fix + matting.
@@ -71,8 +63,8 @@ The biggest single lever was **Figures** (1.5 → 3.5): the M2 furniture-strip +
 I cannot generate Gamma / Canva AI / Copilot decks here (no accounts). When you export them, this
 protocol makes the comparison rigorous:
 
-1. **Same inputs.** Feed each tool the *same* 3–5 benchmark papers (start with the DeepSeek-V3.2 and
-   Transformer papers — both in `benchmarks/manifest.json`).
+1. **Same inputs.** Feed each tool the *same* 3–5 benchmark papers (start with the PANDA paper and
+   the Transformer paper — both in `benchmarks/manifest.json`).
 2. **Anonymize.** Render every deck (ours + each competitor) to PDF → PNG per slide; strip tool
    branding/footers; assign random deck IDs. Raters must not know which tool made which.
 3. **Raters.** ≥3 independent raters, ideally domain readers (someone who runs journal clubs). Each

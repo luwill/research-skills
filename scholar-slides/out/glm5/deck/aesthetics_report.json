@@ -1,0 +1,37 @@
+{
+  "deck": "glm5",
+  "register": "Nature/Science figure-editor",
+  "scored_at": "2026-07-09 (post-M8 rebuild)",
+  "persona": "Nature figure editor preparing for print (scored on rendered PNGs)",
+  "mean": 22.3,
+  "outOf": 24,
+  "weakest3": [
+    { "slide": 8, "total": 16, "outOf": 20, "worst": "typography" },
+    { "slide": 3, "total": 17, "outOf": 20, "worst": "space" },
+    { "slide": 5, "total": 17, "outOf": 20, "worst": "typography" }
+  ],
+  "rework": [],
+  "slides": [
+    { "slide": 1, "dims": { "hierarchy": 4, "typography": 4, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 2, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": null, "color": 3, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 3, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 },
+    { "slide": 4, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 3, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 5, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 },
+    { "slide": 6, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 7, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 3, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 8, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 3 }, "total": 16, "outOf": 20 },
+    { "slide": 9, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 3, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 10, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 11, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 12, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 13, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 3, "consistency": 4 }, "total": 18, "outOf": 20 },
+    { "slide": 14, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 4, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 15, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 }
+  ],
+  "top_defects": [
+    { "rank": 1, "defect": "body measure runs ~85 actual chars (65ch token ≠ 65 characters) — slides 3/5/8/14", "fix": "M9a tighten --measure to ~52ch", "dimension": "typography", "severity": "MEDIUM" },
+    { "rank": 2, "defect": "hero footer repeats the figure number (\"Fig. 7 | … · Fig. 7 · §3.1\")", "fix": "M9c dedupe caption vs source_ref in the hero footer", "dimension": "consistency", "severity": "LOW" },
+    { "rank": 3, "defect": "Fig.7 'User message' chips sit exactly at the 12px projection floor (4.4pt source text)", "fix": "accepted borderline — a denser redraw would be the only further step", "dimension": "figures", "severity": "LOW" }
+  ],
+  "notes": "M8 cleared the entire rework list: slides 4/7/9 via figure.hero (caption folded to footer, annotation moved to speaker notes; Fig.7 projection 8.7px→12.0px, Fig.5 no longer compression-flagged, Fig.1 ~930px wide), slide 11 via native redraw of the AA-index headline (42→50, grounded in body text, deck palette). Remaining P2 on slide 7 is the accepted borderline above. Deck-level: bullet ratio 20%, cover/close share the register, talk time 10:44."
+}

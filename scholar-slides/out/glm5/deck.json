@@ -1,252 +1,454 @@
 {
- "meta": {
-  "title": "GLM-5: from Vibe Coding to Agentic Engineering",
-  "deck_type": "journal-club",
-  "language": "en",
-  "theme": "journal-club",
-  "figures_dir": "figures",
-  "source": {
-   "title": "GLM-5: from Vibe Coding to Agentic Engineering",
-   "arxiv_id": "2602.15763"
-  }
- },
- "slides": [
-  {
-   "layout": "paper-title",
-   "title": "GLM-5: from Vibe Coding to Agentic Engineering",
-   "authors": "GLM-5 Team — Zhipu AI & Tsinghua University",
-   "venue": "arXiv:2602.15763 · Feb 2026",
-   "presenter": "Journal club · louwill · 2026-07",
-   "speaker_notes": "This is GLM-5, Zhipu's February 2026 flagship. The pitch in one line: take the ARC recipe from GLM-4.5, adopt DeepSeek's sparse attention to make a 744-billion-parameter MoE affordable, rebuild the RL post-training around an asynchronous infrastructure, and aim the whole thing at real-world software engineering rather than static benchmarks. I'll walk the architecture, the training pipeline, the numbers, and then what I'd push on."
-  },
-  {
-   "layout": "outline-agenda",
-   "action_title": "Agenda",
-   "items": [
-    "Why: cost and real-world coding are the bottlenecks",
-    "Training pipeline at a glance",
-    "Architecture: DSA + efficiency fixes",
-    "Thinking modes for agents",
-    "Asynchronous agent RL",
-    "Results: benchmarks and leaderboards",
-    "Critical reading & discussion"
-   ],
-   "current": 0,
-   "speaker_notes": "Seven beats: motivation, the pipeline picture, architecture choices, the three thinking modes, the async RL story, the scoreboard, then critique and questions."
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "Motivation",
-   "action_title": "The bottlenecks moved: ==k|compute cost and real-world software engineering==",
-   "points": [
-    "LLMs are shifting from passive knowledge repositories to ==k|active problem solvers==; the paper names computational cost and real-world adaptability as the two primary bottlenecks.",
-    "GLM-4.5 united agentic, reasoning, and coding (ARC) in one MoE; GLM-5 attacks ==k|efficiency== (sparse attention) and ==k|autonomy== (asynchronous agent RL).",
-    "Claimed result: about ==20%== average improvement over GLM-4.7 on 8 ARC benchmarks, comparable to Claude Opus 4.5 and GPT-5.2 (xhigh), better than Gemini 3 Pro."
-   ],
-   "source_ref": "Abstract · §1",
-   "speaker_notes": "Framing first. The title phrase — vibe coding to agentic engineering — is marketing, but the underlying claim is concrete: models now spend hours writing code autonomously, so what matters is cost per unit of work and whether the agent survives real software engineering, not one-shot benchmark answers. GLM-5 goes after both: sparse attention for the cost side, a new RL stack for the autonomy side. Headline claim is a twenty percent average lift over their own 4.7 across eight agentic-reasoning-coding benchmarks."
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "Training pipeline",
-   "action_title": "One pipeline: scale to a ==744B== MoE, then climb an ==k|RL ladder without forgetting==",
-   "figure": {
-    "src": "figures/figure-5.png",
-    "caption": "Fig. 5 | Overall training pipeline of GLM-5.",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==28.5T== tokens of pre/mid-training, then an RL ladder (Reasoning → Agentic → General) with ==k|on-policy cross-stage distillation== against forgetting.",
-   "source_ref": "Fig. 5 · §1–3",
-   "speaker_notes": "The whole system on one slide. Left: base-model training — general corpus, then code and reasoning, then mid-training that stretches context and injects agent data; 28.5 trillion tokens all-in. Right: post-training as a ladder — supervised fine-tuning, then reasoning RL, then agentic RL, then general RL. The interesting part is the dashed box: on-policy cross-stage distillation, which keeps each later stage from erasing what the earlier stage learned. Remember GLM-4.5's story was uniting the three ARC capabilities; this is the industrialized version of that."
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "Architecture",
-   "action_title": "Architecture: ==k|imported DSA sparsity== plus home-grown efficiency fixes",
-   "points": [
-    "Scale: ==744B== total / ==40B== active parameters, ==256== experts, ==80== layers — double GLM-4.5 (355B / 32B), with fewer layers to cut expert-parallel communication.",
-    "==k|DSA (DeepSeek Sparse Attention)== replaces dense $O(L^2)$ attention with dynamic fine-grained token selection; long-context quality holds (SQuAD-128k ==p|86.0 vs 79.7== for the MLA baseline).",
-    "MTP with ==k|3-layer parameter sharing==: accept length ==2.76== vs DeepSeek-V3.2's 2.55 at equal draft-model memory; plus INT4 quantization-aware training in SFT.",
-    "Day-one adaptation to ==k|seven domestic GPU platforms== (Ascend, Moore Threads, Hygon, Cambricon, Kunlunxin, MetaX, Enflame)."
-   ],
-   "source_ref": "§1–2.1",
-   "speaker_notes": "Four architecture facts. One: it's a 744-billion parameter MoE with only 40 billion active — twice 4.5's size — and they deliberately went shallower, 80 layers, because expert-parallel communication was the tax. Two: the attention is DSA, adopted from DeepSeek — dynamic token selection instead of dense quadratic attention — and their long-context ablation says quality holds or improves. Three: multi-token prediction with shared parameters across three draft layers, which buys a longer speculative-decoding accept length than DeepSeek-V3.2 at the same memory. Four — and this is strategically interesting — full-stack support for seven Chinese GPU platforms from day one."
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "Ablation",
-   "action_title": "==k|Muon Split== closes MLA's gap to GQA-8 at equal or better memory",
-   "table": {
-    "caption": "Table 1 (selected) — attention variants under the Muon optimizer, base-model evals",
-    "row_header": true,
-    "columns": [
-     { "label": "Variant" },
-     { "label": "Hellaswag" },
-     { "label": "MMLU" },
-     { "label": "BBH" },
-     { "label": "GSM8K" },
-     { "label": "HumanEval" }
-    ],
-    "rows": [
-     [ "GQA-8", "77.3", "61.2", { "v": "53.3", "bold": true }, { "v": "47.6", "bold": true }, { "v": "38.5", "bold": true } ],
-     [ "MLA", "77.3", "61.5", "48.9", "46.2", "33.5" ],
-     [ "MLA + Muon Split", { "v": "77.8", "bold": true }, { "v": "62.5", "bold": true }, "51.8", "45.0", "36.7" ],
-     [ "MLA-256 + Muon Split", "77.4", "62.0", "51.3", "47.5", "36.6" ]
-    ],
-    "footnote": "Column-best in bold. MLA-256: head dim 192→256, heads reduced by 1/3 → cheaper decoding at constant training compute."
-   },
-   "source_ref": "Table 1 · §2.1",
-   "speaker_notes": "A genuinely useful ablation for anyone training MoEs with Muon. Vanilla MLA under Muon loses to grouped-query attention on reasoning-ish tasks — look at BBH, 48.9 versus 53.3. Their fix, Muon Split, orthogonalizes the projection matrices per-head instead of jointly, letting different heads update at different scales. That recovers most of the gap and even wins on Hellaswag and MMLU. The MLA-256 variant then re-shapes heads for cheaper decoding without losing that. Also note the stability claim: attention logits stayed stable through pre-training without clipping."
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "Agent interface",
-   "action_title": "Three thinking modes keep ==k|multi-turn agents coherent==",
-   "figure": {
-    "src": "figures/figure-7.png",
-    "caption": "Fig. 7 | Interleaved Thinking and Preserved Thinking.",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==k|Interleaved==: think before every tool call · ==k|Preserved==: reasoning kept across turns · Turn-level: toggle per turn. SFT context: ==202,752== tokens.",
-   "source_ref": "Fig. 7 · §3.1",
-   "speaker_notes": "This is the agent-interface contribution, and it's the part most directly aimed at coding agents like the ones we use. Interleaved thinking: a reasoning block before every response and every tool call, not just the first answer — better instruction following mid-episode. Preserved thinking: in a long coding session, the model keeps all its earlier reasoning blocks in context instead of throwing them away each turn and re-deriving — fewer inconsistencies deep into a session. And turn-level thinking is the pragmatic one: switch reasoning off for cheap turns to save latency and cost, on for hard ones. The SFT context window grows to 202,752 tokens to make room for all of this."
-  },
-  {
-   "layout": "bullets",
-   "eyebrow": "Post-training",
-   "action_title": "Asynchronous RL: ==k|generation decoupled from training==, agents learn from long horizons",
-   "points": [
-    "Infrastructure: builds on the ==k|slime== framework's decoupled rollout engines; generation and training run asynchronously to maximize GPU utilization and trajectory throughput.",
-    "Algorithms: asynchronous agent RL lets the model ==k|learn continuously from long-horizon interactions==, targeting planning and self-correction; the RL backbone is GRPO.",
-    "SFT keeps erroneous trajectory segments but ==k|masks them out of the loss== — the model sees error-correction behavior without reinforcing the errors.",
-    "They observed ==w|reward hacking== in slides-generation RL and countered it with runtime rendering checks (Fig. 9)."
-   ],
-   "source_ref": "§1 · §3 · Fig. 9",
-   "speaker_notes": "The RL story has an infrastructure half and an algorithm half. Infrastructure: rollouts and gradient updates are decoupled — generators keep producing agent trajectories while trainers consume them, so the GPUs never idle waiting for each other. Algorithms: asynchronous agent RL on top of a GRPO backbone, aimed at long-horizon planning and self-correction. Two details I like: they keep buggy segments in SFT trajectories but mask the loss, so the model learns what correction looks like; and they're candid about reward hacking in the slides-RL task — the model gamed the reward until they added runtime rendering as the verifier. Keep that in mind for the critique."
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "Headline result",
-   "action_title": "About ==20%== over GLM-4.7, ==k|shoulder-to-shoulder with Opus 4.5 and GPT-5.2==",
-   "figure": {
-    "src": "figures/figure-1.png",
-    "caption": "Fig. 1 | Eight agentic, reasoning, and coding benchmarks.",
-    "cite": "GLM-5 Team 2026"
-   },
-   "source_ref": "Fig. 1 · §1",
-   "speaker_notes": "The headline picture: eight benchmarks spanning reasoning, software engineering, and agentic work — HLE, both SWE-benches, Terminal-Bench 2.0, BrowseComp, MCP-Atlas, tau-squared-Bench, and Vending-Bench 2. Blue is GLM-5. The paper's own summary is fair — on average comparable to Claude Opus 4.5 and GPT-5.2 at max effort, better than Gemini 3 Pro, and about twenty percent above its predecessor GLM-4.7. The per-benchmark detail is on the next slide, where the picture is more selective."
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "Scoreboard",
-   "action_title": "Open-weights SOTA with ==k|selective wins== over the closed frontier",
-   "table": {
-    "caption": "Table 7 (selected) — GLM-5 vs open and proprietary frontier models (row-best in bold)",
-    "row_header": true,
-    "columns": [
-     { "label": "Benchmark" },
-     { "label": "GLM-5" },
-     { "label": "DeepSeek", "unit": "V3.2" },
-     { "label": "Kimi", "unit": "K2.5" },
-     { "label": "Opus 4.5", "unit": "Claude" },
-     { "label": "Gemini 3", "unit": "Pro" },
-     { "label": "GPT-5.2", "unit": "xhigh" }
-    ],
-    "rows": [
-     [ "HLE (w/ Tools)", "50.4", "40.8", { "v": "51.8", "bold": true }, "43.4", "45.8", "45.5" ],
-     [ "GPQA-Diamond", "86.0", "82.4", "87.6", "87.0", "91.9", { "v": "92.4", "bold": true } ],
-     [ "SWE-bench Verified", "77.8", "73.1", "76.8", { "v": "80.9", "bold": true }, "76.2", "80.0" ],
-     [ "SWE-bench Multilingual", "73.3", "70.2", "73.0", { "v": "77.5", "bold": true }, "65.0", "72.0" ],
-     [ "Terminal-Bench 2.0", "56.2", "39.3", "50.8", { "v": "59.3", "bold": true }, "54.2", "54.0" ],
-     [ "BrowseComp (w/ CM)", { "v": "75.9", "bold": true }, "67.6", "74.9", "57.8", "59.2", "65.8" ],
-     [ "τ²-Bench", "89.7", "85.3", "80.2", { "v": "91.6", "bold": true }, "90.7", "85.5" ]
-    ],
-    "footnote": "Selected rows from Table 7; HLE w/ Tools marked * (full set) for Claude/Gemini/GPT there. CM = context management. Closed-model scores as compiled by the paper."
-   },
-   "source_ref": "Table 7 · §6.1",
-   "speaker_notes": "Now the honest per-row read. Where GLM-5 actually leads everyone shown: browsing with context management, 75.9. Where it leads the open field but trails a closed model: software engineering — 77.8 on SWE-bench Verified against Opus's 80.9, terminal work 56.2 against 59.3, tau-squared against Opus. On pure knowledge and science reasoning, GPT-5.2 and Gemini keep a clear margin — GPQA 92.4 versus 86. So 'comparable to the frontier' is true in aggregate, and the specific shape is: strongest at browse-and-act, competitive at SWE, behind at PhD-level QA. For an open-weights model, that's still a remarkable position."
-  },
-  {
-   "layout": "assertion-evidence",
-   "eyebrow": "Leaderboards",
-   "action_title": "First open-weights model to score ==p|50== on the Intelligence Index v4.0",
-   "figure": {
-    "src": "figures/figure-2.png",
-    "caption": "Fig. 2 | Artificial Analysis Intelligence Index v4.0.",
-    "cite": "GLM-5 Team 2026"
-   },
-   "annotation": "==p|50== points, up from GLM-4.7's ==42== — first open-weights model at that mark; also ==k|#1 open model on LMArena Text and Code==.",
-   "source_ref": "Fig. 2–3 · §1",
-   "speaker_notes": "Two third-party signals, which matter because the vendor picked neither task set. Artificial Analysis aggregates ten evals — GDPval-AA, Terminal-Bench Hard, GPQA Diamond, HLE and six more — into their Intelligence Index; GLM-5 is the first open-weights model to reach fifty, an eight-point jump over 4.7. And on LMArena — human preference at scale, millions of real tasks — it's the number-one open model on both the text and code arenas, on par overall with Opus 4.5 and Gemini 3 Pro. Worth remembering these are also the leaderboards the marketing quotes; but they are at least not self-built."
-  },
-  {
-   "layout": "results-table",
-   "eyebrow": "Agentic engineering",
-   "action_title": "On their own CC-Bench-V2: a ==p|big jump over GLM-4.7== — but ==w|Opus still leads most rows==",
-   "table": {
-    "caption": "CC-Bench-V2 (selected) — real-world coding tasks, Agent-as-a-Judge evaluation",
-    "row_header": true,
-    "columns": [
-     { "label": "Task (metric)" },
-     { "label": "GLM-5" },
-     { "label": "GLM-4.7" },
-     { "label": "Opus 4.5", "unit": "Claude" }
-    ],
-    "rows": [
-     [ "Frontend HTML (ISR)", "38.9", "35.4", { "v": "52.2", "bold": true } ],
-     [ "Build: React (BSR)", { "v": "100", "bold": true }, "65.0", "95.0" ],
-     [ "Backend engineering (Pass@1)", "25.8", "19.6", { "v": "26.9", "bold": true } ],
-     [ "Repo exploration (Pass@1)", { "v": "65.6", "bold": true }, "47.8", "64.5" ],
-     [ "Chained tasks (Pass@1)", "52.3", "43.0", { "v": "61.6", "bold": true } ]
-    ],
-    "footnote": "ISR = instance success rate; BSR = build success rate. Frontend judged by a GUI agent (Playwright) + checklist; backend by real project unit tests."
-   },
-   "source_ref": "Table 8 · §6.2",
-   "speaker_notes": "This is the benchmark the title is really about — their own CC-Bench-V2 for end-to-end engineering: frontend projects judged by a GUI agent clicking through the app, backend tasks that must pass real unit tests, and long-horizon chains mined from actual PR histories. Read it two ways. Versus their own 4.7, it's a massive jump everywhere — builds went from sixty-five percent success to a hundred. Versus Opus 4.5, GLM-5 wins repo exploration and build reliability but loses frontend quality by a wide margin — thirty-nine versus fifty-two — and loses chained tasks. So 'agentic engineering' is real progress, and the frontier is still ahead on the hardest rows. Also keep in mind: this is self-built and self-judged."
-  },
-  {
-   "layout": "critique-concerns",
-   "action_title": "Impressive engineering — four places I would push",
-   "points": [
-    {
-     "head": "The flagship evidence is ==w|self-built and machine-judged==",
-     "body": "CC-Bench-V2 is the authors' own benchmark, scored by Agent-as-a-Judge (a GUI agent plus LLM judging); MCP-Atlas uses Gemini 3 Pro as judge. Judge reliability and benchmark ownership both cut in their favor. (my analysis)"
-    },
-    {
-     "head": "Evaluation adjustments ==w|all point the same way==",
-     "body": "τ²-Bench prompts tweaked, MCP-Atlas timeouts extended 4→10 min, a “verified” Terminal-Bench that lifts 56.2→60.7. Each is defensible and disclosed — but every adjustment favors the home team. (my analysis)"
-    },
-    {
-     "head": "“Comparable to the frontier” is ==w|selective==",
-     "body": "Opus 4.5 still leads SWE-bench Verified (80.9 vs 77.8), CyberGym (50.6 vs 43.2), and most CC-Bench rows; GPQA trails GPT-5.2 by 6.4. The wins concentrate in browse/long-horizon categories. (my analysis)"
-    },
-    {
-     "head": "Architectural novelty is ==k|mostly imported==",
-     "body": "DSA is DeepSeek's mechanism, adopted; the genuine novelties are Muon Split, MTP parameter sharing, and the RL infrastructure. The “paradigm shift” language outruns the architecture delta. (my analysis)"
+  "meta": {
+    "title": "GLM-5: from Vibe Coding to Agentic Engineering",
+    "deck_type": "journal-club",
+    "language": "en",
+    "theme": "journal-club",
+    "figures_dir": "figures",
+    "source": {
+      "title": "GLM-5: from Vibe Coding to Agentic Engineering",
+      "arxiv_id": "2602.15763"
     }
-   ],
-   "source_ref": "My critical reading",
-   "speaker_notes": "Credit where due — the engineering is serious and the disclosure is unusually candid, including the reward-hacking anecdote. Four pushes. First, the centerpiece benchmark is theirs, and the judge is an agent stack they also built; a few points of ISR difference is well within judge noise until someone replicates it. Second, the pattern of evaluation adjustments — prompts, timeouts, 'verified' variants — is individually reasonable and collectively one-directional. Third, frontier parity holds in aggregate but not on the hardest software rows, where Opus keeps a real lead. Fourth, the architecture story borrows its biggest piece from DeepSeek; that's fine and openly cited, but then the right comparison class for 'what did GLM-5 invent' is the training system, not the attention."
   },
-  {
-   "layout": "discussion-questions",
-   "action_title": "Questions for the room",
-   "questions": [
-    "Can ==k|Agent-as-a-Judge== (GUI agent + LLM judge) reliably separate models a few points apart — would human developers produce the same ranking on CC-Bench-V2?",
-    "Asynchronous RL means trajectories are ==w|increasingly off-policy== when consumed — what does that do to GRPO stability at this scale, and where is the staleness cliff?",
-    "==k|Preserved Thinking== keeps all reasoning blocks across turns at ~200K context: when does retained reasoning help, and when does it become self-pollution?",
-    "The anonymous ==k|“Pony Alpha”== release: 25% of users guessed it was Claude Sonnet 5 — style convergence, shared data, or distillation pressure?"
-   ],
-   "speaker_notes": "Four openers. One, the measurement question: does anyone trust an LLM-plus-GUI judge to rank models three points apart, and what would a human-judged subset show? Two, the systems question: async RL trades on-policyness for throughput — where does GRPO start to degrade? Three, the interface question: preserved thinking is either compounding context or compounding noise, and it probably depends on task length — where's the crossover? Four, the fun one: when they shipped this anonymously as Pony Alpha, a quarter of users thought it was Claude Sonnet 5. What does that convergence tell us?"
-  },
-  {
-   "layout": "references",
-   "title": "References",
-   "entries": [
-    "GLM-5 Team (2026). GLM-5: from Vibe Coding to Agentic Engineering. arXiv:2602.15763. https://doi.org/10.48550/arXiv.2602.15763",
-    "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556. (source of DSA, cited as [9])"
-   ],
-   "speaker_notes": "Primary source plus the DeepSeek-V3.2 paper, which is where DSA comes from. Code and models are on the zai-org GitHub."
-  }
- ]
+  "slides": [
+    {
+      "layout": "paper-title",
+      "title": "GLM-5: from Vibe Coding to Agentic Engineering",
+      "authors": "GLM-5 Team — Zhipu AI & Tsinghua University",
+      "venue": "arXiv:2602.15763 · Feb 2026",
+      "presenter": "Journal club · louwill · 2026-07",
+      "speaker_notes": "This is GLM-5, Zhipu's February 2026 flagship. The pitch in one line: take the ARC recipe from GLM-4.5, adopt DeepSeek's sparse attention to make a 744-billion-parameter MoE affordable, rebuild the RL post-training around an asynchronous infrastructure, and aim the whole thing at real-world software engineering rather than static benchmarks. I'll walk the architecture, the training pipeline, the numbers, and then what I'd push on."
+    },
+    {
+      "layout": "outline-agenda",
+      "action_title": "Agenda",
+      "items": [
+        "Why: cost and real-world coding are the bottlenecks",
+        "Training pipeline at a glance",
+        "Architecture: DSA + efficiency fixes",
+        "Thinking modes for agents",
+        "Asynchronous agent RL",
+        "Results: benchmarks and leaderboards",
+        "Critical reading & discussion"
+      ],
+      "current": 0,
+      "speaker_notes": "Seven beats: motivation, the pipeline picture, architecture choices, the three thinking modes, the async RL story, the scoreboard, then critique and questions."
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "Motivation",
+      "action_title": "The bottlenecks moved: ==k|compute cost and real-world software engineering==",
+      "points": [
+        "LLMs are shifting from passive knowledge repositories to ==k|active problem solvers==; the paper names computational cost and real-world adaptability as the two primary bottlenecks.",
+        "GLM-4.5 united agentic, reasoning, and coding (ARC) in one MoE; GLM-5 attacks ==k|efficiency== (sparse attention) and ==k|autonomy== (asynchronous agent RL).",
+        "Claimed result: about ==20%== average improvement over GLM-4.7 on 8 ARC benchmarks, comparable to Claude Opus 4.5 and GPT-5.2 (xhigh), better than Gemini 3 Pro."
+      ],
+      "source_ref": "Abstract · §1",
+      "speaker_notes": "Framing first. The title phrase — vibe coding to agentic engineering — is marketing, but the underlying claim is concrete: models now spend hours writing code autonomously, so what matters is cost per unit of work and whether the agent survives real software engineering, not one-shot benchmark answers. GLM-5 goes after both: sparse attention for the cost side, a new RL stack for the autonomy side. Headline claim is a twenty percent average lift over their own 4.7 across eight agentic-reasoning-coding benchmarks."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "Training pipeline",
+      "action_title": "One pipeline: scale to a ==744B== MoE, then climb an ==k|RL ladder without forgetting==",
+      "figure": {
+        "src": "figures/figure-5.png",
+        "caption": "Fig. 5 | Overall training pipeline of GLM-5.",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "Fig. 5 · §1–3",
+      "speaker_notes": "28.5T tokens of pre/mid-training, then an RL ladder (Reasoning → Agentic → General) with on-policy cross-stage distillation against forgetting. — The whole system on one slide. Left: base-model training — general corpus, then code and reasoning, then mid-training that stretches context and injects agent data; 28.5 trillion tokens all-in. Right: post-training as a ladder — supervised fine-tuning, then reasoning RL, then agentic RL, then general RL. The interesting part is the dashed box: on-policy cross-stage distillation, which keeps each later stage from erasing what the earlier stage learned. Remember GLM-4.5's story was uniting the three ARC capabilities; this is the industrialized version of that."
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "Architecture",
+      "action_title": "Architecture: ==k|imported DSA sparsity== plus home-grown efficiency fixes",
+      "points": [
+        "Scale: ==744B== total / ==40B== active parameters, ==256== experts, ==80== layers — double GLM-4.5 (355B / 32B), with fewer layers to cut expert-parallel communication.",
+        "==k|DSA (DeepSeek Sparse Attention)== replaces dense $O(L^2)$ attention with dynamic fine-grained token selection; long-context quality holds (SQuAD-128k ==p|86.0 vs 79.7== for the MLA baseline).",
+        "MTP with ==k|3-layer parameter sharing==: accept length ==2.76== vs DeepSeek-V3.2's 2.55 at equal draft-model memory; plus INT4 quantization-aware training in SFT.",
+        "Day-one adaptation to ==k|seven domestic GPU platforms== (Ascend, Moore Threads, Hygon, Cambricon, Kunlunxin, MetaX, Enflame)."
+      ],
+      "source_ref": "§1–2.1",
+      "speaker_notes": "Four architecture facts. One: it's a 744-billion parameter MoE with only 40 billion active — twice 4.5's size — and they deliberately went shallower, 80 layers, because expert-parallel communication was the tax. Two: the attention is DSA, adopted from DeepSeek — dynamic token selection instead of dense quadratic attention — and their long-context ablation says quality holds or improves. Three: multi-token prediction with shared parameters across three draft layers, which buys a longer speculative-decoding accept length than DeepSeek-V3.2 at the same memory. Four — and this is strategically interesting — full-stack support for seven Chinese GPU platforms from day one."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "Ablation",
+      "action_title": "==k|Muon Split== closes MLA's gap to GQA-8 at equal or better memory",
+      "table": {
+        "caption": "Table 1 (selected) — attention variants under the Muon optimizer, base-model evals",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "Variant"
+          },
+          {
+            "label": "Hellaswag"
+          },
+          {
+            "label": "MMLU"
+          },
+          {
+            "label": "BBH"
+          },
+          {
+            "label": "GSM8K"
+          },
+          {
+            "label": "HumanEval"
+          }
+        ],
+        "rows": [
+          [
+            "GQA-8",
+            "77.3",
+            "61.2",
+            {
+              "v": "53.3",
+              "bold": true
+            },
+            {
+              "v": "47.6",
+              "bold": true
+            },
+            {
+              "v": "38.5",
+              "bold": true
+            }
+          ],
+          [
+            "MLA",
+            "77.3",
+            "61.5",
+            "48.9",
+            "46.2",
+            "33.5"
+          ],
+          [
+            "MLA + Muon Split",
+            {
+              "v": "77.8",
+              "bold": true
+            },
+            {
+              "v": "62.5",
+              "bold": true
+            },
+            "51.8",
+            "45.0",
+            "36.7"
+          ],
+          [
+            "MLA-256 + Muon Split",
+            "77.4",
+            "62.0",
+            "51.3",
+            "47.5",
+            "36.6"
+          ]
+        ],
+        "footnote": "Column-best in bold. MLA-256: head dim 192→256, heads reduced by 1/3 → cheaper decoding at constant training compute."
+      },
+      "source_ref": "Table 1 · §2.1",
+      "speaker_notes": "A genuinely useful ablation for anyone training MoEs with Muon. Vanilla MLA under Muon loses to grouped-query attention on reasoning-ish tasks — look at BBH, 48.9 versus 53.3. Their fix, Muon Split, orthogonalizes the projection matrices per-head instead of jointly, letting different heads update at different scales. That recovers most of the gap and even wins on Hellaswag and MMLU. The MLA-256 variant then re-shapes heads for cheaper decoding without losing that. Also note the stability claim: attention logits stayed stable through pre-training without clipping."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "Agent interface",
+      "action_title": "Three thinking modes keep ==k|multi-turn agents coherent==",
+      "figure": {
+        "src": "figures/figure-7.png",
+        "caption": "Fig. 7 | Interleaved Thinking and Preserved Thinking.",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "Fig. 7 · §3.1",
+      "speaker_notes": "Interleaved: think before every tool call · Preserved: reasoning kept across turns · Turn-level: toggle per turn. SFT context: 202,752 tokens. — This is the agent-interface contribution, and it's the part most directly aimed at coding agents like the ones we use. Interleaved thinking: a reasoning block before every response and every tool call, not just the first answer — better instruction following mid-episode. Preserved thinking: in a long coding session, the model keeps all its earlier reasoning blocks in context instead of throwing them away each turn and re-deriving — fewer inconsistencies deep into a session. And turn-level thinking is the pragmatic one: switch reasoning off for cheap turns to save latency and cost, on for hard ones. The SFT context window grows to 202,752 tokens to make room for all of this."
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "Post-training",
+      "action_title": "Asynchronous RL: ==k|generation decoupled from training==, agents learn from long horizons",
+      "points": [
+        "Infrastructure: builds on the ==k|slime== framework's decoupled rollout engines; generation and training run asynchronously to maximize GPU utilization and trajectory throughput.",
+        "Algorithms: asynchronous agent RL lets the model ==k|learn continuously from long-horizon interactions==, targeting planning and self-correction; the RL backbone is GRPO.",
+        "SFT keeps erroneous trajectory segments but ==k|masks them out of the loss== — the model sees error-correction behavior without reinforcing the errors.",
+        "They observed ==w|reward hacking== in slides-generation RL and countered it with runtime rendering checks (Fig. 9)."
+      ],
+      "source_ref": "§1 · §3 · Fig. 9",
+      "speaker_notes": "The RL story has an infrastructure half and an algorithm half. Infrastructure: rollouts and gradient updates are decoupled — generators keep producing agent trajectories while trainers consume them, so the GPUs never idle waiting for each other. Algorithms: asynchronous agent RL on top of a GRPO backbone, aimed at long-horizon planning and self-correction. Two details I like: they keep buggy segments in SFT trajectories but mask the loss, so the model learns what correction looks like; and they're candid about reward hacking in the slides-RL task — the model gamed the reward until they added runtime rendering as the verifier. Keep that in mind for the critique."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "Headline result",
+      "action_title": "About ==20%== over GLM-4.7, ==k|shoulder-to-shoulder with Opus 4.5 and GPT-5.2==",
+      "figure": {
+        "src": "figures/figure-1.png",
+        "caption": "Fig. 1 | Eight agentic, reasoning, and coding benchmarks.",
+        "cite": "GLM-5 Team 2026",
+        "hero": true
+      },
+      "source_ref": "Fig. 1 · §1",
+      "speaker_notes": "The headline picture: eight benchmarks spanning reasoning, software engineering, and agentic work — HLE, both SWE-benches, Terminal-Bench 2.0, BrowseComp, MCP-Atlas, tau-squared-Bench, and Vending-Bench 2. Blue is GLM-5. The paper's own summary is fair — on average comparable to Claude Opus 4.5 and GPT-5.2 at max effort, better than Gemini 3 Pro, and about twenty percent above its predecessor GLM-4.7. The per-benchmark detail is on the next slide, where the picture is more selective."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "Scoreboard",
+      "action_title": "Open-weights SOTA with ==k|selective wins== over the closed frontier",
+      "table": {
+        "caption": "Table 7 (selected) — GLM-5 vs open and proprietary frontier models (row-best in bold)",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "Benchmark"
+          },
+          {
+            "label": "GLM-5"
+          },
+          {
+            "label": "DeepSeek",
+            "unit": "V3.2"
+          },
+          {
+            "label": "Kimi",
+            "unit": "K2.5"
+          },
+          {
+            "label": "Opus 4.5",
+            "unit": "Claude"
+          },
+          {
+            "label": "Gemini 3",
+            "unit": "Pro"
+          },
+          {
+            "label": "GPT-5.2",
+            "unit": "xhigh"
+          }
+        ],
+        "rows": [
+          [
+            "HLE (w/ Tools)",
+            "50.4",
+            "40.8",
+            {
+              "v": "51.8",
+              "bold": true
+            },
+            "43.4",
+            "45.8",
+            "45.5"
+          ],
+          [
+            "GPQA-Diamond",
+            "86.0",
+            "82.4",
+            "87.6",
+            "87.0",
+            "91.9",
+            {
+              "v": "92.4",
+              "bold": true
+            }
+          ],
+          [
+            "SWE-bench Verified",
+            "77.8",
+            "73.1",
+            "76.8",
+            {
+              "v": "80.9",
+              "bold": true
+            },
+            "76.2",
+            "80.0"
+          ],
+          [
+            "SWE-bench Multilingual",
+            "73.3",
+            "70.2",
+            "73.0",
+            {
+              "v": "77.5",
+              "bold": true
+            },
+            "65.0",
+            "72.0"
+          ],
+          [
+            "Terminal-Bench 2.0",
+            "56.2",
+            "39.3",
+            "50.8",
+            {
+              "v": "59.3",
+              "bold": true
+            },
+            "54.2",
+            "54.0"
+          ],
+          [
+            "BrowseComp (w/ CM)",
+            {
+              "v": "75.9",
+              "bold": true
+            },
+            "67.6",
+            "74.9",
+            "57.8",
+            "59.2",
+            "65.8"
+          ],
+          [
+            "τ²-Bench",
+            "89.7",
+            "85.3",
+            "80.2",
+            {
+              "v": "91.6",
+              "bold": true
+            },
+            "90.7",
+            "85.5"
+          ]
+        ],
+        "footnote": "Selected rows from Table 7; HLE w/ Tools marked * (full set) for Claude/Gemini/GPT there. CM = context management. Closed-model scores as compiled by the paper."
+      },
+      "source_ref": "Table 7 · §6.1",
+      "speaker_notes": "Now the honest per-row read. Where GLM-5 actually leads everyone shown: browsing with context management, 75.9. Where it leads the open field but trails a closed model: software engineering — 77.8 on SWE-bench Verified against Opus's 80.9, terminal work 56.2 against 59.3, tau-squared against Opus. On pure knowledge and science reasoning, GPT-5.2 and Gemini keep a clear margin — GPQA 92.4 versus 86. So 'comparable to the frontier' is true in aggregate, and the specific shape is: strongest at browse-and-act, competitive at SWE, behind at PhD-level QA. For an open-weights model, that's still a remarkable position."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "Leaderboards",
+      "action_title": "First open-weights model to score ==p|50== on the Intelligence Index v4.0",
+      "figure": {
+        "src": "figures/chart-aa-index.png",
+        "caption": "Re-plot from the paper's reported Intelligence Index v4.0 scores — not a paper figure.",
+        "cite": "GLM-5 Team 2026"
+      },
+      "annotation": "==p|50== points, up from GLM-4.7's ==42== — first open-weights model at that mark; also ==k|#1 open model on LMArena Text and Code==.",
+      "source_ref": "Fig. 2–3 · §1",
+      "speaker_notes": "Two third-party signals, which matter because the vendor picked neither task set. Artificial Analysis aggregates ten evals — GDPval-AA, Terminal-Bench Hard, GPQA Diamond, HLE and six more — into their Intelligence Index; GLM-5 is the first open-weights model to reach fifty, an eight-point jump over 4.7. And on LMArena — human preference at scale, millions of real tasks — it's the number-one open model on both the text and code arenas, on par overall with Opus 4.5 and Gemini 3 Pro. Worth remembering these are also the leaderboards the marketing quotes; but they are at least not self-built."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "Agentic engineering",
+      "action_title": "On their own CC-Bench-V2: a ==p|big jump over GLM-4.7== — but ==w|Opus still leads most rows==",
+      "table": {
+        "caption": "CC-Bench-V2 (selected) — real-world coding tasks, Agent-as-a-Judge evaluation",
+        "row_header": true,
+        "columns": [
+          {
+            "label": "Task (metric)"
+          },
+          {
+            "label": "GLM-5"
+          },
+          {
+            "label": "GLM-4.7"
+          },
+          {
+            "label": "Opus 4.5",
+            "unit": "Claude"
+          }
+        ],
+        "rows": [
+          [
+            "Frontend HTML (ISR)",
+            "38.9",
+            "35.4",
+            {
+              "v": "52.2",
+              "bold": true
+            }
+          ],
+          [
+            "Build: React (BSR)",
+            {
+              "v": "100",
+              "bold": true
+            },
+            "65.0",
+            "95.0"
+          ],
+          [
+            "Backend engineering (Pass@1)",
+            "25.8",
+            "19.6",
+            {
+              "v": "26.9",
+              "bold": true
+            }
+          ],
+          [
+            "Repo exploration (Pass@1)",
+            {
+              "v": "65.6",
+              "bold": true
+            },
+            "47.8",
+            "64.5"
+          ],
+          [
+            "Chained tasks (Pass@1)",
+            "52.3",
+            "43.0",
+            {
+              "v": "61.6",
+              "bold": true
+            }
+          ]
+        ],
+        "footnote": "ISR = instance success rate; BSR = build success rate. Frontend judged by a GUI agent (Playwright) + checklist; backend by real project unit tests."
+      },
+      "source_ref": "Table 8 · §6.2",
+      "speaker_notes": "This is the benchmark the title is really about — their own CC-Bench-V2 for end-to-end engineering: frontend projects judged by a GUI agent clicking through the app, backend tasks that must pass real unit tests, and long-horizon chains mined from actual PR histories. Read it two ways. Versus their own 4.7, it's a massive jump everywhere — builds went from sixty-five percent success to a hundred. Versus Opus 4.5, GLM-5 wins repo exploration and build reliability but loses frontend quality by a wide margin — thirty-nine versus fifty-two — and loses chained tasks. So 'agentic engineering' is real progress, and the frontier is still ahead on the hardest rows. Also keep in mind: this is self-built and self-judged."
+    },
+    {
+      "layout": "critique-concerns",
+      "action_title": "Impressive engineering — four places I would push",
+      "points": [
+        {
+          "head": "The flagship evidence is ==w|self-built and machine-judged==",
+          "body": "CC-Bench-V2 is the authors' own benchmark, scored by Agent-as-a-Judge (a GUI agent plus LLM judging); MCP-Atlas uses Gemini 3 Pro as judge. Judge reliability and benchmark ownership both cut in their favor. (my analysis)"
+        },
+        {
+          "head": "Evaluation adjustments ==w|all point the same way==",
+          "body": "τ²-Bench prompts tweaked, MCP-Atlas timeouts extended 4→10 min, a “verified” Terminal-Bench that lifts 56.2→60.7. Each is defensible and disclosed — but every adjustment favors the home team. (my analysis)"
+        },
+        {
+          "head": "“Comparable to the frontier” is ==w|selective==",
+          "body": "Opus 4.5 still leads SWE-bench Verified (80.9 vs 77.8), CyberGym (50.6 vs 43.2), and most CC-Bench rows; GPQA trails GPT-5.2 by 6.4. The wins concentrate in browse/long-horizon categories. (my analysis)"
+        },
+        {
+          "head": "Architectural novelty is ==k|mostly imported==",
+          "body": "DSA is DeepSeek's mechanism, adopted; the genuine novelties are Muon Split, MTP parameter sharing, and the RL infrastructure. The “paradigm shift” language outruns the architecture delta. (my analysis)"
+        }
+      ],
+      "source_ref": "My critical reading",
+      "speaker_notes": "Credit where due — the engineering is serious and the disclosure is unusually candid, including the reward-hacking anecdote. Four pushes. First, the centerpiece benchmark is theirs, and the judge is an agent stack they also built; a few points of ISR difference is well within judge noise until someone replicates it. Second, the pattern of evaluation adjustments — prompts, timeouts, 'verified' variants — is individually reasonable and collectively one-directional. Third, frontier parity holds in aggregate but not on the hardest software rows, where Opus keeps a real lead. Fourth, the architecture story borrows its biggest piece from DeepSeek; that's fine and openly cited, but then the right comparison class for 'what did GLM-5 invent' is the training system, not the attention.",
+      "eyebrow": "CRITICAL READING"
+    },
+    {
+      "layout": "discussion-questions",
+      "action_title": "Questions for the room",
+      "questions": [
+        "Can ==k|Agent-as-a-Judge== (GUI agent + LLM judge) reliably separate models a few points apart — would human developers produce the same ranking on CC-Bench-V2?",
+        "Asynchronous RL means trajectories are ==w|increasingly off-policy== when consumed — what does that do to GRPO stability at this scale, and where is the staleness cliff?",
+        "==k|Preserved Thinking== keeps all reasoning blocks across turns at ~200K context: when does retained reasoning help, and when does it become self-pollution?",
+        "The anonymous ==k|“Pony Alpha”== release: 25% of users guessed it was Claude Sonnet 5 — style convergence, shared data, or distillation pressure?"
+      ],
+      "speaker_notes": "Four openers. One, the measurement question: does anyone trust an LLM-plus-GUI judge to rank models three points apart, and what would a human-judged subset show? Two, the systems question: async RL trades on-policyness for throughput — where does GRPO start to degrade? Three, the interface question: preserved thinking is either compounding context or compounding noise, and it probably depends on task length — where's the crossover? Four, the fun one: when they shipped this anonymously as Pony Alpha, a quarter of users thought it was Claude Sonnet 5. What does that convergence tell us?"
+    },
+    {
+      "layout": "references",
+      "title": "References",
+      "entries": [
+        "GLM-5 Team (2026). GLM-5: from Vibe Coding to Agentic Engineering. arXiv:2602.15763. https://doi.org/10.48550/arXiv.2602.15763",
+        "DeepSeek-AI (2025). DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models. arXiv:2512.02556. (source of DSA, cited as [9])"
+      ],
+      "speaker_notes": "Primary source plus the DeepSeek-V3.2 paper, which is where DSA comes from. Code and models are on the zai-org GitHub."
+    }
+  ]
 }

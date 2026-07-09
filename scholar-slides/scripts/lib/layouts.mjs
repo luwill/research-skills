@@ -62,16 +62,28 @@ const L = {
           .join("")}</ol></div>`
     ),
 
-  "assertion-evidence": (s) =>
-    section(
+  // figure.hero: the figure IS the slide — its caption folds into the source footer and the
+  // annotation is banned (validateSpec), returning the whole vertical budget to the image.
+  "assertion-evidence": (s, ctx) => {
+    const hero = !!s.figure?.hero;
+    const fig = hero ? { ...s.figure, caption: null } : s.figure;
+    let foot = source(s);
+    if (hero && (s.figure.caption || s.source_ref)) {
+      const cite = s.figure.cite ? ` <span class="cite">[${escapeHtml(s.figure.cite)}]</span>` : "";
+      const cap = s.figure.caption ? `${escapeHtml(s.figure.caption)}${cite}` : "";
+      const ref = s.source_ref ? `<span class="cite">${escapeHtml(s.source_ref)}</span>` : "";
+      foot = `<div class="s-source">${[cap, ref].filter(Boolean).join(" · ")}</div>`;
+    }
+    return section(
       "assertion-evidence",
-      "s-ae",
+      hero ? "s-ae s-ae--hero" : "s-ae",
       titleBar(s) +
-        `<div class="s-body">${s.figure ? renderFigure(s.figure) : ""}${
+        `<div class="s-body">${s.figure ? renderFigure(fig, ctx) : ""}${
           s.annotation ? `<div class="s-annotation">${renderText(s.annotation)}</div>` : ""
         }</div>` +
-        source(s)
-    ),
+        foot
+    );
+  },
 
   equation: (s) =>
     section(
@@ -96,14 +108,14 @@ const L = {
       titleBar(s) + `<div class="s-body">${renderTable(s.table)}</div>` + source(s)
     ),
 
-  "two-column": (s) =>
+  "two-column": (s, ctx) =>
     section(
       "two-column",
       "s-two-col",
       titleBar(s) +
         `<div class="s-body"><div class="cols">` +
         `<div class="col-text">${s.points ? list(s.points) : renderText(s.text || "")}</div>` +
-        `<div class="col-fig">${s.figure ? renderFigure(s.figure) : list(s.points2 || [])}</div>` +
+        `<div class="col-fig">${s.figure ? renderFigure(s.figure, ctx) : list(s.points2 || [])}</div>` +
         `</div></div>` +
         source(s)
     ),
@@ -141,7 +153,8 @@ const L = {
       "references",
       "s-references",
       titleBar(s) +
-        `<div class="s-body"><ol>${(s.entries || [])
+        // < 4 entries: two CSS columns read as scattered fragments — set them as one list.
+        `<div class="s-body"><ol${(s.entries || []).length < 4 ? ' class="single"' : ""}>${(s.entries || [])
           .map((e) => `<li>${renderText(e)}</li>`)
           .join("")}</ol></div>`
     ),
@@ -184,18 +197,22 @@ export function validateSpec(deck) {
       problems.push({ slide, layout: s.layout, field: "source_ref", severity: "warn",
         detail: `${s.layout} slide ${slide} has no source_ref — provenance is expected on a factual slide` });
     }
+    if (s.figure?.hero && !isEmpty(s.annotation)) {
+      problems.push({ slide, layout: s.layout, field: "annotation", severity: "error",
+        detail: `slide ${slide}: a hero figure cannot carry an annotation — the mode exists to return that vertical budget to the image; move the text to speaker_notes` });
+    }
   });
   return problems;
 }
 
-export function renderSlide(slide) {
+export function renderSlide(slide, ctx) {
   const fn = L[slide.layout];
   if (!fn) {
     throw new Error(
       `unknown layout "${slide.layout}". Registered: ${REGISTERED.join(", ")}`
     );
   }
-  let html = fn(slide);
+  let html = fn(slide, ctx);
   if (slide.speaker_notes) {
     // reveal.js convention: notes live in an <aside class="notes"> inside the section,
     // hidden on-slide and shown in the speaker view ('s'). Hidden in print too (print.css).

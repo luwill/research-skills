@@ -42,5 +42,9 @@ export function renderTable(t) {
   const foot = t.footnote
     ? `<tfoot><tr><td colspan="${t.columns.length}">${escapeHtml(t.footnote)}</td></tr></tfoot>`
     : "";
-  return `<table class="results">${caption}${head}${body}${foot}</table>`;
+  // A small table on the 1080 stage reads under-sized at the dense default — give it the
+  // roomier type ramp. Gated on BOTH dimensions so wide scoreboards keep the compact size
+  // (bumping a 7-column table risks horizontal overflow instead).
+  const roomy = t.rows.length <= 6 && t.columns.length <= 5 ? " roomy" : "";
+  return `<table class="results${roomy}">${caption}${head}${body}${foot}</table>`;
 }

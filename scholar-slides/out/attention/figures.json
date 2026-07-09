@@ -1,0 +1,208 @@
+[
+  {
+    "id": "figure-1",
+    "kind": "figure",
+    "number": "1",
+    "label": "Figure 1",
+    "caption": "Figure 1: The Transformer - model architecture.",
+    "page": 3,
+    "render_as": "image",
+    "caption_bbox": [
+      210.01100158691406,
+      404.7454528808594,
+      401.99029541015625,
+      414.70806884765625
+    ],
+    "figure_bbox": [
+      196.5590057373047,
+      72.00198364257812,
+      415.43902587890625,
+      404.7454528808594
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-2",
+    "kind": "figure",
+    "number": "2",
+    "label": "Figure 2",
+    "caption": "Figure 2: (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel.",
+    "page": 4,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      274.3883056640625,
+      503.9972229003906,
+      295.3350830078125
+    ],
+    "figure_bbox": [
+      108.0,
+      71.19947814941406,
+      503.9972229003906,
+      274.3883056640625
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-1",
+    "kind": "table",
+    "number": "1",
+    "label": "Table 1",
+    "caption": "Table 1: Maximum path lengths, per-layer complexity and minimum number of sequential operations for different layer types. n is the sequence length, d is the representation dimension, k is the kernel size of convolutions and r the size of the neighborhood in restricted self-attention.",
+    "page": 6,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      71.2754135131836,
+      504.0035705566406,
+      102.98007202148438
+    ],
+    "figure_bbox": null,
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-2",
+    "kind": "table",
+    "number": "2",
+    "label": "Table 2",
+    "caption": "Table 2: The Transformer achieves better BLEU scores than previous state-of-the-art models on the English-to-German and English-to-French newstest2014 tests at a fraction of the training cost.",
+    "page": 8,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      71.19947814941406,
+      504.00311279296875,
+      92.07107543945312
+    ],
+    "figure_bbox": [
+      107.69100189208984,
+      92.07107543945312,
+      504.00311279296875,
+      240.54806518554688
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-3",
+    "kind": "table",
+    "number": "3",
+    "label": "Table 3",
+    "caption": "Table 3: Variations on the Transformer architecture. Unlisted values are identical to those of the base model. All metrics are on the English-to-German translation development set, newstest2013. Listed perplexities are per-wordpiece, according to our byte-pair encoding, and should not be compared to per-word perplexities.",
+    "page": 9,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      71.26016235351562,
+      504.0033264160156,
+      113.88906860351562
+    ],
+    "figure_bbox": [
+      107.69100189208984,
+      113.88906860351562,
+      504.0033264160156,
+      383.1080627441406
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-4",
+    "kind": "table",
+    "number": "4",
+    "label": "Table 4",
+    "caption": "Table 4: The Transformer generalizes well to English constituency parsing (Results are on Section 23 of WSJ)",
+    "page": 10,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      71.2754135131836,
+      503.99505615234375,
+      92.07107543945312
+    ],
+    "figure_bbox": null,
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-3",
+    "kind": "figure",
+    "number": "3",
+    "label": "Figure 3",
+    "caption": "Figure 3: An example of the attention mechanism following long-distance dependencies in the encoder self-attention in layer 5 of 6. Many of the attention heads attend to a distant dependency of the verb ‘making’, completing the phrase ‘making...more difficult’. Attentions here shown only for the word ‘making’. Different colors represent different heads. Best viewed in color.",
+    "page": 13,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      312.311279296875,
+      504.1712646484375,
+      355.07708740234375
+    ],
+    "figure_bbox": [
+      108.0,
+      72.78716278076172,
+      504.72137451171875,
+      312.311279296875
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-4",
+    "kind": "figure",
+    "number": "4",
+    "label": "Figure 4",
+    "caption": "Figure 4: Two attention heads, also in layer 5 of 6, apparently involved in anaphora resolution. Top: Full attentions for head 5. Bottom: Isolated attentions from just the word ‘its’ for attention heads 5 and 6. Note that the attentions are very sharp for this word.",
+    "page": 14,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      614.281494140625,
+      505.3879699707031,
+      646.0620727539062
+    ],
+    "figure_bbox": [
+      108.0,
+      123.90110778808594,
+      505.3879699707031,
+      614.281494140625
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-5",
+    "kind": "figure",
+    "number": "5",
+    "label": "Figure 5",
+    "caption": "Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.",
+    "page": 15,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      602.3233032226562,
+      504.0014953613281,
+      634.1801147460938
+    ],
+    "figure_bbox": [
+      108.0,
+      138.21046447753906,
+      504.0014953613281,
+      602.3233032226562
+    ],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  }
+]

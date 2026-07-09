@@ -22,5 +22,5 @@ Authoring deltas from the default 组会 deck:
 The same paper therefore yields visibly different decks: a sparse conference teaser vs a dense,
 critique-bearing journal club vs a cumulative, appendix-backed defense.
 
-The per-type audience/narrative analysis is summarized above; the density register (sparse
-conference → dense journal club → cumulative defense) drives the slide-budget and archetype mix.
+Full per-type audience/narrative analysis: `docs/02-academic-needs.md` §1. Density idea ported
+from ppt-master `delivery_purpose` + frontend-slides density modes.

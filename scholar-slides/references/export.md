@@ -23,12 +23,6 @@ genuinely native:
   figure, edit the `deck.json` + the reveal/PDF version and re-export.
 - Inline `$math$` inside text is kept as literal LaTeX (PPTX text can't typeset it).
 
-**Fonts in the PPTX.** Titles use a serif (Georgia); body/label text uses **Arial**. This is *not* a
-violation of the design system's "no Arial as a display font" rule — Arial is used only as the
-cross-platform **body** fallback that every PowerPoint/Keynote install renders identically (so a
-co-author's copy doesn't reflow), never as the display/title face. The on-screen reveal.js/PDF deck
-keeps the full design-system type stack; the PPTX trades exotic body faces for guaranteed portability.
-
 Validate an export with `python-pptx`: confirm native text frames, a real `table`, embedded
 pictures, and notes per slide.
 

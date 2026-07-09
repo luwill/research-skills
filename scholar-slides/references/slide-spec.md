@@ -58,8 +58,11 @@ talk-length estimate (bilingual-aware); the QA report also reports timing and fl
 where a cell is a string/number or `{v, bold:true}` (bold the best per column). Units go in the
 header, never in cells.
 
-`figure` object: `{src, caption?, cite?, alt?, fit?}` — `fit` defaults to `contain` (a data
+`figure` object: `{src, caption?, cite?, alt?, fit?, hero?}` — `fit` defaults to `contain` (a data
 figure is NEVER cropped). `src` is the bbox crop from Stage 1; `cite` is mandatory provenance.
+`hero: true` (assertion-evidence only) folds the caption into the source footer and returns the
+whole vertical budget to the image; an `annotation` alongside a hero figure is a spec **error** —
+move that text to `speaker_notes` (see `references/figures-tables.md`).
 
 ## Authoring discipline (per the locked 组会 register)
 - Titles are **assertions** ("The big Transformer beats prior SOTA at a fraction of the cost"),
