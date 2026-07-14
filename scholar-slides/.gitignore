@@ -13,6 +13,10 @@ node_modules/
 /out/*/*
 !/out/*/deck.json
 !/out/*/figures.json
+# chart *specs* are durable (values verbatim; make_chart.py rebuilds the PNG from them)
+!/out/*/figures/
+/out/*/figures/*
+!/out/*/figures/*.spec.json
 !/out/*/deck/
 /out/*/deck/*
 !/out/*/deck/aesthetics_report.json

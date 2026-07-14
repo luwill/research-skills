@@ -55,6 +55,10 @@
   --s5: 48px; --s6: 64px; --s7: 96px;
 
   /* ---- line-height + measure (line-length discipline) ---- */
+  /* Display-size text (>=48px: action titles, cover, dividers) is tracked tight — untracked
+     display reads loose and weak (the classic AI tell; craft floor is -0.02 to -0.03em).
+     -0.02em stays subtle enough for CJK display, which tolerates less negative tracking. */
+  --track-display: -0.02em;
   --lh-tight: 1.15;   /* display / titles */
   --lh-snug:  1.30;   /* leads, list items */
   --lh-body:  1.45;   /* body copy */

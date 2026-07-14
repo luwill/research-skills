@@ -1,9 +1,9 @@
 {
   "deck": "glm5",
   "register": "Nature/Science figure-editor",
-  "scored_at": "2026-07-09 (post-M8 rebuild)",
+  "scored_at": "2026-07-14 (post-M8.5 open-design craft merge rebuild)",
   "persona": "Nature figure editor preparing for print (scored on rendered PNGs)",
-  "mean": 22.3,
+  "mean": 22.4,
   "outOf": 24,
   "weakest3": [
     { "slide": 8, "total": 16, "outOf": 20, "worst": "typography" },
@@ -22,7 +22,7 @@
     { "slide": 8, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 3 }, "total": 16, "outOf": 20 },
     { "slide": 9, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 3, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
     { "slide": 10, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
-    { "slide": 11, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 11, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
     { "slide": 12, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
     { "slide": 13, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 3, "consistency": 4 }, "total": 18, "outOf": 20 },
     { "slide": 14, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 4, "consistency": 4 }, "total": 19, "outOf": 20 },
@@ -33,5 +33,5 @@
     { "rank": 2, "defect": "hero footer repeats the figure number (\"Fig. 7 | … · Fig. 7 · §3.1\")", "fix": "M9c dedupe caption vs source_ref in the hero footer", "dimension": "consistency", "severity": "LOW" },
     { "rank": 3, "defect": "Fig.7 'User message' chips sit exactly at the 12px projection floor (4.4pt source text)", "fix": "accepted borderline — a denser redraw would be the only further step", "dimension": "figures", "severity": "LOW" }
   ],
-  "notes": "M8 cleared the entire rework list: slides 4/7/9 via figure.hero (caption folded to footer, annotation moved to speaker notes; Fig.7 projection 8.7px→12.0px, Fig.5 no longer compression-flagged, Fig.1 ~930px wide), slide 11 via native redraw of the AA-index headline (42→50, grounded in body text, deck palette). Remaining P2 on slide 7 is the accepted borderline above. Deck-level: bullet ratio 20%, cover/close share the register, talk time 10:44."
+  "notes": "M8 cleared the entire rework list: slides 4/7/9 via figure.hero (caption folded to footer, annotation moved to speaker notes; Fig.7 projection 8.7px→12.0px, Fig.5 no longer compression-flagged, Fig.1 ~930px wide), slide 11 via native redraw of the AA-index headline (42→50, grounded in body text, deck palette). Remaining P2 on slide 7 is the accepted borderline above. Deck-level: bullet ratio 20%, cover/close share the register, talk time 10:44. M8.5 rebuild (open-design craft merge): chart re-plotted with horizontal category labels + value labels outside bars (slide 11 typography 3→4); display text now tracked --track-display -0.02em deck-wide (title/cover/dividers); scored under the merged rubric (tracking floors, <=3 sizes/slide, scale-event, visual-cliche blocklist, pacing) — no new defects surfaced; emojiAudit clean. Weakest slides 8/3/5 unchanged: their driver is the M9a measure (85 actual chars), not addressed in this pass."
 }

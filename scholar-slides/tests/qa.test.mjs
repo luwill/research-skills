@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
   numberTokens, mapSuperscripts, collectFields, collectFlags, groundNumbers, layoutMix,
   emphasisAudit, extractDataLayouts, countKatexErrors, extractImgSrcs, findUnrenderedMath,
-  findPlaceholders, figureCrowding,
+  findPlaceholders, figureCrowding, emojiAudit,
 } from "../scripts/lib/qa.mjs";
 
 test("mapSuperscripts + numberTokens normalize scientific notation", () => {
@@ -124,6 +124,28 @@ test("findPlaceholders catches unfilled template tokens but not NLP vocab tokens
   assert.deepEqual(findPlaceholders(legit), []);
   // Case-insensitive, tolerant of inner spaces.
   assert.equal(findPlaceholders("&lt; Presenter &gt;").length, 1);
+});
+
+test("emojiAudit flags emoji decoration in slide text, per slide with location", () => {
+  // Visual AI-slop tell (anti-ai-slop): emoji as icons/bullets never belong in the
+  // figure-editor register. The audit reports every field so the fix is targeted.
+  const deck = { slides: [
+    { layout: "bullets", action_title: "🚀 Training is 3x faster", points: ["✨ sparkles", "plain"] },
+    { layout: "bullets", action_title: "Clean title", points: ["plain point"] },
+    { layout: "assertion-evidence", action_title: "Also clean", figure: { src: "f.png", caption: "Fig. 1 | ⚡ speedup" } },
+  ] };
+  const found = emojiAudit(deck);
+  assert.deepEqual([...new Set(found.map((f) => f.slide))], [1, 3]);
+  const s1 = found.filter((f) => f.slide === 1);
+  assert.ok(s1.some((f) => f.field === "action_title" && f.chars.includes("🚀")));
+  assert.ok(s1.some((f) => f.field === "points[0]" && f.chars.includes("✨")));
+});
+
+test("emojiAudit does not false-positive on math, arrows, CJK, or integrity flags", () => {
+  const deck = { slides: [
+    { layout: "bullets", action_title: "损失下降 34.1% → 提速 2.3·10¹⁹", points: ["x ≤ y ± z", "[MISSING] 消融"] },
+  ] };
+  assert.deepEqual(emojiAudit(deck), []);
 });
 
 test("static HTML extractors", () => {

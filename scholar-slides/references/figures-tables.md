@@ -90,3 +90,16 @@ the audience cannot read the figure's own labels. Escalate in this order:
    deck type ramp, arbitrarily legible. Caption must say it is a re-plot, not a paper figure
    (e.g. the GLM-5 AA-index slide). Numbers that appear ONLY inside a raster figure cannot be
    redrawn — they would not ground; fall back to 1–2.
+
+## Native-chart discipline (make_chart.py defaults; keep specs within them)
+
+- **Bar lengths are computed, never eyeballed** — the spec's values are plotted verbatim
+  (`chart_data` is unit-tested on this). Never post-edit a rendered chart image.
+- **Category labels stay horizontal** (≤8 short categories). Rotated ticks read off-register
+  next to the deck's upright type; `tick_rotation` falls back to 15° only when the axis is
+  genuinely crowded (>8 categories or a >14-char label). If labels are long, shorten the
+  *labels* (e.g. "Transformer (LLaMA)" → "Llama"), don't rotate the axis.
+- **Every data point carries a visible value label**, placed OUTSIDE the bar (a label inside a
+  fixed-height bar clips exactly when the bar is short — the worst case). `render` does this
+  automatically up to 12 bars; past that labels collide, so denser charts drop them — prefer
+  plotting a *subset* (disclosed in the caption) over an unlabeled forest.

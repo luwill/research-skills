@@ -1,0 +1,475 @@
+{
+  "meta": {
+    "title": "xLSTM: Extended Long Short-Term Memory",
+    "deck_type": "journal-club",
+    "language": "en",
+    "theme": "journal-club",
+    "figures_dir": "figures",
+    "source": {
+      "title": "xLSTM: Extended Long Short-Term Memory",
+      "arxiv_id": "2405.04517"
+    }
+  },
+  "slides": [
+    {
+      "layout": "paper-title",
+      "title": "xLSTM: Extended Long Short-Term Memory",
+      "authors": "Maximilian Beck*, Korbinian Pöppel*, Markus Spanring, Andreas Auer, Oleksandra Prudnikova, Michael Kopp, Günter Klambauer, Johannes Brandstetter, Sepp Hochreiter",
+      "affiliation": "ELLIS Unit / LIT AI Lab, JKU Linz · NXAI",
+      "venue": "arXiv:2405.04517 · NeurIPS 2024",
+      "presenter": "Journal club · louwill · 2026-07",
+      "speaker_notes": "This is the xLSTM paper from Sepp Hochreiter's lab — the inventor of the LSTM asking whether his 1997 architecture, given every modern LLM trick, can compete with Transformers at billion-parameter scale. The answer they defend: yes, if you fix exactly the things that made LSTMs lose in 2017. I'll walk the three limitations, the two new memory cells, then the evidence at 15B and 300B training tokens, and close with where I would push."
+    },
+    {
+      "layout": "outline-agenda",
+      "title": "Agenda",
+      "items": [
+        "Why revisit LSTMs in the LLM era",
+        "Three limitations that ended the LSTM era",
+        "The xLSTM recipe: exponential gating + two new cells",
+        "sLSTM and mLSTM, equation by equation",
+        "Synthetic evidence: state tracking and memory capacity",
+        "Language modeling at 15B and 300B tokens",
+        "Critique and discussion"
+      ],
+      "speaker_notes": "Seven beats. The method section is equation-heavy by design — this is a journal club, so we go through the actual update rules, not cartoons. Then two synthetic experiments that isolate each new component, the language-modeling scoreboards, and my critical reading."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "MOTIVATION",
+      "action_title": "Three failures kept LSTMs out of the LLM era: no revision, scalar memory, no parallelism",
+      "figure": {
+        "src": "figures/figure-2.png",
+        "caption": "Fig. 2 | Left: Nearest-Neighbor-Search MSE. Right: rare-token perplexity on Wikitext-103.",
+        "cite": "Beck et al. 2024"
+      },
+      "annotation": "==k|Limitation (iii)== is structural: memory mixing (hidden–hidden recurrence) forces sequential training — the direct opening Transformers exploited.",
+      "source_ref": "Fig. 2 · §1",
+      "speaker_notes": "The paper names three limitations explicitly. One: an LSTM cannot revise a storage decision — in nearest-neighbor search, once it commits to a similar vector it struggles to overwrite when a better match arrives; that is the left panel. Two: everything must squeeze into scalar cell states — the right panel shows perplexity on rare tokens degrading, a capacity failure. Three, not in the figure but the most consequential: memory mixing forces strictly sequential processing, so training cannot parallelize. Every xLSTM design choice maps onto one of these three."
+    },
+    {
+      "layout": "bullets",
+      "eyebrow": "CLAIMS",
+      "action_title": "The paper makes four falsifiable claims",
+      "points": [
+        "==k|Exponential gating== (with normalizer + stabilizer states) lets LSTMs revise storage decisions.",
+        "==k|sLSTM== keeps a scalar memory and recurrence, adding a new head-wise memory-mixing scheme → state tracking.",
+        "==k|mLSTM== stores key–value pairs in a ==d×d matrix memory== with a covariance update — and trains fully in parallel.",
+        "Stacked as residual xLSTM blocks, the result performs favorably against Transformers and SSMs — in perplexity ==and== scaling."
+      ],
+      "source_ref": "Abstract · §2",
+      "speaker_notes": "Four claims, each testable. Exponential gating answers limitation one, the matrix memory answers limitation two, dropping memory mixing in mLSTM answers limitation three, and the fourth claim is the empirical bet the second half of the paper defends. Keep these in mind — the synthetic experiments are constructed to isolate claims one through three."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "METHOD",
+      "action_title": "The recipe: exponential gating plus two new memory cells, stacked as residual blocks",
+      "figure": {
+        "src": "figures/figure-1.png",
+        "caption": "Fig. 1 | The xLSTM family: original LSTM cell → sLSTM / mLSTM cells → residual xLSTM blocks → stacked architecture.",
+        "cite": "Beck et al. 2024",
+        "hero": true
+      },
+      "source_ref": "Fig. 1 · §2",
+      "speaker_notes": "The family portrait, left to right. Start from the 1997 cell — constant error carousel plus sigmoid gates. Both new cells inherit that core and add exponential gating. The sLSTM keeps the scalar state and recurrence and adds a new memory-mixing scheme; the mLSTM replaces the scalar with a matrix and drops recurrence entirely so it can train in parallel. Each goes into a residual block, and the architecture is just a stack of those blocks — notation xLSTM[a:b] for the ratio of mLSTM to sLSTM blocks. Now the equations."
+    },
+    {
+      "layout": "equation",
+      "eyebrow": "EQUATIONS I",
+      "action_title": "Exponential gates need a normalizer — sLSTM keeps recurrence for state tracking",
+      "equations": [
+        {
+          "latex": "c_t = f_t\\, c_{t-1} + i_t\\, z_t, \\qquad n_t = f_t\\, n_{t-1} + i_t, \\qquad h_t = o_t\\, \\frac{c_t}{n_t}"
+        },
+        {
+          "latex": "i_t = \\exp(\\tilde{i}_t), \\qquad f_t = \\sigma(\\tilde{f}_t)\\ \\text{OR}\\ \\exp(\\tilde{f}_t)"
+        },
+        {
+          "latex": "m_t = \\max\\big(\\log f_t + m_{t-1},\\ \\log i_t\\big)"
+        }
+      ],
+      "note": "The normalizer state $n_t$ rescales the carousel so exponential gates cannot blow up the output; the stabilizer $m_t$ keeps the exponentials in float range — provably without changing the network's output. Recurrence ($h_{t-1}$ feeds every gate) is what preserves memory mixing.",
+      "source_ref": "§2.2",
+      "speaker_notes": "Same carousel as 1997, two changes. Input gates may now be exponential — an unbounded gate can overwrite an old memory in one step, which is exactly the revision ability limitation one asked for. Unbounded gates need bookkeeping: the normalizer state sums input-gate mass so the hidden state stays a weighted average, and the stabilizer subtracts the running log-max inside the exponentials — the appendix proves this leaves outputs and gradients unchanged. Note the gates still see the previous hidden state: that recurrence is memory mixing, kept deliberately for state tracking, and it is why sLSTM cannot parallelize."
+    },
+    {
+      "layout": "equation",
+      "eyebrow": "EQUATIONS II",
+      "action_title": "mLSTM stores key–value pairs in a matrix memory — and trains in parallel",
+      "equations": [
+        {
+          "latex": "C_t = f_t\\, C_{t-1} + i_t\\, v_t k_t^{\\top}, \\qquad n_t = f_t\\, n_{t-1} + i_t\\, k_t"
+        },
+        {
+          "latex": "h_t = o_t \\odot \\frac{C_t\\, q_t}{\\max\\{\\lvert n_t^{\\top} q_t \\rvert,\\ 1\\}}"
+        },
+        {
+          "latex": "q_t = W_q x_t + b_q, \\qquad k_t = \\tfrac{1}{\\sqrt{d}} W_k x_t + b_k, \\qquad v_t = W_v x_t + b_v"
+        }
+      ],
+      "note": "The covariance (outer-product) update writes value $v_t$ under key $k_t$; a query later reads it back — Transformer q/k/v vocabulary, but recurrent constant-size state. No $h_{t-1}$ anywhere: no memory mixing, so the whole sequence trains in parallel.",
+      "source_ref": "§2.3",
+      "speaker_notes": "The matrix cell answers limitation two. Each step writes an outer product — value times key — into a d-by-d state, gated by the same exponential input gate and a forget-gate decay; retrieval is a matrix–vector product with a query. This is the classic covariance rule from associative-memory theory, which the authors note is the optimal linear storage scheme, and it is equivalent to Fast Weight Programmers. The crucial engineering fact: no hidden-to-hidden term appears, so the recurrence unrolls into a parallel form — that answers limitation three. Expected question: how is this different from linear attention? Same storage rule — the difference is LSTM-style exponential gating and the normalizer."
+    },
+    {
+      "layout": "two-column",
+      "eyebrow": "ARCHITECTURE",
+      "action_title": "Two residual block designs carry the cells — and xLSTM[a:b] sets the mix",
+      "points": [
+        "==k|sLSTM block== — post up-projection, like a Transformer block: cell first, then gated MLP.",
+        "Optional convolution in front; memory mixing within heads only.",
+        "Carries ==k|state tracking== — but runs sequentially."
+      ],
+      "points2": [
+        "==k|mLSTM block== — pre up-projection, like an SSM block: cell wrapped inside two MLPs.",
+        "Learnable skip + component-wise output gate.",
+        "Fully parallel; xLSTM[7:1] = 7 mLSTM : 1 sLSTM; xLSTM[1:0] = mLSTM only."
+      ],
+      "source_ref": "Fig. 3 · §2.4",
+      "speaker_notes": "Two block wrappers, borrowed from the two competing families. The sLSTM sits in a Transformer-style post-up-projection block; the mLSTM sits in an SSM-style pre-up-projection block, where the up-projection happens before the cell — the matrix memory then works in the higher-dimensional space. The bracket notation gives the block ratio: seven-to-one means one sLSTM block per eight. Almost all capacity ends up in parallel mLSTM blocks, with a pinch of sLSTM for state tracking. Whether that pinch is worth it becomes an interesting question in the results."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "SYNTHETIC I",
+      "action_title": "Only models with memory mixing solve state tracking — attention and SSMs fail parity",
+      "figure": {
+        "src": "figures/chart-parity.png",
+        "caption": "Re-plot of Fig. 4's Parity column (8 of 13 models) — not a paper figure.",
+        "cite": "Beck et al. 2024",
+        "hero": true
+      },
+      "source_ref": "Fig. 4 · §4.1",
+      "speaker_notes": "Re-plotted from Figure 4's parity column so the back row can read it; the full Chomsky-hierarchy heatmap is in the paper. First isolation experiment: formal languages requiring state tracking. Look at the parity column — Llama, Mamba, Retention, Hyena all sit near zero while plain LSTM and the sLSTM-bearing variants sit at one. This matches the Merrill and Sabharwal theory that Transformers and SSMs are fundamentally less expressive than RNNs on regular languages. Note the honest wrinkle: xLSTM[1:0], the mLSTM-only variant, also fails parity — no recurrence, no state tracking. The sLSTM block is what buys this row."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "SYNTHETIC II",
+      "action_title": "Matrix memory closes the recall gap to Transformers on MQAR",
+      "figure": {
+        "src": "figures/figure-5.png",
+        "caption": "Fig. 5 | Multi-Query Associative Recall at context 2048: accuracy vs model width, up to 256 key–value pairs.",
+        "cite": "Beck et al. 2024",
+        "hero": true
+      },
+      "source_ref": "Fig. 5 · §4.1",
+      "speaker_notes": "Second isolation: associative recall, the capacity test. Transformers are the gold standard here — attention memorizes exponentially many pairs in the coding dimension. Among recurrent models, xLSTM[1:1] is consistently best, and at the hardest setting — 256 pairs, right panel — it is the only recurrent model tracking Llama at small widths. Interesting detail: the sLSTM block helps rather than hurts recall, so mixing and matrix memory compose. This is the empirical answer to limitation two."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "HEADLINE RESULT",
+      "action_title": "At 15B tokens both xLSTM variants beat every Transformer, SSM and RNN baseline",
+      "table": {
+        "caption": "Validation perplexity on SlimPajama (15B tokens), ~350M-parameter class.",
+        "columns": [
+          {
+            "label": "Model"
+          },
+          {
+            "label": "#Params",
+            "unit": "M"
+          },
+          {
+            "label": "Val ppl",
+            "unit": "↓"
+          }
+        ],
+        "row_header": true,
+        "rows": [
+          [
+            "GPT-3",
+            "356",
+            "14.26"
+          ],
+          [
+            "Llama",
+            "407",
+            "14.25"
+          ],
+          [
+            "Mamba",
+            "423",
+            "13.70"
+          ],
+          [
+            "Hyena",
+            "435",
+            "17.59"
+          ],
+          [
+            "RWKV-5",
+            "456",
+            "14.25"
+          ],
+          [
+            "RetNet",
+            "431",
+            "16.23"
+          ],
+          [
+            "HGRN2",
+            "411",
+            "14.32"
+          ],
+          [
+            "xLSTM[1:0]",
+            "409",
+            {
+              "v": "13.43",
+              "bold": true
+            }
+          ],
+          [
+            "xLSTM[7:1]",
+            "408",
+            "13.48"
+          ]
+        ],
+        "footnote": "9 of 14 rows shown (best per family kept); full comparison in Table 1 of the paper."
+      },
+      "source_ref": "Table 1 · §4.2",
+      "speaker_notes": "The controlled comparison: every model at roughly 350M parameters, same 15 billion SlimPajama tokens, same autoregressive setup. Both xLSTM variants land at the top — 13.43 for the pure-mLSTM model, ahead of Mamba at 13.70 and the Transformers at around 14.25. Notice that the mLSTM-only variant edges out the seven-to-one mix here — the sLSTM contribution to plain language modeling is small. The margins look thin, but at this scale a quarter of a perplexity point is a real gap between method families."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "ABLATION",
+      "action_title": "The win decomposes: backbone ×68, exponential gating −8.3 ppl, matrix memory −4.2 ppl",
+      "table": {
+        "caption": "Morphing a vanilla LSTM into xLSTM, one component at a time (15B SlimPajama tokens).",
+        "columns": [
+          {
+            "label": "Step"
+          },
+          {
+            "label": "Exp. gating"
+          },
+          {
+            "label": "Matrix mem."
+          },
+          {
+            "label": "Val ppl",
+            "unit": "↓"
+          }
+        ],
+        "row_header": true,
+        "rows": [
+          [
+            "Vanilla multi-layer LSTM",
+            "–",
+            "–",
+            "2417.86"
+          ],
+          [
+            "+ residual backbone",
+            "–",
+            "–",
+            "35.46"
+          ],
+          [
+            "+ up-projection block",
+            "–",
+            "–",
+            "26.01"
+          ],
+          [
+            "+ exponential gating  (= xLSTM[0:1])",
+            "✓",
+            "–",
+            "17.70"
+          ],
+          [
+            "+ matrix memory  (= xLSTM[7:1])",
+            "✓",
+            "✓",
+            {
+              "v": "13.48",
+              "bold": true
+            }
+          ]
+        ],
+        "footnote": "Gating ablation (Table 2 bottom): input-dependent, learnable forget + input gates are worth a further 13.95 → 13.43."
+      },
+      "source_ref": "Table 2 · §4.2",
+      "speaker_notes": "My favorite table in the paper because it assigns credit. A vanilla stacked LSTM is unusable at this scale — perplexity in the thousands. Modern residual backbones do the first enormous chunk of work, down to 26. Then the paper's actual contributions: exponential gating is worth eight perplexity points, the matrix memory four more. So roughly: modern plumbing makes LSTMs viable, the two new ideas make them competitive. The gating study underneath adds that making both gates learnable and input-dependent buys the last half point — that row is exactly what separates xLSTM from RetNet- and RWKV-style fixed decays."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "LONG CONTEXT",
+      "action_title": "Trained at 2k, stable at 16k — Llama explodes to 337.83 while xLSTM holds 8.92",
+      "figure": {
+        "src": "figures/figure-7.png",
+        "caption": "Fig. 7 | Token perplexity vs position for 1.3B models trained at context 2048, evaluated to 16384.",
+        "cite": "Beck et al. 2024",
+        "hero": true
+      },
+      "source_ref": "Fig. 7 · §4.3",
+      "speaker_notes": "Now the 300-billion-token models. Everything is trained at context 2048 — the shaded band — then evaluated out to 16k. The Transformer detonates past its training window, three hundred thirty-seven perplexity at 16k. Mamba and RWKV drift upward. Both xLSTM curves stay flat at around nine. That flatness is the recurrent constant-size state doing what it is supposed to do — and note this is length generalization without any positional-encoding tricks, because there are no positional encodings."
+    },
+    {
+      "layout": "results-table",
+      "eyebrow": "LLM SCALE",
+      "action_title": "At 1.3B and 300B tokens, xLSTM leads validation perplexity and the downstream average",
+      "table": {
+        "caption": "1.3B models after 300B SlimPajama tokens: validation ppl + zero-shot downstream accuracy (%).",
+        "columns": [
+          {
+            "label": "Model"
+          },
+          {
+            "label": "Val ppl",
+            "unit": "↓"
+          },
+          {
+            "label": "LAMBADA",
+            "unit": "acc ↑"
+          },
+          {
+            "label": "HellaSwag",
+            "unit": "↑"
+          },
+          {
+            "label": "PIQA",
+            "unit": "↑"
+          },
+          {
+            "label": "ARC-E",
+            "unit": "↑"
+          },
+          {
+            "label": "Average",
+            "unit": "↑"
+          }
+        ],
+        "row_header": true,
+        "rows": [
+          [
+            "RWKV-4",
+            "9.83",
+            "49.78",
+            "56.20",
+            "74.70",
+            "61.83",
+            "54.78"
+          ],
+          [
+            "Llama",
+            "9.44",
+            "57.44",
+            "57.81",
+            "73.12",
+            "62.79",
+            "56.99"
+          ],
+          [
+            "Mamba",
+            "9.14",
+            "55.64",
+            "60.45",
+            "74.43",
+            {
+              "v": "66.12",
+              "bold": true
+            },
+            "58.41"
+          ],
+          [
+            "xLSTM[1:0]",
+            {
+              "v": "8.89",
+              "bold": true
+            },
+            {
+              "v": "57.83",
+              "bold": true
+            },
+            {
+              "v": "60.91",
+              "bold": true
+            },
+            "74.59",
+            "64.31",
+            {
+              "v": "58.48",
+              "bold": true
+            }
+          ],
+          [
+            "xLSTM[7:1]",
+            "9.00",
+            "56.69",
+            "60.26",
+            {
+              "v": "74.92",
+              "bold": true
+            },
+            "65.11",
+            "58.10"
+          ]
+        ],
+        "footnote": "Average spans all 7 tasks of Table 3 (ARC-C and WinoGrande omitted here for width). PALOMA: xLSTM[1:0] beats Mamba on 568/571 text domains (99.5%), Llama on 486 (85.1%)."
+      },
+      "source_ref": "Table 3 · §4.3",
+      "speaker_notes": "The culminating experiment. At 1.3B parameters and 300 billion tokens, xLSTM[1:0] takes validation perplexity — 8.89 against Mamba's 9.14 and Llama's 9.44 — and the downstream average, though the downstream margin over Mamba is a tenth of a point, essentially a tie. Mamba keeps ARC. The broader PALOMA sweep is the more convincing summary: across 571 text domains, xLSTM's perplexity is lower than Mamba's on ninety-nine and a half percent of them — a consistent, not cherry-picked, advantage. Scaling curves in Figure 8 run parallel across the four sizes with xLSTM keeping its offset, which is their basis for extrapolating upward."
+    },
+    {
+      "layout": "assertion-evidence",
+      "eyebrow": "EFFICIENCY",
+      "action_title": "Generation time is linear and throughput is highest — Llama hits OOM first",
+      "figure": {
+        "src": "figures/figure-9.png",
+        "caption": "Fig. 9 | 1.3B models: generation time vs length (left) and tokens/s vs batch size on an A100-80GB (right).",
+        "cite": "Beck et al. 2024"
+      },
+      "annotation": "Recurrent state = constant memory per sequence: xLSTM sustains batch 2048 where Llama goes ==w|out of memory==.",
+      "source_ref": "Fig. 9 · §4.3, §5",
+      "speaker_notes": "The deployment argument. Left: generation time grows linearly for every recurrent model and quadratically for the Transformer. Right: because the state is constant-size, xLSTM keeps raising batch size long after Llama runs out of memory, ending with the highest throughput on an A100. The honest counterweight comes from the limitations section and I want it on the slide: training kernels are about four times slower than FlashAttention today. The inference story is structural; the training-efficiency story is still an engineering IOU."
+    },
+    {
+      "layout": "critique-concerns",
+      "eyebrow": "CRITICAL READING",
+      "action_title": "Strong controlled evidence — four places I would push",
+      "points": [
+        {
+          "head": "The scale claim rests on ==w|extrapolation==",
+          "body": "Largest model is 1.3B. \"Serious competitor to current LLMs\" is a scaling-law forecast, not a demonstrated 7B/70B result — and at 2.7B in the 15B-token study, xLSTM[7:1] was visibly undertrained. (my analysis)"
+        },
+        {
+          "head": "Efficiency is argued at the ==w|algorithm level==",
+          "body": "Authors concede mLSTM kernels are ~4× slower than FlashAttention and sLSTM blocks the parallel path entirely. Equal-token comparisons are not equal-compute comparisons; a wall-clock-matched baseline would be harsher. (§5 + my analysis)"
+        },
+        {
+          "head": "Evaluation stays in the ==w|perplexity comfort zone==",
+          "body": "SlimPajama validation, zero-shot multiple choice, PALOMA perplexities — no instruction following, no code generation, no in-context-learning stress test, where attention's exact retrieval may matter most. (my analysis)"
+        },
+        {
+          "head": "sLSTM's value at LLM scale is ambiguous",
+          "body": "The paper's own tables: [1:0] beats [7:1] on 15B ppl, 300B ppl and PALOMA. State tracking wins synthetics, but nothing in the LM suite rewards it — the mixing story and the LLM story pull apart. (my analysis)"
+        }
+      ],
+      "source_ref": "My critical reading · §5",
+      "speaker_notes": "Four pushes, three mine, one shared with the authors. First, every LLM-scale claim beyond 1.3B is an extrapolation — and their own 15B-token study shows the hybrid undertrained at 2.7B, so optimization at scale is not free. Second, all comparisons are token-matched, not compute-matched; with kernels four times slower, an equal-wall-clock Llama sees four times the data. Third, the evaluation suite never leaves perplexity-adjacent territory — the tasks where attention's exact lookup should shine, like in-context learning and code, are absent. Fourth, an internal tension: the sLSTM is the theoretically distinctive part, yet the pure-mLSTM variant wins most LM rows. Worth debating what that means for the architecture's identity."
+    },
+    {
+      "layout": "discussion-questions",
+      "title": "Discussion",
+      "questions": [
+        "sLSTM wins the synthetics, mLSTM wins language modeling — is state tracking a capability LLM benchmarks simply do not measure, or one they do not need?",
+        "The mLSTM update is linear-attention storage with exponential LSTM gating. Where exactly does its inductive bias diverge from Mamba's selective state — and does the gating ablation isolate it?",
+        "FlashAttention erased a similar kernel gap for attention. What would it take — and would ~4× training cost still be worth constant-memory inference for xLSTM to displace attention in production?",
+        "The paper predicts favorable scaling from 4 points ≤1.3B. What evidence since May 2024 — e.g. a 7B xLSTM — would confirm or falsify that forecast? (open discussion, beyond the paper)"
+      ],
+      "speaker_notes": "Four discussion threads. One is the capability-versus-benchmark question the ablations raise. Two invites a mechanistic comparison against Mamba — same complexity class, different gating philosophy. Three is the economics: constant-memory inference against a four-x training premium. Four deliberately steps outside the paper: this is a May 2024 forecast, so what has the field learned since — anyone tracking whether a larger xLSTM materialized?"
+    },
+    {
+      "layout": "references",
+      "title": "References",
+      "entries": [
+        "Beck, M.*, Pöppel, K.*, Spanring, M., Auer, A., Prudnikova, O., Kopp, M., Klambauer, G., Brandstetter, J. & Hochreiter, S. (2024). xLSTM: Extended Long Short-Term Memory. arXiv:2405.04517. https://doi.org/10.48550/arXiv.2405.04517",
+        "Hochreiter, S. & Schmidhuber, J. (1997). Long Short-Term Memory. Neural Computation 9(8). https://doi.org/10.1162/neco.1997.9.8.1735",
+        "Vaswani, A. et al. (2017). Attention Is All You Need. NeurIPS. arXiv:1706.03762",
+        "Gu, A. & Dao, T. (2023). Mamba: Linear-Time Sequence Modeling with Selective State Spaces. arXiv:2312.00752",
+        "Arora, S. et al. (2023). Zoology: Measuring and Improving Recall in Efficient Language Models (MQAR). arXiv:2312.04927"
+      ],
+      "speaker_notes": "Primary source plus the four works the talk leaned on: the original LSTM, the Transformer baseline, Mamba as the strongest non-Transformer rival, and the MQAR task definition."
+    }
+  ]
+}

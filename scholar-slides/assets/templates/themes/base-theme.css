@@ -16,7 +16,7 @@
   font-weight: 600;
   font-size: var(--fs-subhead);
   line-height: var(--lh-tight);
-  letter-spacing: -0.01em;
+  letter-spacing: var(--track-display);
   color: var(--title-ink);            /* conference-report register: accent by default (token hook) */
   text-wrap: balance;                 /* balanced lines, no mid-phrase breaks (full measure) */
   padding-bottom: var(--s2);
@@ -69,7 +69,7 @@
 .s-paper-title { justify-content: center; align-items: flex-start; }
 .s-paper-title h1 {
   font-family: var(--title-font); font-size: var(--fs-title); line-height: var(--lh-tight);
-  font-weight: 600; max-width: 26ch; text-wrap: balance;
+  font-weight: 600; max-width: 26ch; text-wrap: balance; letter-spacing: var(--track-display);
 }
 .s-paper-title h1::before {           /* editorial accent bar anchors the cover */
   content: ""; display: block; width: var(--s7); height: var(--rule-weight);
@@ -83,7 +83,7 @@
 /* ---- section divider (colors via flavor hooks: journal-club = light, conference = full-bleed dark) ---- */
 .s-section { justify-content: center; align-items: flex-start; background: var(--divider-bg); color: var(--divider-ink); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 .s-section .num { font-family: var(--title-font); font-size: var(--fs-lead); color: var(--divider-num); }
-.s-section h2 { font-family: var(--title-font); font-size: var(--fs-display); font-weight: 600; max-width: 26ch; text-wrap: balance; color: var(--divider-ink); }
+.s-section h2 { font-family: var(--title-font); font-size: var(--fs-display); font-weight: 600; max-width: 26ch; text-wrap: balance; color: var(--divider-ink); letter-spacing: var(--track-display); }
 
 /* ---- agenda ---- */
 .s-agenda ol { list-style: none; counter-reset: a; padding: 0; }

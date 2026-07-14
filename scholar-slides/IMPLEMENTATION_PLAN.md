@@ -361,9 +361,33 @@ the plan's original "width-driven CSS" alone could not fix them. The mechanism t
   ground). Escalation ladder documented in figures-tables.md; `figure.hero` in slide-spec.md.
 Accepted borderline: Fig.7's 4.4pt "User message" chips sit exactly at the 12px floor — the
 remaining P2 is honest, not a bug. 72 node + 82 py green; benchmark parity-clean.
+## M8.5 — open-design craft merge  ✅ DONE (2026-07-14)
+Studied `nexu-io/open-design` (77.9k★): architecture convergent with ours (fixed framework +
+content slots, locked layout pools, mechanism-presence QA — ours measures rendered pixels, which
+is stronger). Ported the `craft/` discipline layer, four changes:
+- **Tracking token**: `--track-display: -0.02em` (tokens.css) applied to action title / cover
+  h1 / section h2 (display ≥48px untracked reads loose — the classic AI tell; caps eyebrows
+  already tracked +0.12em).
+- **`qa.emojiAudit`** → P2 `emoji-decoration` in qa_report (visual-slop tell, deterministic;
+  `\p{Extended_Pictographic}`, no false positives on math/arrows/CJK/flags).
+- **Chart discipline** (make_chart.py): `tick_rotation` — horizontal ticks ≤8 short categories
+  (rotation is the crowded-axis fallback); `should_label_bars` — every bar value labeled OUTSIDE
+  the bar up to 12 bars (+`margins(y=0.12)` headroom). Fixes the glm5/xlstm "rotated labels
+  off-register" top-defect.
+- **Rubric anchors** (aesthetics-review.md): hierarchy scale-event (title ≥1.5× body),
+  tracking floors + ≤3 sizes/slide + 3-weight system, visual cliché blocklist (emoji/gradients/
+  indigo/rounded-card-left-border/blobs/uniform padding + the 80/20 soul check), deck-level
+  pacing (density alternation beyond layoutMix). Chart rules in figures-tables.md.
+NOT ported: their DESIGN.md brand files (generated boilerplate), heavy 4-layer token schema
+(138-brand scale problem; we have 2 flavors — a flavor-only-overrides-known-tokens test is the
+useful kernel, backlog), marketing visual language (Klein blue, manifesto slides).
+
 - **M9 typography:** M9a `--measure` 65ch→~52ch (65ch ≈ 85–90 actual chars — unit ≠ count);
   M9b CJK word-boundary title wrap (Intl.Segmenter + keep-all); M9c humanize footer source refs;
   M9d drop the unexplained agenda first-item highlight.
+- **M9e (from open-design merge):** flavor-token contract test (a theme flavor may only override
+  tokens declared in tokens.css); optional per-slide "≤3 distinct type sizes" measurement in
+  verify_slides.
 - **M10 consistency/delivery:** unify qa_report vs benchmark finding counts; emphasisAudit on
   built HTML (covers layout-injected color); one-command full refresh (build+render+export+parity —
   NOTE: `export_pptx.mjs` defaults its output next to deck.json; pass `out/<d>/deck/deck.pptx`

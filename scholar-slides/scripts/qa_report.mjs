@@ -4,7 +4,7 @@
 // It does NOT certify truth (only a human can) — it surfaces every defect and every flag.
 import fs from "node:fs";
 import path from "node:path";
-import { groundNumbers, collectFlags, layoutMix, emphasisAudit, figureCrowding } from "./lib/qa.mjs";
+import { groundNumbers, collectFlags, layoutMix, emphasisAudit, figureCrowding, emojiAudit } from "./lib/qa.mjs";
 import { buildFigMeta } from "./lib/render_checks.mjs";
 import { timingReport } from "./lib/notes.mjs";
 import { validateDeck } from "./validate_deck.mjs";
@@ -74,6 +74,13 @@ export async function qaReport(deckDir, sourceDir) {
   for (const fc of figureCrowding(deck)) {
     findings.push({ stage: "aesthetics", check: "figure-crowded", severity: "P3", slide: fc.slide,
       detail: `caption+annotation = ${fc.chars} chars (> ${fc.maxChars}) — the figure loses protagonist space; move detail to speaker_notes` });
+  }
+  // Visual AI-slop tell: emoji decoration in slide text (icons belong to the type system,
+  // meaning to the emphasis roles). Near-always wrong in this register — P2, not a block,
+  // because a quoted source could legitimately contain one (acknowledge at CKPT-3).
+  for (const em of emojiAudit(deck)) {
+    findings.push({ stage: "aesthetics", check: "emoji-decoration", severity: "P2", slide: em.slide,
+      detail: `${em.chars.join(" ")} in ${em.field} — emoji reads as AI-slop in the figure-editor register; use the emphasis roles or plain type` });
   }
   // Emphasis discipline (designed, not decorated): cap the added colored roles at <=2 per slide.
   const emph = emphasisAudit(deck);

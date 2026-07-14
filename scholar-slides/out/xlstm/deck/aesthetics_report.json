@@ -1,0 +1,40 @@
+{
+  "deck": "xlstm",
+  "register": "Nature/Science figure-editor",
+  "scored_at": "2026-07-09",
+  "persona": "Nature figure editor preparing for print (scored on rendered PNGs)",
+  "mean": 22.7,
+  "outOf": 24,
+  "weakest3": [
+    { "slide": 4, "total": 17, "outOf": 20, "worst": "space" },
+    { "slide": 8, "total": 17, "outOf": 20, "worst": "typography" },
+    { "slide": 18, "total": 17, "outOf": 20, "worst": "space" }
+  ],
+  "rework": [],
+  "slides": [
+    { "slide": 1, "dims": { "hierarchy": 4, "typography": 4, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 2, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": null, "color": 3, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 3, "dims": { "hierarchy": 4, "typography": 4, "space": 3, "figures": 3, "color": 4, "consistency": 4 }, "total": 22, "outOf": 24 },
+    { "slide": 4, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 },
+    { "slide": 5, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 6, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": null, "color": 4, "consistency": 4 }, "total": 20, "outOf": 20 },
+    { "slide": 7, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": null, "color": 4, "consistency": 4 }, "total": 20, "outOf": 20 },
+    { "slide": 8, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 },
+    { "slide": 9, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 23, "outOf": 24 },
+    { "slide": 10, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 11, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 12, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 13, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 14, "dims": { "hierarchy": 4, "typography": 4, "space": 4, "figures": 4, "color": 4, "consistency": 4 }, "total": 24, "outOf": 24 },
+    { "slide": 15, "dims": { "hierarchy": 4, "typography": 4, "space": 3, "figures": 3, "color": 4, "consistency": 4 }, "total": 22, "outOf": 24 },
+    { "slide": 16, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 3, "consistency": 4 }, "total": 18, "outOf": 20 },
+    { "slide": 17, "dims": { "hierarchy": 4, "typography": 3, "space": 4, "figures": null, "color": 4, "consistency": 4 }, "total": 19, "outOf": 20 },
+    { "slide": 18, "dims": { "hierarchy": 3, "typography": 3, "space": 3, "figures": null, "color": 4, "consistency": 4 }, "total": 17, "outOf": 20 }
+  ],
+  "top_defects": [
+    { "rank": 1, "defect": "claims slide (4) fills only 48% of the stage width — short bullet fragments under the 65ch measure", "fix": "M9a measure recalibration; or lengthen the claim lines", "dimension": "space", "severity": "MEDIUM" },
+    { "rank": 2, "defect": "two-column slide (8): columns vertically center independently, leading differs between columns", "fix": "top-align .cols and unify li spacing (M9/M10 candidate)", "dimension": "typography", "severity": "MEDIUM" },
+    { "rank": 3, "defect": "matplotlib re-plots (9) carry rotated category labels — off-register with the deck's upright type", "fix": "make_chart.py horizontal tick labels for ≤8 categories", "dimension": "typography", "severity": "LOW" }
+  ],
+  "notes": "First deck authored fully under the M6 gate + M8 levers: 4 hero figures (5/9/10/13), one native redraw (parity column of Fig. 4 — the heatmap's ±std text projected 9.4px and could not be cropped contiguously), Tables 1/2/3 rebuilt as native tables. No rework slides; both remaining P3s (claims-slide width, aesthetics-not-run now resolved) are tracked. Deck-level: bullets 1/18 (6%), no layout monotony, cover/close consistent."
+}

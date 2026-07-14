@@ -35,6 +35,21 @@ def chart_data(spec):
             "highlight_max": bool(spec.get("highlight_max"))}
 
 
+def tick_rotation(categories) -> int:
+    """0 (upright, on-register with the deck's type) unless the axis is genuinely crowded:
+    >8 categories or a label too long to sit horizontally. Rotation is the fallback, not the default."""
+    cats = [str(c) for c in categories]
+    if len(cats) > 8 or (cats and max(len(c) for c in cats) > 14):
+        return 15
+    return 0
+
+
+def should_label_bars(n_series: int, n_cats: int) -> bool:
+    """Every data point gets a visible value label — unless the chart is too dense for the
+    labels to stay legible (>12 bars: they collide and lie worse than they inform)."""
+    return n_series * n_cats <= 12
+
+
 def _style(ax):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -56,13 +71,22 @@ def render(spec, out_path, dpi=200):
             ax.set_xticks(x); ax.set_xticklabels(cats)
     else:  # bar / grouped_bar
         width = 0.8 / n
+        label_bars = should_label_bars(n, len(cats))
         for j, s in enumerate(series):
             offs = (j - (n - 1) / 2) * width
             bars = ax.bar(x + offs, s["values"], width, color=s["color"], label=s["name"])
             if d["highlight_max"] and n == 1:
                 mi = max(range(len(s["values"])), key=lambda k: s["values"][k])
                 bars[mi].set_edgecolor("#15497a"); bars[mi].set_linewidth(2)
-        ax.set_xticks(x); ax.set_xticklabels(cats, rotation=15, ha="right")
+            if label_bars:
+                # value OUTSIDE the bar (padding above), never inside where a short bar clips it;
+                # %g renders the spec value verbatim (no invented precision)
+                ax.bar_label(bars, padding=3, fontsize=9, color="#1a1d21", fmt="%g")
+        if label_bars:
+            ax.margins(y=0.12)  # headroom so the tallest bar's label never clips
+        rot = tick_rotation(cats)
+        ax.set_xticks(x)
+        ax.set_xticklabels(cats, rotation=rot, ha="right" if rot else "center")
 
     if d["title"]: ax.set_title(d["title"], fontsize=13, loc="left", color="#1a1d21")
     if d["x_label"]: ax.set_xlabel(d["x_label"], fontsize=11)

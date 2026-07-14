@@ -40,6 +40,9 @@ Anchors: **0** = broken/embarrassing · **1** = amateur · **2** = acceptable-bu
 One clear entry point per slide; the eye lands on the assertion or the key mark, then flows.
 - **4** Instant focal point; title→evidence→takeaway reads in one sweep; supporting elements recede.
 - **≤2** Competing elements, no clear first-read, or the point is buried in a wall of equal-weight text.
+- **Scale event:** the slide's primary display element (action title) must be ≥1.5× the body
+  size — hierarchy is carried by *scale and space*, not by bolding everything. A smaller jump
+  reads as a document, not a slide. (Our ramp: 50px title / 32px body = 1.56× ✓.)
 - Kills: >1 focal element; body text same visual weight as the title; decorative elements louder than data.
 
 ### 2. Typography — scale, measure, rhythm
@@ -47,6 +50,11 @@ One clear entry point per slide; the eye lands on the assertion or the key mark,
   CJK ≤ ~35), no orphans/widows, no awkward 2-line title breaks, tabular figures in tables.
 - **≤2** Ad-hoc sizes; titles wrap mid-phrase ("detect &\nclassify"); lines run edge-to-edge;
   ragged leading; body text below projection-legible floor.
+- **Tracking floors (the most-skipped craft rule; the theme encodes them — flag any override):**
+  ALL-CAPS runs (eyebrows, labels) tracked ≥ +0.06em; display-size text (≥48px) tracked
+  −0.02–−0.03em (`--track-display`). Untracked caps read cramped; untracked display reads loose.
+- **Restraint counts:** ≤3 distinct type sizes visible per slide; one 3-weight system deck-wide
+  (400 read / 600 emphasize / 700 announce) — if everything important is bold, nothing is.
 - Kills: mixed font sizes off the scale; title measure so wide it wraps to an ugly 2 lines;
   paragraph-length "bullets."
 
@@ -99,6 +107,37 @@ This is where Nature/Science decks are won or lost.
 - **Cover & close.** Title and references/questions slides get the same design care as the middle —
   they book-end the talk and set expectation.
 - **One-system test.** Shuffle thumbnails; a stranger should see them as obviously one deck.
+- **Pacing (density alternation).** Uniform density across consecutive slides reads as a
+  template. Editorial pacing alternates compression and release: a dense evidence slide
+  (table, multi-item critique) earns a breathing slide near it (divider, hero figure, a thin
+  takeaway). Walk the thumbnails: if 4+ consecutive slides carry the same *visual weight*,
+  re-sequence or thin one — this is rhythm beyond `layoutMix`'s layout-name check.
+
+---
+
+## Visual cliché blocklist (anti-AI-slop)
+
+The text register bans "Delve into…" clichés (`narrative.md`); this is the **visual**
+equivalent. Each of these is a reliable "default LLM output" tell — treat any occurrence as a
+named defect in the relevant dimension:
+
+- **Emoji as icons or bullets** (🚀 ✨ 🎯 ⚡ …) — meaning belongs to the emphasis roles and the
+  type system. Deterministic: `qa.emojiAudit` emits P2 `emoji-decoration`.
+- **Unmotivated gradients** — esp. the two-stop purple→blue / blue→cyan "trust" hero wash. Flat
+  paper + intentional type wins (already a Color kill; listed here as the tell it is).
+- **Tailwind-default indigo/violet accents** (#6366f1 #4f46e5 #8b5cf6 #7c3aed #a855f7) — the
+  textbook AI accent. Our accent is `--accent` (deep academic blue); anything off-token is drift.
+- **Rounded card + colored left-border combo** — the canonical "AI dashboard tile". Our
+  callout/annotation deliberately squares the bordered edge (`border-radius: 0 r r 0`); keep it
+  that way — "fixing" the asymmetry recreates the cliché.
+- **Decorative blobs / wave dividers / meaningless geometry** — every mark earns its place; a
+  Nature figure editor deletes ornament that carries no data.
+- **Uniform symmetric padding everywhere** — see Pacing above; sameness is a tell, alternating
+  density reads as authored.
+
+Soul check (the inverse rule): aim for ~80% proven register + ~20% deliberate choice — one
+typographic move, one restrained color decision, one memorable moment (a statement divider, a
+hero figure). If a shuffled thumbnail could belong to any deck on earth, it has no author.
 
 ---
 

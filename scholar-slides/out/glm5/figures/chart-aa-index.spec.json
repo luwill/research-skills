@@ -1,0 +1,7 @@
+{
+  "type": "bar",
+  "categories": ["GLM-4.7", "GLM-5"],
+  "series": [{ "name": "Intelligence Index v4.0", "values": [42, 50] }],
+  "y_label": "Artificial Analysis Intelligence Index v4.0",
+  "highlight_max": true
+}

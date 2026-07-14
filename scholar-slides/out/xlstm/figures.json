@@ -1,0 +1,612 @@
+[
+  {
+    "id": "figure-1",
+    "kind": "figure",
+    "number": "1",
+    "label": "Figure 1",
+    "caption": "Figure 1: The extended LSTM (xLSTM) family. From left to right: 1. The original LSTM memory cell with constant error carousel and gating. 2. New sLSTM and mLSTM memory cells that introduce exponential gating. sLSTM offers a new memory mixing technique. mLSTM is fully parallelizable with a novel matrix memory cell state and new covariance update rule. 3. mLSTM and sLSTM in residual blocks yield xLSTM blocks. 4. Stacked xLSTM blocks give an xLSTM architecture.",
+    "page": 1,
+    "render_as": "image",
+    "caption_bbox": [
+      107.64099884033203,
+      665.524169921875,
+      504.35211181640625,
+      719.134033203125
+    ],
+    "figure_bbox": [
+      100.0,
+      466.0,
+      512.0,
+      659.524169921875
+    ],
+    "min_font_pt": 7.3,
+    "panels": [],
+    "bbox_source": "manual",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-2",
+    "kind": "figure",
+    "number": "2",
+    "label": "Figure 2",
+    "caption": "Figure 2: LSTM limitations. Left : Nearest Neighbor Search problem in terms of mean squared error (MSE). Given a reference vector, a sequence is scanned sequentially for the most similar vector with the objective to return its attached value at sequence end. LSTM struggles to revise a stored value when a more similar vector is found. Our new xLSTM overcomes this limitation by exponential gating. Right : Rare Token Prediction. The perplexity (PPL) of token prediction on Wikitext-103, in partitions of token frequency. LSTM performs worse on predicting rare tokens because of its lim- ited storage capacities, whereas our new xLSTM solves this problem via a matrix memory.",
+    "page": 2,
+    "render_as": "image",
+    "caption_bbox": [
+      266.0889892578125,
+      497.37554931640625,
+      505.6487731933594,
+      627.383056640625
+    ],
+    "figure_bbox": [
+      268.0,
+      374.0,
+      508.0,
+      496.0
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "manual",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-3",
+    "kind": "figure",
+    "number": "3",
+    "label": "Figure 3",
+    "caption": "Figure 3: xLSTM blocks. Left : A residual sLSTM block with post up-projection (like Transformers): The input is fed into an sLSTM — with an optional convolution — followed by a gated MLP. Right : A residual mLSTM block with pre up-projection (like State Space models): mLSTM is wrapped inside two MLPs, via a convolution, a learnable skip connection, and an output gate that acts component- wise. See Figure 10 and Figure 11 in the appendix for details.",
+    "page": 5,
+    "render_as": "image",
+    "caption_bbox": [
+      266.0390930175781,
+      541.0064086914062,
+      505.73907470703125,
+      627.474853515625
+    ],
+    "figure_bbox": [
+      266.0390930175781,
+      412.98114013671875,
+      505.73907470703125,
+      541.0064086914062
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-4",
+    "kind": "figure",
+    "number": "4",
+    "label": "Figure 4",
+    "caption": "Figure 4: Test of xLSTM’s exponential gating with memory mixing. Results are given by the scaled accuracy of different models at solving formal language tasks, of which some require state tracking. The different tasks are grouped by the Chomsky hierarchy.",
+    "page": 8,
+    "render_as": "image",
+    "caption_bbox": [
+      107.69100189208984,
+      297.2399597167969,
+      505.7474365234375,
+      328.99407958984375
+    ],
+    "figure_bbox": [
+      107.69100189208984,
+      72.00259399414062,
+      505.7474365234375,
+      297.2399597167969
+    ],
+    "min_font_pt": 4.0,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-5",
+    "kind": "figure",
+    "number": "5",
+    "label": "Figure 5",
+    "caption": "Figure 5: Test of memory capacities of different models at the Multi-Query Associative Recall task with context length 2048. Each panel is dedicated to a different number of key-value pairs. The x -axis displays the model size and the y -axis the validation accuracy.",
+    "page": 8,
+    "render_as": "image",
+    "caption_bbox": [
+      107.64099884033203,
+      687.33837890625,
+      504.2470703125,
+      719.134033203125
+    ],
+    "figure_bbox": [
+      100.0,
+      553.0,
+      512.0,
+      683.0
+    ],
+    "min_font_pt": 6.9,
+    "panels": [],
+    "bbox_source": "manual",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-1",
+    "kind": "table",
+    "number": "1",
+    "label": "Table 1",
+    "caption": "Table 1: Method comparison on next token prediction when trained on 15B tokens from SlimPajama. Best valida- tion perplexities within model classes, i.e., Transformers, LSTMs, SSMs, RNNs, and linear Transformers are underlined and overall best is in bold. For each model class, the best performing methods are later used in Section 4.3 for LLM training. xLSTMs with new memory (xLSTM[1:0] and xLSTM[7:1]) perform best.",
+    "page": 9,
+    "render_as": "data",
+    "caption_bbox": [
+      337.37200927734375,
+      432.9452819824219,
+      505.7460632324219,
+      552.0740356445312
+    ],
+    "figure_bbox": [
+      108.0,
+      552.0740356445312,
+      505.7474060058594,
+      687.7570190429688
+    ],
+    "min_font_pt": 9.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-6",
+    "kind": "figure",
+    "number": "6",
+    "label": "Figure 6",
+    "caption": "Figure 6 : Method comparison on next token prediction when trained on 15B tokens from SlimPajama. Performance mea- sure in validation perplexity for the best methods of each model class (see Table 1 ) are reported. The performance degradation of xLSTM[7:1] at 2.7B is due to initially slower training conver- gence that leads to an especially undertrained model. xLSTM is the best method at all sizes.",
+    "page": 10,
+    "render_as": "image",
+    "caption_bbox": [
+      378.5379943847656,
+      129.25027465820312,
+      505.7466735839844,
+      270.1970520019531
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-2",
+    "kind": "table",
+    "number": "2",
+    "label": "Table 2",
+    "caption": "Table 2: Ablation studies. Top: Ablation studies on the new xLSTM components, contributing the strong performance improvement of xLSTM over vanilla LSTM to both the exponential gating and the matrix memory. Bottom: Ablation studies on different gating techniques. We consider an xLSTM[1:0] with sigmoid forget gate and exponential input gate. Bias initialization ∞ means that the forget gate is set to one, [3 , 6] indicates that values are taken equidistant in the respective interval, and N (0 , 0 . 1) that values are randomly chosen from a Gaussian with mean 0 and std 0 . 1 . PPL denotes validation perplexity. The first two lines correspond to models similar to linearized attention, line four to Retention, line five to RWKV-5, and line six to RWKV-6. Dependencies of the gates on the input lead to better performance.",
+    "page": 10,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      595.9434204101562,
+      504.0047302246094,
+      693.3460693359375
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-7",
+    "kind": "figure",
+    "number": "7",
+    "label": "Figure 7",
+    "caption": "Figure 7: Sequence extrapolation in language modeling. This is a comparison of 1.3B-sized, large models of xLSTM, RWKV-4, Llama, and Mamba at next token prediction on the SlimPajama validation set after training on 300B tokens from SlimPajama. Models are trained with context length 2048 and then tested for context lengths up to 16384. Left: Token perplexities evaluated at different context lengths. In contrast to other methods, xLSTM models remain at low perplexities for longer contexts. Right: Prediction quality when extrapolating to long context sizes in terms of validation perplexity (PPL). xLSTM yields the best PPL values (best in bold, second best underlined).",
+    "page": 11,
+    "render_as": "image",
+    "caption_bbox": [
+      107.7509994506836,
+      456.5082702636719,
+      504.16705322265625,
+      531.9860229492188
+    ],
+    "figure_bbox": [
+      100.0,
+      272.0,
+      512.0,
+      452.0
+    ],
+    "min_font_pt": 7.9,
+    "panels": [],
+    "bbox_source": "manual",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-3",
+    "kind": "table",
+    "number": "3",
+    "label": "Table 3",
+    "caption": "Table 3: Validation set perplexity and downstream tasks. Comparison of xLSTM, RWKV-4, Llama, and Mamba on the validation set at next token prediction and on downstream tasks after training on 300B tokens from SlimPajama. Model sizes are 125M, 250M, 760M, and 1.3B. The first column shows the methods and the second the actual number of parameters. The third column lists the validation set perplexities, while the remaining columns show the performance on downstream tasks. Best model per model size is depicted bold and the second best is underlined. In the vast majority of tasks and across all model sizes xLSTM is the best method — only on the ARC task Mamba is in some cases the best method. xLSTM[1:0] and xLSTM[7:1] are the two best models with respect to validation set perplexity.",
+    "page": 12,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      289.9879150390625,
+      505.7436828613281,
+      387.2310791015625
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "figure-8",
+    "kind": "figure",
+    "number": "8",
+    "label": "Figure 8",
+    "caption": "Figure 8: Scaling laws. Next token prediction perplexity of xLSTM, RWKV-4, Llama, and Mamba on the SlimPajama validation set when trained on 300B tokens from SlimPajama. Model sizes are 125M, 350M, 760M, and 1.3B. Best models for each model class, see Table 1 , were selected. The scaling laws indicate that for larger models xLSTM will perform well too.",
+    "page": 13,
+    "render_as": "image",
+    "caption_bbox": [
+      107.25299835205078,
+      511.0523681640625,
+      504.0032043457031,
+      553.7570190429688
+    ],
+    "figure_bbox": [
+      107.25299835205078,
+      260.245361328125,
+      504.0211486816406,
+      511.0523681640625
+    ],
+    "min_font_pt": 6.8,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-9",
+    "kind": "figure",
+    "number": "9",
+    "label": "Figure 9",
+    "caption": "Figure 9: Inference Generative Speed. Left: Generation times of different 1.3B models for a pre-fill context of 16 tokens (to mitigate cache initialization). The recurrent models (xLSTM[1:0], xLSTM[7:1], Mamba and RWKV-4) show linear behavior, whereas the Transformer (Llama) infer- ence/decoding time is quadratic in sequence length. Right: Token throughput for different batch sizes on a A100-80GB GPU for 1.3B sized models. Note that the Transformer / Llama model goes out of memory (OOM) already for small batch sizes, whereas xLSTM and Mamba can sustain very large batch sizes. xLSTM[1:0] consistently outperforms Mamba in throughput.",
+    "page": 14,
+    "render_as": "image",
+    "caption_bbox": [
+      107.75102996826172,
+      215.1164093017578,
+      505.649658203125,
+      290.7010803222656
+    ],
+    "figure_bbox": [
+      107.75102996826172,
+      71.99844360351562,
+      526.1712646484375,
+      215.1164093017578
+    ],
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-10",
+    "kind": "figure",
+    "number": "10",
+    "label": "Figure 10",
+    "caption": "Figure 10: Schematic representation of an sLSTM Block – post up-projection: Embedded in a pre- LayerNorm residual structure, the input is optionally passed through a causal convolution of window size 4 that includes a Swish activation for input and forget gates. Then, for all input, forget and output gates i , f , o , and the cell update z the input is fed through a block-diagonal linear layer with four diagonal blocks or “heads”. These diagonal blocks coincide with the recurrent gate pre-activations from the last hidden state, which corresponds to an sLSTM with four heads depicted with the circular arrows. The resulting hidden state goes through a GroupNorm layer ( Wu & He , 2018 ) – a head-wise LayerNorm for each of the four heads. Finally, the output is up- and down-projected using a gated MLP, with GeLU activation function and projection factor 4 / 3 to match parameters.",
+    "page": 29,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      614.863037109375,
+      505.64996337890625,
+      712.1390380859375
+    ],
+    "figure_bbox": [
+      108.0,
+      74.31652069091797,
+      505.64996337890625,
+      614.863037109375
+    ],
+    "min_font_pt": 5.4,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-11",
+    "kind": "figure",
+    "number": "11",
+    "label": "Figure 11",
+    "caption": "Figure 11: Schematic representation of an mLSTM block – pre up-projection: Embedded in a pre-LayerNorm residual structure, the input is up-projected first with projection factor 2, once for an externalized output gate and once as input for the mLSTM cells. The mLSTM cell input is dimension-wise causally convoluted (kernel size 4), before entering a learnable skip connection. We obtain input q and k via block-diagonal projection matrices of block size 4. The values v are fed directly, skipping the convolution part. After the mLSTM sequence mixing, outputs are normalized via GroupNorm ( Wu & He , 2018 ) – a head-wise layer norm for each of the four heads. Finally, the learnable skip input is added and the result is gated component-wise with the external output gate. The output is down-projected.",
+    "page": 30,
+    "render_as": "image",
+    "caption_bbox": [
+      107.69100189208984,
+      527.82421875,
+      505.7452392578125,
+      625.134033203125
+    ],
+    "figure_bbox": [
+      107.69100189208984,
+      81.97645568847656,
+      505.7452392578125,
+      527.82421875
+    ],
+    "min_font_pt": 8.1,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-12",
+    "kind": "figure",
+    "number": "12",
+    "label": "Figure 12",
+    "caption": "Figure 12: Supplementary results given by scaled accuracy of different models at solving formal language tasks. Tasks are grouped by the Chomsky hierarchy.",
+    "page": 32,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      329.5232849121094,
+      503.99737548828125,
+      350.4700622558594
+    ],
+    "figure_bbox": [
+      108.0,
+      71.99891662597656,
+      503.99737548828125,
+      329.5232849121094
+    ],
+    "min_font_pt": 4.6,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-16",
+    "kind": "figure",
+    "number": "16",
+    "label": "Figure 16",
+    "caption": "Figure 16 shows the extrapolation results from Experiment 3. For xLSTM[1:1], xLSTM[1:0], and Mamba the model performance does not change in the extrapolation setting. The RWKV models (especially RWKV5) degrade slightly with increasing context length. xLSTM[1:1] performs best, as it maintains its superior performance of Experiment 2.",
+    "page": 35,
+    "render_as": "image",
+    "caption_bbox": [
+      107.6709976196289,
+      606.8955078125,
+      504.0003356933594,
+      649.6500244140625
+    ],
+    "figure_bbox": [
+      107.53199768066406,
+      74.38484954833984,
+      505.7467041015625,
+      606.8955078125
+    ],
+    "min_font_pt": 9.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-13",
+    "kind": "figure",
+    "number": "13",
+    "label": "Figure 13",
+    "caption": "Figure 13: Illustration of the MQAR task. Color pairs represent key-value pairs (keys have darker shade). The first part of the sequence defines the key-value pairs for the respective sample. After that, the keys appear randomly according to a power law distribution 4 . Grey tokens in the input sequence represent a zero token. The “target” sequence contains the value after the respective key appearance — the rest of the tokens are ignored for the accuracy and loss calculation. The model must predict the value tokens given the respective key.",
+    "page": 36,
+    "render_as": "image",
+    "caption_bbox": [
+      106.00700378417969,
+      152.37303161621094,
+      505.2414245605469,
+      216.95309448242188
+    ],
+    "figure_bbox": [
+      106.00700378417969,
+      71.99993896484375,
+      505.2414245605469,
+      152.37303161621094
+    ],
+    "min_font_pt": 15.3,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-14",
+    "kind": "figure",
+    "number": "14",
+    "label": "Figure 14",
+    "caption": "Figure 14: Result of MQAR-Experiment 1. The columns show different task settings (context length and key-value pairs). The rows group related models for better clarity. The x -axis gives the model size and the y -axis the validation accuracy.",
+    "page": 37,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      650.6305541992188,
+      503.999755859375,
+      682.3580322265625
+    ],
+    "figure_bbox": [
+      108.0,
+      108.771728515625,
+      504.00518798828125,
+      650.6305541992188
+    ],
+    "min_font_pt": 5.6,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "figure-15",
+    "kind": "figure",
+    "number": "15",
+    "label": "Figure 15",
+    "caption": "Figure 15: Result of MQAR-Experiment 2. The columns and rows correspond to different numbers of key-value pairs and the context length respectivly. The x -axis gives the model size and the y -axis the validation accuracy.",
+    "page": 38,
+    "render_as": "image",
+    "caption_bbox": [
+      108.0,
+      434.7362365722656,
+      504.00048828125,
+      466.5130615234375
+    ],
+    "figure_bbox": [
+      108.0,
+      107.77313232421875,
+      504.00048828125,
+      434.7362365722656
+    ],
+    "min_font_pt": 5.6,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-5",
+    "kind": "table",
+    "number": "5",
+    "label": "Table 5",
+    "caption": "Table 5: Long Range Arena model hyperparameters. These are the model hyperparameters used in each of the Long Range Arena tasks. For each model we used the best learning rate and the better of the two learning rate schedulers.",
+    "page": 38,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      641.7355346679688,
+      504.00238037109375,
+      673.550048828125
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-6",
+    "kind": "table",
+    "number": "6",
+    "label": "Table 6",
+    "caption": "Table 6: Long Range Arena test accuracy. Bold highlights the best performing model, underlined the second best. X denotes models that fail to outperform random baselines. xLSTM is the best of xLSTM[1:0], xLSTM[0:1] based on validation dataset accuracy.",
+    "page": 39,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      644.7632446289062,
+      504.00341796875,
+      676.6190185546875
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-7",
+    "kind": "table",
+    "number": "7",
+    "label": "Table 7",
+    "caption": "Table 7: Peak learning rates and model dimensions for scaling law plots.",
+    "page": 41,
+    "render_as": "data",
+    "caption_bbox": [
+      161.3040008544922,
+      614.4004516601562,
+      450.38873291015625,
+      624.363037109375
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-8",
+    "kind": "table",
+    "number": "8",
+    "label": "Table 8",
+    "caption": "Table 8: Matrix Memory variants. We study different configurations for the matrix memory. Matrix memory in the pre up-projection block performs best and gives xLSTM[1:0]. Notably, it seems that the dimension-wise causal convolution within the pre up-projection block is important.",
+    "page": 42,
+    "render_as": "data",
+    "caption_bbox": [
+      107.69100189208984,
+      238.37049865722656,
+      504.2520751953125,
+      270.1510925292969
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  },
+  {
+    "id": "table-9",
+    "kind": "table",
+    "number": "9",
+    "label": "Table 9",
+    "caption": "Table 9: Perplexity values per domain.",
+    "page": 43,
+    "render_as": "data",
+    "caption_bbox": [
+      227.39999389648438,
+      517.5354614257812,
+      381.20257568359375,
+      527.498046875
+    ],
+    "figure_bbox": [
+      107.53199768066406,
+      527.498046875,
+      505.73931884765625,
+      640.2950439453125
+    ],
+    "min_font_pt": 9.9,
+    "panels": [],
+    "bbox_source": "region",
+    "factual": true,
+    "confidence": "high"
+  },
+  {
+    "id": "table-10",
+    "kind": "table",
+    "number": "10",
+    "label": "Table 10",
+    "caption": "Table 10: PPL Evaluations: For the 1.3B sized models trained on 300B SlimPajama tokens, these are the detailed evaluation results on the respective validation datasets.",
+    "page": 44,
+    "render_as": "data",
+    "caption_bbox": [
+      115.2030029296875,
+      129.5799560546875,
+      511.51580810546875,
+      150.38705444335938
+    ],
+    "figure_bbox": null,
+    "min_font_pt": null,
+    "panels": [],
+    "bbox_source": "none",
+    "factual": true,
+    "confidence": "low"
+  }
+]

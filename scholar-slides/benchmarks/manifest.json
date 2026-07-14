@@ -6,6 +6,7 @@
     { "name": "deepseek_conf", "dir": "out/deepseek_conf", "field": "LLM", "register": "conference",   "note": "DeepSeek-V3.2 conference re-cut — 0% bullets, section rhythm, dark dividers" },
     { "name": "zh_smoke",      "dir": "out/zh_smoke",      "field": "CJK", "register": "journal-club", "note": "中文 smoke — CJK typography, full-width punctuation" },
     { "name": "glm5",          "dir": "out/glm5",          "field": "LLM", "register": "journal-club", "note": "GLM-5 — 15 slides, ablation+scoreboard tables, manual fig-1 re-crop" },
-    { "name": "glm5_zh",       "dir": "out/glm5_zh",       "field": "LLM/CJK", "register": "journal-club", "note": "GLM-5 中文版 — full CJK journal-club deck" }
+    { "name": "glm5_zh",       "dir": "out/glm5_zh",       "field": "LLM/CJK", "register": "journal-club", "note": "GLM-5 中文版 — full CJK journal-club deck" },
+    { "name": "xlstm",         "dir": "out/xlstm",         "field": "ML/RNN", "register": "journal-club", "note": "xLSTM — 18 slides, 4 hero figures, native parity re-plot, 3 tables; first deck authored under the M6 gate" }
   ]
 }

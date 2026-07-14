@@ -113,6 +113,21 @@ export function emphasisAudit(deck, { maxAdded = 2 } = {}) {
   return { slides, over: slides.filter((s) => s.added.length > maxAdded).map((s) => s.slide), maxAdded };
 }
 
+// ---- emoji decoration (visual AI-slop tell; see aesthetics-review.md blocklist) ----
+// Emoji as icons/bullets never belong in the figure-editor register — semantic emphasis roles
+// and monoline structure carry meaning instead. \p{Extended_Pictographic} covers the emoji
+// blocks without touching math (≤ ± ·), arrows (→), CJK, or integrity-flag text.
+const EMOJI_RE = /\p{Extended_Pictographic}/gu;
+
+export function emojiAudit(deck) {
+  const out = [];
+  for (const f of collectFields(deck)) {
+    const chars = [...new Set(f.text.match(EMOJI_RE) || [])];
+    if (chars.length) out.push({ slide: f.slide, layout: f.layout, field: f.field, chars });
+  }
+  return out;
+}
+
 // ---- figure crowding: the figure is the protagonist, text must not squeeze it ----
 // On the fixed 1080px stage an assertion-evidence slide has ~600px left for the figure AFTER
 // title, caption, and annotation. Every extra caption/annotation line costs the figure ~45px of
