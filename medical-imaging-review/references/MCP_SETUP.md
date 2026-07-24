@@ -1,247 +1,139 @@
-# Tool Adapters for Literature Collection
+# Tool Discovery and Literature Adapters
 
-Use this file to adapt the literature workflow to the tools available in the current environment. Do not assume a specific MCP server name exists. First inspect available tools; then choose the most direct first-source route.
+Adapt the review workflow to capabilities actually available in the current session, whatever the host environment. Do not assume an MCP server, connector, local service, subscription, or logged-in browser exists.
 
-The core operations are tool-independent:
+Here <project_dir> means the collision-safe review_project/<topic-slug>-<YYYYMMDD-HHMMSS>-<8hex>/ child printed by scripts/init_review_project.py. Use only narrative, method-survey, scoping, or systematic as route tokens; systematic means qualitative synthesis.
 
-| Operation | Preferred route | Fallback |
+## Contents
+
+- Discovery before selection
+- Capability map
+- Route-aware search
+- Source and access rules
+- Stable citekeys and claim ledger
+- Reproducibility record
+- Fallbacks and blocked states
+- Privacy and configuration boundaries
+
+## Discovery before selection
+
+Before searching:
+
+1. Inspect the active tools, installed skills, connected apps, local files, and authorized browser state.
+2. Identify which capabilities can search, export, read full text, verify metadata, and preserve provenance.
+3. Prefer a purpose-built connected source over generic web search when both provide the needed evidence.
+4. Record database availability in the generated review_config.yaml and actual capability provenance in the applicable search log or REVIEW_CONTEXT.md.
+5. Test one representative query or record before committing the protocol to that route.
+
+Do not edit tool, browser, Zotero, or MCP configuration and do not install a connector unless the user explicitly requests that change. Never write environment-specific tool commands into the manuscript.
+
+## Capability map
+
+| Operation | Preferred capability | Fallback |
 |---|---|---|
-| Search method preprints | Available arXiv/paper-search MCP, Hugging Face papers, scholarly web search | arXiv website/API, publisher pages |
-| Search biomedical literature | Available PubMed/NCBI MCP or web search restricted to PubMed | PubMed website by query or PMID |
-| Read closed-access papers | Zotero MCP/local Zotero API/local PDFs | Ask user for PDF or use abstract-only contribution claim |
-| Verify DOI metadata | Crossref API or DOI resolver | Publisher page, PubMed metadata |
-| Verify author list | PubMed/Crossref/arXiv/publisher page | Zotero metadata plus manual spot-check |
-| Verify numeric/directional claims | Full text or abstract/results table | Remove the numeric claim if the source cannot be read |
+| Search biomedical literature | Authorized bibliographic database or PubMed-capable connector | PubMed web/API; request an export from a required unavailable database |
+| Search method preprints | arXiv or scholarly-paper connector | arXiv web/API or verified publisher/preprint pages |
+| Search subscribed databases | User-authorized database session or exported search results | Mark the database unavailable and request a reproducible export |
+| Search a local library | Authorized Zotero connector or local Zotero access | User-provided RIS/BibTeX export or PDFs |
+| Read full text | Authorized local PDF, repository, publisher page, or connected library | Use only the accessible abstract-level claims or request the document |
+| Verify identifiers and metadata | Publisher, PubMed, Crossref, arXiv, or repository record | Reconcile two independent metadata sources and log uncertainty |
+| Verify quantitative or directional claims | Full text with page, table, figure, or section location | Remove or narrow the claim until supporting text is accessible |
 
-If a listed tool is unavailable, use the fallback. The manuscript quality standard stays the same.
+Search, metadata verification, and claim verification are different operations. A search result snippet is not a source for a scientific claim.
 
----
+## Route-aware search
 
-## Tool discovery checklist
+### Narrative review or method survey
 
-Before search:
+Use searches broad enough to support the stated scope and controversy map. Record discovery sources, query concepts, evidence cutoff, and selection rationale. Do not imply exhaustive coverage.
 
-1. List available MCP/tools in the current environment.
-2. Record the actual usable tool names in `CLAUDE.md` or the project plan.
-3. For each source family, record the fallback URL/API.
-4. Do not write tool-specific commands into the manuscript or final notes.
+There is no universal date window or result-count target. Choose limits from the topic, field maturity, user requirements, and evidence cutoff in <project_dir>/review_config.yaml.
 
----
+### Scoping review
 
-## ArXiv / preprint route
+Translate the frozen concept blocks into each database's syntax. Preserve:
 
-Use arXiv for preprints and ML-method advances. If an arXiv MCP is installed, use it; otherwise use arXiv URLs directly.
+- database and platform
+- complete query exactly as run
+- search date and coverage dates
+- filters and limits with rationale
+- export filename or stable record identifier
+- deduplication inputs and decisions
+- supplementary search methods
 
-### Optional Claude MCP example
+Web search can supplement but cannot silently replace a protocol-required bibliographic database.
 
-Repository: https://github.com/blazickjp/arxiv-mcp-server
+### Systematic review with qualitative synthesis
 
-Configuration example:
+Use the databases and supplementary methods required by the frozen question and conduct guidance. Ask an information specialist or qualified human to review the strategy when required or feasible. Preserve every executable search and update.
 
-Add to `~/.claude/mcp.json` (or your MCP config file):
+Do not claim the search is complete when a required database, export, date, or query record is missing. Do not start pooled analysis; meta-analysis is outside this skill.
 
-```json
-{
-  "mcpServers": {
-    "arxiv": {
-      "command": "uvx",
-      "args": ["arxiv-mcp-server"],
-      "env": {
-        "ARXIV_STORAGE_PATH": "~/.arxiv-mcp-server/papers"
-      }
-    }
-  }
-}
-```
+## Source and access rules
 
-Example tool names if this MCP is installed:
+Prefer sources in this order for the claim being made:
 
-| Tool | Purpose |
-|---|---|
-| `search_papers` equivalent | Search by keywords with date range and category filters |
-| `download_paper` equivalent | Download paper PDF by arXiv ID |
-| `list_papers` equivalent | List downloaded papers |
-| `read_paper` equivalent | Read downloaded paper content |
+1. Full primary-study text and its tables, figures, supplements, or appendices.
+2. Official primary-study abstract and bibliographic record.
+3. Registry, regulator, or dataset owner for facts within that source's authority.
+4. Secondary synthesis for context, discovery, or a claim about that synthesis.
 
-### Search strategy
+Use vendor materials only for facts they authoritatively establish, such as product documentation or a stated regulatory filing. Do not use them as clinical-effectiveness evidence when a primary study is required.
 
-```
-Query: "[topic] AND (segmentation OR detection OR classification)"
-Categories: cs.CV, eess.IV, cs.LG
-Date: Last 3 years for current state of the art
-Max results: 50-80 per query (discriminate aggressively — quality over breadth)
-```
+If only an abstract is accessible:
 
-### Example queries
+- record abstract-only access in <project_dir>/claim_ledger.csv
+- limit claims to information explicitly present there
+- do not infer architecture internals, exact unreported results, causal claims, or novelty priority
+- do not fabricate page, table, or figure locations
 
-- `"medical image segmentation transformer"` (cs.CV, eess.IV)
-- `"coronary artery deep learning"` (cs.CV)
-- `"CT scan neural network"` (eess.IV)
-- `"foundation model medical segmentation"` (cs.CV, cs.LG)
+Do not bypass access controls or use unauthorized copies. Ask the user for an authorized document or export when necessary.
 
-### Workflow integration
+## Stable citekeys and claim ledger
 
-Per CITATION_INTEGRITY.md Rule 2, when adding an arXiv paper to bibliography:
+Assign a stable citekey as soon as a source is accepted, for example smith2024model. Keep that key stable even if author order, publication status, or citation style is later corrected.
 
-1. Search to find candidates.
-2. Open the abstract page and download/read the PDF for promising ones.
-3. Read full text, or at least abstract + methods + results, before writing method details.
-4. Note actual first author, full author list, exact module names, headline numbers
-5. Cross-check: arxiv abstract page = `https://arxiv.org/abs/<id>` for author list verification
+Preserve user-approved reference-manager exports as immutable import artifacts. Normalize accepted records into <project_dir>/references.bib, which is the project bibliography used by stable draft citekeys such as [@smith2024model] in <project_dir>/manuscript.md. Render numeric or author-date styles only at formatting time.
 
----
+For each claim in <project_dir>/claim_ledger.csv, preserve the initializer's schema and record:
 
-## PubMed / biomedical route
+- claim identifier and exact text
+- citekey or citekeys
+- source type and access level
+- supporting page, table, figure, section, or abstract location
+- verification status, verifier, and date
+- uncertainty or conflict notes
 
-Use PubMed for peer-reviewed clinical, validation, diagnostic, and implementation literature.
+If metadata sources disagree, preserve the conflict in the ledger and block polished use until resolved.
 
-### Optional Claude MCP example
+## Reproducibility record
 
-Repository: https://github.com/grll/pubmedmcp
+For each search or source operation, preserve enough information for another human to repeat it using the generated artifacts rather than a second ad hoc schema. Narrative and method-survey discovery goes in `search/narrative_exploration_log.csv`; formal searches go in `search/search_log.csv`; source-specific metadata/full-text decisions go in `source_notes/<citekey>.md`; tool availability and blocked fallbacks go in `review_config.yaml` or `REVIEW_CONTEXT.md`. Use the existing `searcher_id` and `notes` fields for the human operator and environment-specific capability. Record exact dates rather than words such as today or recent.
 
-Configuration example:
+## Fallbacks and blocked states
 
-```json
-{
-  "mcpServers": {
-    "pubmedmcp": {
-      "command": "uvx",
-      "args": ["pubmedmcp@latest"],
-      "env": {
-        "UV_PRERELEASE": "allow",
-        "UV_PYTHON": "3.12"
-      }
-    }
-  }
-}
-```
+When a capability is unavailable:
 
-Example tool names if this MCP is installed:
+- PubMed or biomedical connector unavailable: use the authorized web/API route or ask for an export.
+- Required subscribed database unavailable: request a search export; do not substitute a general web search without a protocol amendment.
+- Zotero unavailable: request RIS, BibTeX, CSV, or PDFs from the user.
+- Full text unavailable: narrow or remove unsupported claims and record the access limitation.
+- Metadata conflict unresolved: retain the source as pending and do not cite it in polished prose.
+- Human screening, extraction, or appraisal gate unavailable: provide provisional AI-assisted suggestions only.
 
-| Tool | Purpose |
-|---|---|
-| `pubmed_search_articles` equivalent | Search PubMed with MeSH and free-text queries |
+Record the blocked state, attempted fallback, owner, and next action in REVIEW_CONTEXT.md and IMPLEMENTATION_PLAN.md; set delivery.project_status in review_config.yaml consistently. A tool failure does not lower the evidence standard.
 
-### Search tips
+## Privacy and configuration boundaries
 
-- Use MeSH terms for precise medical searches
-- Combine with publication type filters (Review, Clinical Trial)
-- Filter by date for recent literature
+- Access only libraries, files, accounts, and browser sessions the user has authorized for this task.
+- Do not upload local PDFs, annotations, or library metadata to an external service without authorization.
+- Do not expose tokens, local paths, private collection names, or unpublished manuscript content in search queries or reports.
+- Do not install or reconfigure tools as an implicit fallback.
+- Keep tool provenance in project records and scientific claims in the manuscript; do not mix them.
 
-### Example MeSH queries
-
-- `"Deep Learning"[MeSH] AND "Coronary Vessels"[MeSH]`
-- `"Image Processing, Computer-Assisted"[MeSH] AND "Tomography, X-Ray Computed"[MeSH]`
-- `"Cardiac Imaging Techniques"[MeSH] AND "Artificial Intelligence"[MeSH]`
-
-### Direct URL/API verification
-
-For metadata verification (CITATION_INTEGRITY.md Rules 1-2), use the PubMed page by PMID:
-
-```
-WebFetch on https://pubmed.ncbi.nlm.nih.gov/<PMID>/
-  → Extract: full author list, journal, year, vol, issue, pages, DOI, finding direction
-```
-
-This is the canonical first-source metadata verification step for medical clinical papers.
-
----
-
-## Zotero / local-library route
-
-Access user's local Zotero database via Zotero-MCP.
-
-### Direct API Access (fallback)
-
-```bash
-# List collections
-curl -s "http://localhost:23119/api/users/[USER_ID]/collections"
-
-# Get items from a collection
-curl -s "http://localhost:23119/api/users/[USER_ID]/collections/[KEY]/items"
-```
-
-### Zotero-MCP (if available)
-
-**Repository:** https://github.com/54yyyu/zotero-mcp
-
-Possible tool names:
-
-| Tool | Purpose |
-|---|---|
-| `mcp__zotero__zotero_search_collections` | Find collections by name / keyword |
-| `mcp__zotero__zotero_get_collection_items` | List items in a collection |
-| `mcp__zotero__zotero_search_items` | Search items by keyword |
-| `mcp__zotero__zotero_get_item_metadata` | Get full metadata for an item |
-| `mcp__zotero__zotero_get_item_fulltext` | Get full paper text from attached PDF |
-| `mcp__zotero__zotero_get_annotations` | Get user highlights / notes |
-| `mcp__zotero__zotero_semantic_search` | Semantic search across library |
-
-### Workflow integration
-
-For closed-access journals (Med Image Anal, Eur Radiol, JACC family, Lancet family, Nature family), the user often has PDFs in Zotero that aren't accessible via web tools. Workflow:
-
-```
-1. Search items by author/method/topic.
-2. Get item metadata and DOI.
-3. Retrieve full text only when metadata and abstract are insufficient.
-```
-
-### Extractable fields
-
-- title
-- abstractNote
-- date
-- creators (author list — verify against first-source per Rule 2)
-- publicationTitle
-- DOI
-- tags
-- collections
-
----
-
-## Source Selection Guide
-
-| Source | Best for | Strengths | Workflow phase |
-|---|---|---|---|
-| **ArXiv** | Methodological preprints, ML/AI advances | Fast access, CS/AI focus, full text | Phase 2.1 |
-| **PubMed** | Peer-reviewed clinical / validation, MeSH-indexed | Authoritative for medical, free metadata access | Phase 2.2 |
-| **Zotero** | Closed-access journals where user has PDFs | Local, supports fulltext extraction | Phase 2.3 |
-| **Crossref** | DOI verification | API gives canonical metadata | All phases (verification) |
-
----
-
-## Verification helper URLs
-
-For Phase 4 (per-claim verification) and Phase 5 (peer review):
-
-```
-# Crossref by DOI (URL-encode the DOI if needed)
-https://api.crossref.org/works/<DOI>
-  → Returns JSON: title, full author list, container-title (journal), volume, issue, page, DOI, published year
-
-# Crossref by topic search
-https://api.crossref.org/works?query.bibliographic=<keywords>&rows=5
-  → Returns top 5 matching entries
-
-# PubMed by PMID
-https://pubmed.ncbi.nlm.nih.gov/<PMID>/
-  → Returns parsed page: title, authors, journal info, DOI, abstract
-
-# arXiv abstract page (for author list verification)
-https://arxiv.org/abs/<id>
-  → Returns abstract + full author list
-```
-
----
-
-## When a tool is unavailable
-
-If an MCP server is not configured or fails:
-
-- **ArXiv fallback**: use `https://arxiv.org/abs/<id>` directly
-- **PubMed fallback**: use `https://pubmed.ncbi.nlm.nih.gov/<PMID>/` directly
-- **Zotero fallback**: ask the user to share PDFs directly, or use direct API access via curl
-- **Crossref fallback**: use DOI resolver and publisher page
-
-The skill is designed to work without any specific MCP. The verification standard does not change when the tool route changes.
+Useful public fallbacks:
+
+- PubMed: https://pubmed.ncbi.nlm.nih.gov/
+- Crossref: https://api.crossref.org/
+- arXiv: https://arxiv.org/
+- DOI resolver: https://doi.org/

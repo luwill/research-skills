@@ -1,229 +1,246 @@
-# 10 Patterns of LLM Hallucination in Medical Imaging Reviews
+# Evidence-Integrity Failure Patterns in Medical Imaging Reviews
 
-Use this as a checklist during Phase 4 (writing) and Phase 5 (peer review). Every paragraph should be self-scanned against these patterns. The first 9 patterns are derived from the actual failure modes observed in the `coronary-cta-paper` v2 draft; Pattern 10 addresses review-type overclaiming.
+Use these patterns during collection, extraction, drafting, QA, and expert sign-off. They are failure modes to investigate, not claims about how often an error occurs.
 
-Examples are drawn from coronary imaging but the patterns are domain-general.
-
----
-
-## Pattern 1: Real paper, fabricated author list
-
-**Most common.** The paper exists, but the author list is a generic 4-name pattern (or only includes 1-2 real authors mixed with fabricated co-authors).
-
-### Detection signals
-
-- Author list looks like "Liu Y, Zhang H, Chen X, Wang J" — 4 of the most common surnames in a language paired with most common initials.
-- First-author initial doesn't match real first author (e.g., "Wittmann F" vs. real Bastian Wittmann).
-- Author count obviously wrong for the journal (Nature paper with 3 authors is unusual; methods paper with 12 authors is unusual).
-- Author list looks suspiciously "alphabetical" or "rhythmic" — real lists are messy.
-
-### Example from coronary-cta-paper
-
-- v2 reference [30]: "Liu Y, Zhang H, Chen X, Wang J. TransCC..."
-- Reality: Chenchu Xu, Meng Li, Xue Wu (3 actual authors of the real TransCC paper)
-
-### Fix
-
-Replace entire author list with verbatim from arXiv / PubMed / Crossref / Zotero.
+Detection can be automated in part; resolution requires source-level and route-level human review.
 
 ---
 
-## Pattern 2: Inflated performance numbers
+## Pattern 1: Real title, wrong source identity
 
-The cited paper is real, the topic is right, but the specific Dice / sensitivity / specificity / HR is fabricated and typically inflated.
+The paper or record exists, but authors, venue, year, identifier, version, or publication status are wrong.
 
-### Detection signals
+### Signals
 
-- Dice values ending in `.891`, `.917`, `.943` — suspiciously specific 3-decimal numbers
-- Performance numbers consistently above field benchmarks
-- Round-looking numbers when papers usually report messier values
-- Multiple methods all reporting "Dice 0.89" when the real distribution should span 0.70-0.85
+- generic or incomplete author metadata;
+- preprint and journal version treated as independent studies;
+- DOI resolves to a different title;
+- registry, conference, and journal reports conflated;
+- correction, expression of concern, or retraction not reflected;
+- one source appears under multiple citekeys.
 
-### Example from coronary-cta-paper
+### Required fix
 
-- v2: "TransCC achieves Dice 0.891 / HD95 1.72 mm on 120 cases"
-- Reality: Dice 0.730 / IoU 0.582 on ImageCAS (not "120 cases")
-
-### Fix
-
-Open the actual paper. Quote the actual numbers from abstract or results table. If the paper isn't accessible, drop the specific numeric claim and cite it only at a neutral contribution level ("applied X to Y"). Do **not** substitute an unverified priority/novelty claim ("first to", "首个", "novel") — that is a different hallucination, not a safe fallback.
+Verify against the appropriate publisher/repository/registry record, update references.bib, preserve version relationships, and update every linked claim-ledger row. A DOI is not mandatory when another stable identifier exists.
 
 ---
 
-## Pattern 3: Conclusion-direction flip
+## Pattern 2: Number detached from its evaluation context
 
-Most pernicious. Real paper, real authors, real finding — but the direction (higher/lower, increased/decreased) is reversed.
+A reported value is real or plausible, but its population, dataset split, unit of analysis, comparator, threshold, metric definition, or uncertainty is wrong or missing.
 
-### Detection signals
+### Signals
 
-- Look for any body sentence with directional language: "higher", "lower", "increased", "decreased", "better", "worse", "more", "less"
-- These all need explicit verification against the source
+- a value appears without internal/external/temporal/prospective test status;
+- patient-, image-, slice-, lesion-, or patch-level units are mixed;
+- validation and test sets are conflated;
+- percent and proportion are confused;
+- only a point estimate is reported when the source provides an interval;
+- adjusted and unadjusted effects are mixed.
 
-### Example from coronary-cta-paper
+### Required fix
 
-- v2: "Lv et al. showed collateral circulation is associated with **higher** FAI"
-- Reality: collaterals associated with **lower** FAI
-
-### Fix
-
-Always quote directional claims verbatim from the source abstract. Don't paraphrase quantitative directional language.
-
----
-
-## Pattern 4: Vendor / agency material cited as peer-reviewed
-
-Vendor white papers, FDA clearance letters, NHS reports cited with fabricated journal attribution.
-
-### Detection signals
-
-- References that look like: "Company X. Product Y Whitepaper. Major Journal. 2024"
-- "Study Investigators. Findings. BMJ Open. 2024" (when no such BMJ Open paper exists)
-- Citations of clinical findings backed by a regulatory document rather than a peer-reviewed trial
-
-### Example from coronary-cta-paper
-
-- v2: "NHS England. FISH&CHIPS Study Implementation Report. BMJ Open. 2024"
-- Reality: real publication is Fairbairn TA, et al. Nat Med. 2025;31(6):1903-1910
-
-### Fix
-
-Search PubMed for the actual peer-reviewed publication of the study. Use vendor materials only for regulatory / programmatic facts (clearance dates, indications), never for clinical claims.
+Verify the full results table/figure/supplement and populate data_split, split_unit, comparator, metric, estimate, unit, uncertainty_interval, and source_locator in claim_ledger.csv. Remove the detail if it cannot be verified.
 
 ---
 
-## Pattern 5: Placeholder DOIs
+## Pattern 3: Direction, comparator, or uncertainty reversal
 
-`xxx`, `[TBD]`, `x):xxx-xxx` stubs left in the bibliography.
+The source is relevant, but higher/lower, better/worse, positive/negative, or no-clear-difference language is reversed or overstated.
 
-### Detection
+### Signals
 
-```bash
-grep -nE "xxx|\[TBD\]|x\):xxx|doi:10\.[a-z]+/x" manuscript_draft.md
-```
+- the comparator changes between source and manuscript;
+- a confidence interval compatible with no clear difference is described as superiority;
+- subgroup direction is generalized to the full population;
+- unadjusted direction is reported as an adjusted result;
+- abstract wording conflicts with the full results.
 
-### Example from coronary-cta-paper
+### Required fix
 
-- v2 had 17 entries like: `Eur Radiol. 2026;36(x):xxx-xxx. doi:10.1007/s00330-025-xxx`
-- Reality: each has a real DOI resolvable via PubMed by PMID
-
-### Fix
-
-For each placeholder, WebFetch on PubMed by PMID to extract real metadata. If the paper genuinely doesn't have a DOI yet (true preprint), use the arXiv ID or accept the "online ahead of print" notation — but never `xxx`.
+Check the estimand, comparator, interval, adjustment set, subgroup, and time point at the exact source locator. Record direction and uncertainty in the ledger. Use verified, bounded language; do not copy abstract direction without context.
 
 ---
 
-## Pattern 6: Generic 4-author hallucination (subset of pattern 1, called out separately)
+## Pattern 4: Source-role laundering
 
-Specifically the "4 common surnames + common initials" pattern. So distinctive it deserves its own watch.
-
-### Examples
-
-- "Zhang H, Wang L, Chen Y, Liu Q" (Chinese)
-- "Smith J, Johnson A, Williams M, Brown D" (English)
-- "Patel R, Kumar A, Singh P, Sharma N" (Indian)
-- "Sato K, Tanaka T, Suzuki M, Watanabe H" (Japanese)
-
-### Fix
-
-Any time you see exactly 4 authors with this pattern, verify all 4 against the source. Real 4-author papers usually have at least one less-common name.
-
----
-
-## Pattern 7: Citation number drift
-
-Body says "[43]" but bibliography [43] is the wrong paper. The correct paper is at [10] (or wherever).
-
-### Detection
-
-For every paragraph, check 1-2 random `[N]` against bibliography:
-- Is the body sentence's topic congruent with bibliography [N]'s title?
-- Is the body sentence's author name (if mentioned) the bibliography [N] author?
-
-### Example from coronary-cta-paper
-
-- v2: "Shit et al. [43] introduced clDice"
-- v2 bibliography [43]: a centerline DRL paper (unrelated)
-- v2 bibliography [10]: Shit S, Paetzold JC. clDice — CVPR 2021 (correct)
-- Total drift instances in v2: 30-40
-
-### Fix
-
-For each affected `[N]`, grep for the correct number and edit body in place.
-
----
-
-## Pattern 8: Metric formula errors
-
-Definitions of standard metrics are wrong. Often: clDice written as "sum-divided-by", actually defined as "harmonic mean".
+A source supports one type of fact but is cited as evidence for another.
 
 ### Common confusions
 
-- clDice: actually harmonic mean of topological precision and recall (HM(Tprec, Tsens)), often mis-written as "sum / 2" or "average"
-- Hausdorff distance: actually `max(d(A→B), d(B→A))`, often mis-written as "average distance"
-- IoU vs Dice: `|A∩B|/|A∪B|` vs `2|A∩B|/(|A|+|B|)` — sometimes swapped
-- FedAvg: weighted by client-data-size, often mis-described as simple averaging
+- product documentation used as clinical-effectiveness evidence;
+- regulatory authorization treated as outcome benefit;
+- reimbursement/coding treated as regulatory authorization;
+- a registry/protocol used as if it reports final results;
+- a reporting checklist treated as a risk-of-bias tool;
+- a secondary review used for a precise primary-study result when the primary report is available.
 
-### Fix
+### Required fix
 
-For every metric or method formula displayed, verify against the original paper. Don't rely on memory — these are textbook formulas with subtle precise definitions.
-
----
-
-## Pattern 9: Internal inconsistency across sections
-
-The same paper is cited in §3.2 with one author list and in §3.5 with a different author list. Or the same dataset appears with different patient counts in different sections.
-
-### Detection
-
-Pick the 5 most-cited papers in the manuscript. For each, grep for every appearance:
-
-```bash
-grep -n "TransCC\|Wittmann\|FISH&CHIPS\|ORFAN\|<key-paper-name>" manuscript_draft.md
-```
-
-Check: every appearance of the same paper should attribute to the same author list with the same numbers.
-
-### Example from coronary-cta-paper
-
-- v2: ImageCAS described as "1000 cases" in §2, "multi-center 1500 cases" in §3.2, "single-center 1000 cases" in Table 3
-- Reality: ImageCAS is single-center, 1000 cases
-
-### Fix
-
-For each high-value paper or dataset, lock in a canonical description in CLAUDE.md terminology table. All sections must conform.
+Create separate claim-ledger rows for scientific results, protocol facts, regulatory status, reimbursement status, and product descriptions. Use official current regulator/payer records for current status and peer-reviewed primary evidence for clinical results.
 
 ---
 
-## Pattern 10: Systematic-review label without systematic methods
+## Pattern 5: Placeholder, stale, or unverifiable current fact
 
-The manuscript calls itself a systematic review, meta-analysis, or scoping review, but the methods are really narrative: no exact search strings, no eligibility criteria, no screening flow, no extraction table, and no risk-of-bias method.
+An unfinished token or old status survives into the evidence package.
 
-### Detection signals
+### Signals
 
-- Title or abstract says "systematic review" but Methods lacks PRISMA, eligibility criteria, search strategy, screening, data extraction, or risk-of-bias assessment.
-- The manuscript claims "comprehensive search" without naming databases, dates, and exact strings.
-- Results discuss "included studies" without a flow diagram or exclusion reasons.
-- Meta-analysis language appears without pooling method, heterogeneity handling, and comparable outcomes.
+- placeholder identifiers, authors, dates, page ranges, URLs, figures, tables, or values;
+- future tense for an already completed search;
+- regulator or reimbursement status without jurisdiction, source, and checked date;
+- dataset size/version copied from memory;
+- unresolved status represented as confirmed.
 
-### Fix
+### Required fix
 
-Either add the route-specific methods files and rewrite to PRISMA/PRISMA-ScR standards, or downgrade the label to "narrative review", "method survey", or "scoping review" as appropriate. Never preserve the systematic label by cosmetic wording alone.
+Replace the placeholder with verified information or explicitly report not_verified/not_reported. Recheck current regulatory and reimbursement records immediately before expert sign-off.
 
 ---
 
-## Self-Check Workflow
+## Pattern 6: Citekey, bibliography, and claim-ledger drift
 
-Every 5-6 paragraphs during writing:
+The manuscript citekey resolves, but not to the source supporting the sentence, or the supporting claim has no traceable ledger row.
 
-1. Scan the last block for direction language → verify pattern 3.
-2. Look at any new citations → verify patterns 1, 2, 5, 6.
-3. Cross-check any vendor/agency references → verify pattern 4.
-4. Random-sample 1-2 `[N]` body↔bib → verify pattern 7.
-5. Check any metric formula displayed → verify pattern 8.
-6. If the title/abstract uses systematic/scoping/meta-analysis language → verify pattern 10.
+### Signals
 
-Every section completion:
+- manuscript citekey absent from references.bib;
+- duplicate bibliography records;
+- claim citekey differs between prose and table;
+- source locator does not contain the stated result;
+- material claim has no claim_id;
+- manual numeric references appear in working manuscript text;
+- citekey renamed after drafting.
 
-7. Search the section for the manuscript's top 5 cited papers → verify pattern 9 (internal consistency).
+### Required fix
 
-This adds ~10-15% to writing time. Catches >90% of hallucinations before they leave the writer's desk.
+Exhaustively reconcile manuscript.md, references.bib, claim_ledger.csv, tables, figures, and supplements. Preserve stable citekeys and render final numbering only through Pandoc/CSL.
+
+---
+
+## Pattern 7: False independence and dataset leakage
+
+Multiple reports, models, or papers are treated as independent confirmations even though they reuse participants, datasets, test sets, labels, or development pipelines.
+
+### Signals
+
+- many studies evaluate on the same public benchmark;
+- preprint, conference, and journal versions all appear in a count;
+- companion analyses share a cohort and date range;
+- patient overlap or slice-level splitting is unclear;
+- test set influenced model selection or hyperparameter tuning;
+- foundation-model pretraining may contain the evaluation benchmark.
+
+### Required fix
+
+Populate extraction/cohort_linkage.csv, identify the report/study/cohort unit, document split integrity and contamination uncertainty, and avoid double counting. Paper count alone does not establish independent replication.
+
+---
+
+## Pattern 8: Metric, formula, or unit corruption
+
+A familiar metric is defined, calculated, transformed, or interpreted incorrectly.
+
+### Signals
+
+- overlap, distance, calibration, discrimination, and clinical-utility metrics are mixed;
+- mean Hausdorff distance is called Hausdorff distance;
+- macro, micro, per-class, per-patient, and pooled metrics are not distinguished;
+- threshold-dependent and threshold-free summaries are conflated;
+- confidence intervals, standard deviations, and interquartile ranges are interchanged;
+- effect measures or units change between extraction and prose.
+
+### Required fix
+
+Verify the definition against the original method/source and the study-specific implementation. Record source locator, aggregation, threshold, unit, and uncertainty. A style profile may influence equation placement, but never its definition.
+
+---
+
+## Pattern 9: Internal contradiction across artifacts
+
+The same study, dataset, product, protocol, or conclusion is described differently in different project files.
+
+### Signals
+
+- participant count or center count changes by section;
+- the same dataset is both internal and external;
+- claim ledger and extraction table disagree;
+- regulatory and reimbursement columns contain the same assertion;
+- manuscript describes a conflict as resolved while adjudication log remains open;
+- protocol version and deviation log disagree.
+
+### Required fix
+
+Use stable entity IDs and canonical descriptions in REVIEW_CONTEXT.md. Reconcile every occurrence and preserve the adjudication or deviation record explaining the final value.
+
+---
+
+## Pattern 10: Route, method, human-review, or AI-use overclaim
+
+The manuscript label or conclusion outruns the project artifacts.
+
+### Signals
+
+- narrative or method-survey route claims exhaustive or systematic coverage;
+- scoping route estimates effects or claims efficacy;
+- systematic language appears without protocol, exact searches, selection records, extraction, appraisal, certainty, and flow artifacts;
+- systematic Results prose exists while human_review_gate.json is missing or incomplete;
+- AI agents are listed as independent human reviewers;
+- protocol deviations or AI assistance are omitted;
+- zero automated findings are described as factual or methodological approval;
+- unsupported quantitative pooling or overview-of-reviews language appears in the supported-route project.
+
+### Required fix
+
+Stop forward writing. Restore the route-appropriate artifacts or narrow the manuscript claim. For systematic reviews, satisfy the exact human_review_gate.json contract in TEMPLATES.md; missing human work cannot be waived as a limitation. Disclose AI assistance and protocol deviations.
+
+---
+
+## Writing-quality signals are not hallucination proof
+
+Vague, repetitive, promotional, or formulaic language may deserve revision, but no phrase is automatically an AI error. Do not ban cautious language merely for sounding generic. Ask instead:
+
+- Is the claim supported?
+- Does strength match risk of bias, uncertainty, consistency, directness, and applicability?
+- Is the population/comparator/metric visible?
+- Is interpretation clearly separated from fact?
+
+Style-profile warnings never replace evidence checks and never force a strong conclusion.
+
+---
+
+## Self-check workflow
+
+### During collection
+
+1. Verify identity/version/status and assign a stable citekey.
+2. Record access route and source role.
+3. Start cohort/report linkage.
+
+### During extraction
+
+4. Capture dataset split, split unit, comparator, metric, unit, uncertainty, direction, and source locator.
+5. Preserve independent human decisions where required.
+6. Log conflicts instead of silently averaging or choosing values.
+
+### During drafting
+
+7. Create or update a claim-ledger row for every material claim.
+8. Use only verified quantitative/directional rows.
+9. Reconcile prose, tables, figures, abstract, and key points.
+10. Bound language to the selected route.
+
+### Before expert sign-off
+
+11. Check corrections/retractions/versions and current official records.
+12. Reconcile cohort overlap and unresolved conflicts.
+13. Confirm protocol deviations and AI assistance disclosure.
+14. Validate systematic human_review_gate.json where applicable.
+15. Run the route-aware auditor.
+
+~~~bash
+python3 <skill_dir>/scripts/audit_manuscript.py review_project/<project-id>/manuscript.md --route <narrative|method-survey|scoping|systematic> --project-dir review_project/<project-id> --fail-on critical --output review_project/<project-id>/review_outputs/audit_report.md
+~~~
+
+The --profile JSON path is optional. Zero automated findings still leaves substantive checks as not_assessed until completed by humans or named experts.

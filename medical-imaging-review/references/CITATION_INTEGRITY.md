@@ -1,228 +1,225 @@
-# Citation Integrity Protocol
+# Citation and Claim Integrity Protocol
 
-This is the most important reference file in the skill. Citation drift / fabrication is the #1 failure mode of LLM-drafted reviews.
+This protocol governs **references.bib**, stable working citekeys, **claim_ledger.csv**, manuscript citations, tables, figures, and evidence-package outputs.
 
-5 rules. Every citation must satisfy all 5.
+The goal is traceability: a human verifier must be able to move from each material claim to the correct source, exact locator, dataset split, comparator, metric, uncertainty, and source role.
 
----
-
-## Rule 1: No placeholder DOIs
-
-Any DOI containing `xxx`, `[TBD]`, `?`, stub patterns, or "to-be-filled" notation **must be resolved before the manuscript advances to the next section**.
-
-### Detection
-
-```bash
-grep -nE "xxx|\[TBD\]|x\):xxx|doi:10\.[a-z]+/x" manuscript_draft.md
-```
-
-Expected: 0 hits at any milestone.
-
-### Resolution
-
-For papers with a PMID:
-
-```
-Open https://pubmed.ncbi.nlm.nih.gov/<PMID>/ with an available web/PubMed tool.
-  → Extract: title, full author list, journal, year, volume, issue, pages, DOI
-```
-
-For papers without a PMID but a known DOI:
-
-```
-Open https://api.crossref.org/works/<DOI> with an available web/API tool.
-  → Extract: same fields from JSON
-```
-
-For papers in a closed-access journal where the user has the PDF:
-
-```
-Search Zotero by "<author> <method>".
-Retrieve item metadata and attached full text if available.
-```
-
-### Why this is Rule 1
-
-v2 of this skill shipped 17 placeholder DOIs in the coronary-cta-paper draft. Editors at any medical journal will reject a manuscript with `xxx` in the DOI on first sight. This is the lowest-effort, highest-impact rule.
+Use five rules. A syntactically valid citation is not necessarily an evidentially valid citation.
 
 ---
 
-## Rule 2: Author list verification
+## Rule 1: Verify source identity, version, and publication status
 
-Every reference in the bibliography must have its first and last author verified against the first-source. For references with > 6 authors, list first 6 + et al. — but the first author (and last author for medical clinical papers) must be verbatim.
+Before adding a source to references.bib, verify:
 
-### LLM failure mode
+- title;
+- complete author metadata required by the selected citation style;
+- journal, venue, repository, registry, regulator, or payer;
+- year and publication status;
+- DOI, PMID, arXiv ID, registry ID, regulator record ID, or another stable identifier;
+- correction, expression-of-concern, retraction, and superseding-version status;
+- relationship to companion reports or duplicate publications.
 
-LLMs generate **generic-sounding 4-author lists** when they don't know the actual authors:
+Use the publisher record, repository record, bibliographic database, registry, regulator, or payer appropriate to the source type. Crossref and PubMed are valuable metadata routes but are not mandatory for every eligible source.
 
-- ✗ "Liu Y, Zhang H, Chen X, Wang J. TransCC..." (these are common Chinese surnames in 4-author pattern — strong fabrication signal)
-- ✗ "Smith J, Johnson A, Williams M, Brown D" (English equivalent)
-- ✗ "Patel R, Kumar A, Singh P, Sharma N"
+A source without a DOI is not automatically broken or ineligible. Use another stable identifier and record the verification route. If metadata conflict, preserve the conflict in source notes and resolve it before using the source.
 
-### Detection
-
-For each reference in the bibliography, ask:
-- Are these 4 of the most common surnames in a major language?
-- Do the initials look suspiciously "average" (J / A / M / D)?
-- Is this a paper where I might have looked up the title but never the authors?
-
-For any "yes" answer, treat as suspect and verify.
-
-### Resolution
-
-```
-Open https://pubmed.ncbi.nlm.nih.gov/<PMID>/
-  OR
-Open https://api.crossref.org/works/<DOI>
-  → Replace the entire author list verbatim.
-```
-
-For arXiv papers:
-
-```
-Open https://arxiv.org/abs/<id>
-```
-
-### Why this matters
-
-A wrong author list reads as obvious fabrication to anyone in the field. Real reviewers know the principal investigators in their area, and seeing "Liu Y, Zhang H, Chen X, Wang J" attached to a high-profile method paper is an instant credibility kill.
+Never leave placeholder identifiers, dates, pagination, authors, URLs, or publication status in an expert-signoff package.
 
 ---
 
-## Rule 3: Body ↔ Bibliography reconciliation
+## Rule 2: Use one canonical bibliography record and a stable citekey
 
-The `[N]` in the body must (a) exist in the bibliography and (b) be the paper the body sentence is actually attributing the claim to.
+The canonical bibliography is **references.bib**. Draft with Pandoc citekeys:
 
-### LLM failure mode — "citation drift"
+~~~markdown
+The model was evaluated on a temporally independent cohort [@surname2024-shorttopic].
+~~~
 
-When LLM reorganizes sections or merges paragraphs, it often forgets to renumber citations. The body sentence says "Shit et al. introduced clDice [43]" but bibliography entry [43] is a completely different paper (e.g., a centerline DRL paper). Bibliography entry [10] is actually the clDice paper.
+Do not draft with manually assigned numeric references. Numeric or author-date formatting is a final rendering concern.
 
-### Detection
+Create a citekey from:
 
-```bash
-# Find all citations in body
-grep -nE "\[([0-9]+)\]" manuscript_draft.md | head -50
+~~~text
+<normalized-first-author-surname><year>-<short-title-token>
+~~~
 
-# Find bibliography entries
-grep -nE "^[0-9]+\." manuscript_draft.md
-```
+For collisions, append a deterministic suffix derived from a stable identifier. Never use current bibliography order because order changes during revision. Once assigned, the citekey is immutable.
 
-For each body citation `[N]`, verify:
-- Is there a bibliography entry numbered N?
-- Does that entry attribute to the right paper?
+Every manuscript citekey must resolve to exactly one references.bib entry. Every cited bibliography entry must be represented in the evidence package. Do not create two citekeys for different reports without recording whether they share a cohort, dataset, model, or outcome.
 
-### Resolution
+Render final citations with Pandoc. The base command works without a custom CSL:
 
-Two patterns:
+~~~bash
+pandoc review_project/<project-id>/manuscript.md --citeproc --bibliography review_project/<project-id>/references.bib --output review_project/<project-id>/rendered/manuscript.docx
+~~~
 
-**Pattern A: Single-author misattribution.** Body says "Shit et al. [43]" but [43] is wrong. Action: `grep -n "Shit"` to find the correct number, edit body to point there.
+Add `--csl <verified-csl-file>` only after the user or target journal supplies a current CSL file and `review_config.yaml` records it in `citations.target_csl`.
 
-**Pattern B: Numerical drift across many citations.** Body [60] should be [36] (after section reorganization shifted 24 entries). Action: list affected range, manually re-number.
-
-For a typical 120-reference review, expect 5-15 drift instances if you're careful and 30-40 if you're not.
-
-### Detection at scale
-
-Run the bundled audit script:
-
-```bash
-python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
-```
-
-The script flags missing bibliography entries, duplicate DOI entries, likely author-citation mismatches, placeholder strings, numbered headings, H4 headings, vendor-name body mentions, display equations outside Box context, and systematic-review claims without methods support. Treat script output as triage; final citation correctness still requires source-level reading.
+Inspect the rendered bibliography for author truncation, title capitalization, identifiers, duplicate entries, and target-style conformance. Fix references.bib or CSL inputs; do not hand-edit rendered numbering as the source of truth.
 
 ---
 
-## Rule 4: Conclusion-direction verification
+## Rule 3: Reconcile manuscript, bibliography, and claim ledger
 
-For every cited **finding** (HR, OR, p-value, effect size, "higher" / "lower" claim), the body sentence's directional claim must match the source's stated direction.
+Every material factual claim must form a three-way link:
 
-### LLM failure mode
+~~~text
+manuscript claim
+  -> stable citekey in references.bib
+  -> claim-source row in claim_ledger.csv
+~~~
 
-LLMs flip directions when paraphrasing. The paper says "patients with collateral circulation had **lower** FAI values." LLM paraphrase becomes: "Lv et al. [N] showed collateral circulation is associated with **higher** FAI."
+Use the exact claim-ledger header and enum values defined in TEMPLATES.md. One row represents one claim-source pair. If three sources support one synthesis claim, create three rows with the same claim_id.
 
-This is one of the worst failures because the cited paper genuinely exists, the author is real, and the topic is right — but the conclusion direction is reversed. Catches eye of any reviewer in the area.
+Each row must include:
 
-### Detection
+- atomic claim text and claim type;
+- citekey and stable source identifier;
+- exact source locator;
+- dataset or cohort, dataset split, and split unit when applicable;
+- comparator, metric, value, unit, confidence interval or other uncertainty;
+- direction;
+- access type, URI, and date;
+- human verifier identity or identities;
+- verification status and notes.
 
-For every body sentence that contains directional language (higher / lower / increased / decreased / better / worse), the writer must have explicitly verified the direction against the source.
+Reconciliation checks:
 
-Quick checklist when writing such a sentence:
-1. What direction does the source actually report?
-2. What direction am I about to write?
-3. Do those match?
+1. Every manuscript citekey exists in references.bib.
+2. Every precise factual, quantitative, comparative, directional, priority, regulatory, reimbursement, or availability claim has a claim-ledger row.
+3. The citekey in the ledger resolves to the source actually supporting the claim.
+4. The locator re-finds the evidence without relying on memory.
+5. Tables, figure captions, abstracts, key points, and supplements receive the same treatment as body prose.
 
-### Resolution
-
-Always cite directions verbatim from the abstract. Don't paraphrase quantitative directional claims.
-
-✗ "Lv et al. [N] showed collaterals are associated with higher FAI."
-✓ "Patients with collateral circulation had lower FAI values than those without (Lv et al. [N])."
-
----
-
-## Rule 5: First-source over vendor materials
-
-Vendor white papers, NHS England reports, FDA 510(k) clearance letters, and company press releases are **not** peer-reviewed primary sources for clinical findings. Cite them only for regulatory facts (clearance date, indication), not for clinical evidence (trial results, performance numbers).
-
-### LLM failure mode
-
-LLM cites "NHS England. FISH&CHIPS Study Implementation Report. BMJ Open. 2024" as if it's a peer-reviewed trial. Reality: there is no such BMJ Open paper. The FISH&CHIPS study is a real NHS program, and its peer-reviewed publication is:
-
-> Fairbairn TA, Mullen L, Nicol E, Lip GYH, Schmitt M, Shaw M, et al. Implementation of a national AI technology program on cardiovascular outcomes and the health system. **Nat Med**. 2025;31(6):1903-1910.
-
-The body sentence was right about the study existing, but the citation was a fabricated journal attribution.
-
-### Detection
-
-For every reference that looks like:
-- "[Company name]. [Product] White Paper. ..."
-- "[Agency]. [Study]. ..."
-- "[Study Investigators]. [Findings]. [Major journal]. 2024."
-
-Treat as **suspect** and search for the actual peer-reviewed publication.
-
-### Resolution
-
-For each vendor- or agency-style citation, search PubMed:
-
-```
-Search PubMed or the journal site for "<study acronym> implementation OR validation".
-```
-
-If a peer-reviewed publication exists, use it. If not, use the vendor material **only for regulatory / programmatic facts**, never for clinical performance claims.
+Do not rely on random citation spot checks as the final gate. Automated reconciliation can find missing keys and rows; source support remains a human task.
 
 ---
 
-## Verification Workflow Integration
+## Rule 4: Verify quantitative, directional, and comparative context
 
-These 5 rules are applied at multiple points:
+For any number or directional/comparative statement, verify the full context from the most informative accessible source location, normally the full results text, table, figure, supplement, or registry result:
 
-| Phase | Rules applied | How |
-|---|---|---|
-| Phase 2 (collection) | Rules 1, 2, 5 | At entry time, before adding to bibliography |
-| Phase 4 (writing) | Rules 1, 3, 4 | Per-paragraph as citations are placed |
-| Phase 5 (peer review) | All 5 | `ref-checker` pass runs a systematic body↔bib + author + DOI sweep (see WORKFLOW.md Phase 5) |
-| Phase 6 (submission) | All 5 | Final checklist before submission |
+- population and eligibility;
+- dataset/cohort and exact evaluation split;
+- unit of analysis, such as patient, examination, image, slice, lesion, or patch;
+- comparator or reference standard;
+- metric definition and threshold;
+- point estimate, unit, and confidence/credible interval or other uncertainty;
+- adjusted versus unadjusted estimate and adjustment set;
+- time point and subgroup;
+- stated direction and whether the interval supports a clear difference.
+
+Do not copy a direction from an abstract without checking whether the abstract omits relevant qualifiers. Use the claim ledger's evidence_excerpt field for a short support note; avoid unnecessary verbatim copying.
+
+Verification-status rules:
+
+- **verified**: source and context support the claim at the recorded locator;
+- **partially_verified**: only part of the claim is supported; rewrite before use;
+- **contradicted**: source conflicts with the claim; remove or correct it;
+- **inaccessible**: evidence could not be inspected at the required level;
+- **superseded**: a correction, later version, or preferred report replaces it;
+- **pending**: not yet checked.
+
+Only verified rows may support precise numeric or directional prose. Abstract-only or metadata-only access cannot verify:
+
+- internal architecture or preprocessing details;
+- priority claims such as first or only;
+- subgroup or adjusted-effect claims;
+- exact dataset split or leakage claims unless explicitly reported there;
+- precise performance numbers lacking sufficient context.
+
+When verification is incomplete, remove the unsupported detail or state the access limitation. Do not infer missing values.
 
 ---
 
-## What to do when a rule failure is found
+## Rule 5: Match the source to the claim and track dependence
 
-Failures are normal — these are guardrails, not aspirational goals.
+Different source types support different claims:
 
-For each failure:
+| Claim | Appropriate source |
+|---|---|
+| Scientific result or clinical effectiveness | Peer-reviewed primary report, with preprint status disclosed where applicable |
+| Protocol or prespecified outcome | Registry/protocol record |
+| Regulatory authorization, indication, or current status | Current official jurisdiction-specific regulator record |
+| Reimbursement, coding, or coverage | Current official payer/coding authority record |
+| Product description | Official product documentation, clearly labeled and not treated as effectiveness evidence |
+| Dataset specification | Dataset paper, repository, data dictionary, or official version record |
+| Reporting completeness | Applicable reporting guideline used as a descriptive framework, not a substitute for risk-of-bias assessment |
 
-1. **Stop forward writing immediately.** Don't accumulate broken citations.
-2. **Look up the correct metadata** using the resolution steps above.
-3. **Fix the citation in place** — body sentence + bibliography entry both.
-4. **Check for related failures.** A misattribution in one place often signals the same error in 2-3 other places where the same paper was cited.
-5. **Log the fix** in `IMPLEMENTATION_PLAN.md` change log — this protects the next person editing the manuscript.
+Regulatory authorization, reimbursement, and clinical effectiveness are separate claims and require separate ledger rows and source classes. Verify regulator and payer status again immediately before expert sign-off.
+
+Track scientific dependence:
+
+- multiple reports from one study;
+- reused public test sets;
+- overlapping institutional cohorts;
+- repeated thresholds or outcomes;
+- model updates derived from the same development data;
+- conference/preprint/journal versions of the same work.
+
+Record these relationships in **extraction/cohort_linkage.csv** or REVIEW_CONTEXT.md. Multiple papers are not automatically independent confirmations.
 
 ---
 
-## Why this protocol exists
+## Human verification requirements
 
-The single largest source of credibility damage in LLM-drafted reviews is citation infrastructure failure. A draft can have brilliant analysis and miss editor first-glance if the bibliography is fabricated, drifted, or misattributed.
+Narrative, method-survey, and scoping projects must identify the human responsible for each verified material claim in verified_by.
 
-This protocol takes 10-20% of total writing time but eliminates 80%+ of the credibility-killer issues. It is non-negotiable.
+For systematic projects:
+
+- critical outcome/performance data require two distinct human extraction decisions in extraction/critical_data.csv;
+- the human IDs must match traceable screening, extraction, risk-of-bias, and adjudication artifacts;
+- AI agents may assist discovery or checking but cannot occupy a human verifier slot;
+- a disagreement remains unresolved until documented adjudication.
+
+Do not change verifier IDs merely to satisfy a gate. The evidence package must preserve original decisions, conflicts, and resolutions.
+
+---
+
+## Integration by phase
+
+| Phase | Required integrity work |
+|---|---|
+| Context/protocol | Define citation syntax, source roles, reviewer policy, and critical claims |
+| Discovery/search | Create source records, immutable exports, and stable identifiers |
+| Collection | Assign citekeys, verify metadata/version/status, start claim ledger |
+| Selection/extraction | Track cohort/report relationships and dual verification where required |
+| Drafting | Link every material claim to citekey and ledger locator |
+| QA | Exhaustively reconcile manuscript, references.bib, ledger, and route artifacts |
+| Expert-signoff packaging | Render with Pandoc/CSL; recheck official current claims and unresolved statuses |
+
+---
+
+## Auditor use and limitations
+
+Run the route-aware auditor:
+
+~~~bash
+python3 <skill_dir>/scripts/audit_manuscript.py review_project/<project-id>/manuscript.md --route <narrative|method-survey|scoping|systematic> --project-dir review_project/<project-id> --fail-on critical --output review_project/<project-id>/review_outputs/audit_report.md
+~~~
+
+The --profile JSON path is optional.
+
+The auditor may detect missing citekeys, missing project artifacts, placeholders, duplicate identifiers, malformed ledger rows, or an incomplete systematic human gate. It cannot prove that a source supports a claim, that a risk-of-bias judgment is correct, or that a review is compliant.
+
+Claim reconciliation is deliberately strict and one-directional. The auditor normalizes each material prose sentence (lowercase, citation and citekey markers removed, collapsed to word tokens) and requires an exact-token match against a `claim_text` in `claim_ledger.csv`. A paraphrased or unlogged claim is surfaced as a finding, never silently passed, so keep each ledger `claim_text` a faithful copy of the sentence it supports. Expect flags on prose that drifts from the ledger — reconcile the two rather than loosening the check.
+
+Each finding carries a stable machine-readable `category` (for example `unverified_claim`, `mutable_numeric_citation`, `inline_working_bibliography`, `route_mismatch`); consume that field, not the human-readable message text, when scripting on the JSON output. A `--fail-on` threshold returns exit code 1 on a failing gate, 2 on an input error, and 0 otherwise.
+
+Zero automated findings must still leave substantive source support, methods correctness, and expert judgments as **not_assessed** until humans complete them.
+
+---
+
+## Failure response
+
+When a failure is found:
+
+1. Freeze forward drafting for the affected claim or artifact.
+2. Preserve the original source, decision, and conflict record.
+3. Correct references.bib, claim_ledger.csv, manuscript text, and affected tables/figures together.
+4. Search for the same error pattern in related claims or reports.
+5. Record material corrections in IMPLEMENTATION_PLAN.md or the adjudication/deviation log.
+6. Re-run reconciliation and the route-aware audit.
+
+After all blocking citation gates are complete, the deliverable may be labeled an expert-signoff-ready draft and evidence package with explicit unresolved items. Otherwise label it a draft awaiting expert assessment; publication and methodological approval remain external human decisions.

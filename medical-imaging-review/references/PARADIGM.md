@@ -1,221 +1,237 @@
-# Phase 0: Paradigm Capture
+# Paradigm Capture and Style Profiles
 
-Before writing the manuscript, extract a style spec from 2-3 exemplar reviews in the target journal tier. For systematic or scoping reviews, include exemplars of the same review type, because Methods and Results conventions matter as much as prose style.
+Paradigm capture records how relevant target-journal articles communicate. It does not define evidence quality and must not create universal style rules.
 
----
-
-## Why this phase exists
-
-LLMs trained on the entire web have absorbed every register of medical writing — vendor white papers, methodological surveys, textbook chapters, narrative reviews, systematic reviews, flagship reviews — and have no built-in preference among them. By default, the register they generate is somewhere between "good survey paper" and "Wikipedia article": numbered chapters, hedging language, neutral catalogue, dense subsections.
-
-Flagship-tier reviews (Nature Reviews / Nat Med / Lancet family / JACC) write differently:
-
-- 2 heading levels and no number prefixes for most narrative reviews; more formal method subheadings for systematic/scoping reviews when the journal expects them
-- 1-2 sentence "verdict" closers per axis section
-- Equations and dataset details in Boxes, not body
-- Vendor names handled table-first, with sparse prose use only when needed for regulatory or comparative precision
-- Authorial position taken explicitly when evidence supports it
-- 1.5-2.5 references per paragraph, well-targeted
-- Often a 4-5 bullet "Key Points" box after the title
-
-Without an exemplar anchor, even careful writing drifts toward the generic register. With one, every paragraph has a benchmark.
+Create **review_project/<project-id>/PARADIGM.md** and, when enough evidence exists, **style_profile.json**. All resulting style checks are warnings unless current target-journal instructions explicitly make an item mandatory.
 
 ---
 
-## Action 1: Select 2-3 exemplar reviews
+## Principles
 
-### Selection criteria
-
-- **Same modality, problem family, or review type** as your topic. (For coronary AI, look at recent coronary or cardiovascular AI reviews. For systematic reviews, include a recent systematic review in the same journal tier.)
-- **Same journal tier** as your target. If aiming for Nat Med, read a recent Nat Med review. If aiming for Eur Radiol, read a recent Eur Radiol review.
-- **Last 3 years**. Older exemplars may have outdated stylistic conventions.
-- **Recognized authors**. Reviews authored by senior figures in the field carry the conventions of their target journals more reliably.
-
-### Suggested exemplars by tier
-
-**Top tier (Nature Reviews / Nat Med / Lancet family):**
-
-- Nature Reviews Cardiology — for cardiovascular AI
-- Nat Med — for AI-in-medicine narrative reviews
-- Lancet Digital Health — for AI clinical translation
-
-**Second tier (specialty journals):**
-
-- JACC: Cardiovascular Imaging — for cardiac imaging AI
-- Radiology / Eur Radiol — for general imaging AI
-- IEEE TMI — for methodological reviews with clinical context
-
-**Methodological tier:**
-
-- Medical Image Analysis — for purely methodological reviews
-- IEEE JBHI — for AI-in-healthcare methods
-
-### Acquiring the PDFs
-
-Most flagship reviews are accessible via:
-
-- The user's Zotero library (check first — they likely already have them)
-- PubMed Central (for open-access)
-- The journal's website (subscription / institutional access)
-- arXiv preprint version (sometimes available)
+1. **Match route before prestige.** A systematic exemplar is more useful for a systematic project than an unrelated narrative article from a higher-profile journal.
+2. **Use current journal instructions as the authority.** Exemplars illustrate practice; they do not override author instructions.
+3. **Observe variation.** Do not turn one article's heading depth, equation placement, table count, or tone into a hidden default.
+4. **Separate style from science.** Search adequacy, screening, extraction, risk of bias, certainty, citation support, and human review are never style-profile settings.
+5. **Record uncertainty.** If exemplars conflict or the sample is too small, mark the preference unspecified.
 
 ---
 
-## Action 2: Read carefully — not skim
+## Select exemplars
 
-Spend 60-90 minutes per exemplar. Read the full text, including Boxes, Figure captions, and Table footnotes.
+Choose one or more articles that are relevant to:
 
-Pay attention to:
+- the same route: narrative, method-survey, scoping, or systematic;
+- the same target journal or explicit journal family;
+- a similar clinical/technical question;
+- a similar evidence unit, such as methods, diagnostic accuracy, prediction, implementation, or policy;
+- current author instructions and article format.
 
-### Heading structure
+Do not impose a fixed exemplar count or publication-year cutoff. Explain why each exemplar is informative and note any older exemplar retained for historical or methodological reasons.
 
-- How many levels deep? (Almost always 2 for top tier.)
-- Are headings numbered or unnumbered? (Almost always unnumbered for top tier.)
-- How long are H2 sections? (Typically 800-1500 words.)
-- How long are H3 sections? (Typically 300-800 words.)
-- How are deeper subsections handled? (Bold lead-in `**Topic.**`, not H4.)
-
-### Paragraph rhythm
-
-- How does a paragraph open? (Topic claim — almost never "In recent years," or "It is worth noting.")
-- How does evidence flow? (1-3 sentences of specifics with citations, not loose generalities.)
-- How does a paragraph close? (Either with a transition or with a verdict — not with hedging.)
-- How many sentences per paragraph? (Usually 4-7.)
-
-### Citation density
-
-- Count references per paragraph in 5 random paragraphs.
-- Top tier: usually 1.5-2.5 refs per paragraph.
-- Lower density suggests overclaiming; higher suggests stacking refs uncritically.
-
-### Equation handling
-
-- Are display equations in body or Boxes?
-- If in body, is there a Box at all?
-- How are metric definitions handled — formula or prose?
-
-### Vendor handling
-
-- Search for any commercial product name. Does it appear mainly in tables, and are any body mentions necessary for precision?
-- How are FDA / regulatory facts cited?
-
-### Authorial voice
-
-- Find the 3-5 strongest claims in the review. How are they phrased?
-- Does the author take positions like "X is currently the best approach for Y" or stay neutral throughout?
-- Where does hedging appear? (Usually only when evidence genuinely supports caution.)
-
-### Boxes and Figures
-
-- How many Boxes? (1-3 typical.)
-- What goes in a Box? (Definitions, key trials, controversies.)
-- How many Figures? (3-5 typical.)
-- What kinds of Figures? (Overview / taxonomy / workflow / data-driven plot.)
-
-### Tables
-
-- How many Tables? (2-4 typical — rarely 5+.)
-- What goes in a Table? (Datasets, methods comparison, commercial products.)
-- How dense? (10-20 rows is common; 30+ is unusual.)
-
-### Key Points box
-
-- Is there one? (Yes for most top tier.)
-- How many bullets? (4-5 typical.)
-- How long is each bullet? (1-3 sentences.)
+Verify title, authors, venue, year, DOI/PMID or other identifier, article type, and access route. Add it to references.bib with a stable citekey if it will be cited.
 
 ---
 
-## Action 3: Write `PARADIGM.md` in the project root
+## Read for observable conventions
 
-Use this template:
+Capture facts rather than assumptions.
 
-```markdown
-# Paradigm Spec for [Project Name]
+### Article identity and route
 
-## Target journal: [name and tier]
+- What article type does the journal call it?
+- Does the reported method match that label?
+- Is the article invited, commissioned, consensus-based, protocol-driven, or independently submitted?
+- Are supplementary files essential to understanding the methods?
 
-## Exemplars studied
-1. [Author Year]. [Title]. [Journal]. [PMID/DOI]. (PDF: <path>)
-2. [Author Year]. [Title]. [Journal]. [PMID/DOI]. (PDF: <path>)
+### Structure
 
-## Extracted style spec
+- Section order and labels;
+- heading depth and numbering;
+- location of protocol/search/screening/appraisal content;
+- abstract and key-message format;
+- placement of limitations, certainty, and data/code statements.
 
-### Heading structure
-- Max depth: [N] levels
-- Numbering: [yes / no]
-- Typical H2 length: [N-N] words
-- Deeper subsections: [H4 / bold lead-in / other]
+### Evidence presentation
 
-### Paragraph rhythm
-- Opening: [observed pattern, e.g., "Topic claim sentence, no temporal preamble"]
-- Body: [observed pattern, e.g., "2-4 sentences of specifics with citations"]
-- Closing: [observed pattern, e.g., "Transition or verdict"]
-- Typical length: [N-N] sentences
+- How individual studies and syntheses are distinguished;
+- how uncertainty, risk of bias, and certainty are communicated;
+- whether comparative values show population, split, comparator, unit, threshold, and interval;
+- handling of counterevidence and limitations;
+- use of tables, evidence maps, flow diagrams, forest/ROC plots, boxes, and supplements.
 
-### Citation density
-- Average refs per paragraph: [N]
-- Multi-citation cap (max refs in one bracket): [N]
+### Citation presentation
 
-### Equations
-- Location: [body / Box / both / none]
-- Display style: [LaTeX / inline / prose]
+- Citation style rendered by the journal;
+- how multi-source synthesis claims are cited;
+- whether primary sources are preferred over secondary summaries;
+- how preprints, registries, official records, datasets, and software are labeled.
 
-### Vendor handling
-- Body: [allowed / disallowed]
-- Table: [yes / no]
-- Total Tables containing vendor names: [N]
+The project still drafts with stable Pandoc citekeys. Rendered numeric or author-date appearance is captured in CSL, not manually copied into manuscript.md.
 
-### Authorial voice
-- Hedging frequency: [observed examples]
-- Strong claims: [N observed across 3 reviews]
-- Verdict closers per section: [observed pattern]
+### Prose and voice
 
-### Boxes and Figures
-- Box count: [N]
-- Box purposes: [list]
-- Figure count: [N]
-- Figure types: [list]
+- Typical paragraph organization;
+- degree and placement of uncertainty language;
+- distinction between observation, interpretation, and recommendation;
+- whether conclusion strength tracks evidence limitations;
+- terminology and abbreviation conventions.
 
-### Tables
-- Count: [N]
-- Density: [N-N rows]
+Do not ban a phrase merely because it appears generic or machine-like. Flag vague, unsupported, or repetitive language by function, and revise it to match evidence strength.
 
-### Key Points
-- Present: [yes / no]
-- Bullet count: [N]
-- Bullet length: [N-N sentences]
+### Equations, tables, figures, and products
 
-## Manuscript style targets (binding for Phase 4 writing)
+- Where equations appear and why;
+- table/figure purposes rather than counts alone;
+- caption and footnote conventions;
+- whether product/manufacturer names are necessary for precision;
+- separation of regulatory, reimbursement, and clinical-evidence facts.
 
-Phase 4 writing should conform to this spec. Specifically:
-- Max heading depth: ...
-- No numbered headings.
-- Box 1 for metrics / formulas.
-- Vendor names table-first; sparse body mentions only when needed.
-- ≥ 3 verdict sentences across the manuscript.
-- Citation density 1.5-2.5 refs/paragraph.
-- Key Points: 4-5 bullets after title.
-
-## Anti-patterns observed in v2 drafting (to specifically avoid)
-
-(Copy / adapt from this skill's HALLUCINATION_PATTERNS.md to the extent the patterns are domain-relevant.)
-```
+Vendor placement is a profile observation, not a universal prohibition. Regulatory and reimbursement source requirements remain blocking regardless of placement.
 
 ---
 
-## Action 4: Re-read PARADIGM.md before each Phase 4 writing session
+## PARADIGM.md template
 
-Phase 4 is multi-day. Drift is the main risk. At the start of each writing session, re-read `PARADIGM.md` to re-anchor.
+~~~markdown
+# Paradigm Notes
+
+## Project
+- Project ID: <project_id>
+- Route: <narrative|method-survey|scoping|systematic>
+- Target journal: <journal or undecided>
+- Journal instructions URL/date: <URL and access date>
+
+## Exemplars
+| Citekey | Article type | Relevance | Important caveat |
+|---|---|---|---|
+| @<citekey> | <journal label/route> | <why selected> | <invited, older, different question, etc.> |
+
+## Observed structure
+| Feature | Observation | Variation | Confidence |
+|---|---|---|---|
+| Heading numbering | <observation> | <exceptions> | <high/medium/low> |
+| Heading depth | <observation> | <exceptions> | <confidence> |
+| Section order | <observation> | <exceptions> | <confidence> |
+| Key messages | <observation> | <exceptions> | <confidence> |
+
+## Observed evidence presentation
+<How study-level results, appraisal, uncertainty, counterevidence, and synthesis are presented>
+
+## Observed citation presentation
+<Rendered style, multi-source claims, preprints, registries, official records, datasets, software>
+
+## Observed prose and terminology
+<Paragraph organization, uncertainty language, terminology, abbreviations>
+
+## Observed visual/table conventions
+<Purpose and placement of equations, tables, figures, boxes, flow diagrams, supplements>
+
+## Candidate profile warnings
+| Check | Expected value | Source | Confidence | Exception handling |
+|---|---|---|---|---|
+| <check> | <value or unspecified> | <instructions/exemplars> | <confidence> | <warning text> |
+
+## Scientific requirements excluded from profile
+Search, screening, extraction, risk of bias, certainty, claim verification, human review, AI disclosure, protocol deviations, and official-source verification remain governed by route methods and cannot be softened here.
+~~~
 
 ---
 
-## Time budget
+## style_profile.json generation
 
-- Exemplar selection: 30 min
-- Reading 2 exemplars: 2-3 hours
-- Writing the spec: 30-45 min
+Only encode a check when supported by current instructions or consistent exemplar evidence:
 
-Total: 3-4 hours.
+~~~json
+{
+  "schema_version": "1.0",
+  "profile_name": "<target-or-custom-name>",
+  "source": "<instructions URL/date and exemplar citekeys>",
+  "checks": {
+    "heading_numbering": {
+      "expected": "<numbered|unnumbered|unspecified>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "max_heading_depth": {
+      "expected": "<integer|null>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "key_points": {
+      "expected": "<required|optional|absent|unspecified>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "equation_location": {
+      "expected": "<body|box|either|unspecified>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "vendor_placement": {
+      "expected": "<body|table|either|unspecified>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "table_limit": {
+      "expected": "<integer|null>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "figure_limit": {
+      "expected": "<integer|null>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "citation_density": {
+      "expected": "<description|null>",
+      "severity": "warning",
+      "rationale": "<source>"
+    },
+    "section_order": {
+      "expected": ["<section>"],
+      "severity": "warning",
+      "rationale": "<source>"
+    }
+  },
+  "notes": "<conflicts, uncertainty, and exceptions>"
+}
+~~~
 
-This is the highest-ROI 3-4 hours in the entire project. Skipping it almost guarantees survey-paper-register drift, which is then extremely expensive to fix in revision.
+Permitted severity is warning. A journal requirement may be labeled required_by_journal in rationale, but the profile still does not become an evidence gate.
+
+If evidence is insufficient, omit the key or use unspecified/null. Do not invent a generic fallback.
+
+---
+
+## Applying the profile
+
+At the start of a drafting session:
+
+1. Re-read REVIEW_CONTEXT.md for scientific scope.
+2. Re-read PARADIGM.md for observed communication conventions.
+3. Use style_profile.json only to generate revision warnings.
+4. Resolve conflicts in favor of evidence accuracy, route methods, and current journal instructions.
+5. Record any profile change and its source.
+
+Auditor example:
+
+~~~bash
+python3 <skill_dir>/scripts/audit_manuscript.py review_project/<project-id>/manuscript.md --route <narrative|method-survey|scoping|systematic> --project-dir review_project/<project-id> --fail-on critical --output review_project/<project-id>/review_outputs/audit_report.md
+~~~
+
+The --profile JSON path is optional. When omitted, profile-dependent checks are not_assessed, not violations and not passes.
+
+---
+
+## What paradigm capture cannot establish
+
+Paradigm capture cannot prove:
+
+- that a search is adequate;
+- that study selection or extraction is unbiased;
+- that a source supports a claim;
+- that a risk-of-bias or certainty judgment is correct;
+- that a strong conclusion is warranted;
+- that a draft will receive editorial acceptance.
+
+Its output is a documented set of communication preferences for an expert-signoff-ready draft, not a quality certificate.

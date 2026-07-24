@@ -1,307 +1,188 @@
 ---
 name: medical-imaging-review
-description: Use when the user asks to write a "综述", narrative review, method survey, scoping review, systematic review, meta-analysis, evidence map, or journal-submission review manuscript in a medical imaging AI context — segmentation, detection, classification, diagnosis, prognosis, or clinical translation across CT, MRI, X-ray, ultrasound, pathology, and related modalities. Not for revising an existing AI-drafted review draft (use ai-review-revision) or for original research.
+description: Use when the user asks to plan, conduct, document, synthesize, or draft a medical imaging AI narrative review or method survey, scoping review, or systematic review with qualitative synthesis, including protocol design, literature search, screening, extraction, risk-of-bias appraisal, or evidence synthesis. Do not use this skill to perform a meta-analysis or umbrella review; route those requests to a specialized evidence-synthesis methods workflow.
 ---
 
-# Medical Imaging AI Literature Review Skill (v3.2.0)
+# Medical Imaging AI Review
 
-Produce comprehensive reviews that pass first-round peer review on factual grounds, not just structural grounds.
+Build traceable review artifacts whose claims can be audited back to first sources. Report the actual project state and unresolved human gates. Do not promise editorial outcomes or describe an incomplete project as a completed review.
 
-This is **not** a template-filling skill. It is a write-with-verify discipline.
+## Scope and hard boundary
 
----
+Support exactly four route tokens across three methodological families:
 
-## Quick Start
-
-First choose the review type. Read [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) before collecting literature or drafting prose.
-
-Default narrative/method-survey projects live in 4 files:
-
-```
-project_root/
-├── PARADIGM.md            # Style spec from 2-3 exemplar reviews (Phase 0)
-├── CLAUDE.md              # Project-specific terminology + literature inventory
-├── IMPLEMENTATION_PLAN.md # 3-axis outline + per-claim verification checklist
-└── manuscript_draft.md    # The actual manuscript
-```
-
-Scoping and systematic reviews add protocol, search, screening, extraction, and risk-of-bias files; see [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) and [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md).
-
-Follow the workflow in [references/WORKFLOW.md](references/WORKFLOW.md). The phases are: review-type routing -> paradigm capture -> init -> collect-and-verify -> outline/taxonomy -> write-with-per-claim-verification -> peer review -> submission prep.
-
----
-
-## Review Type Routing
-
-Do not let the title outrun the methods.
-
-| If the user asks for... | Route to... | Read |
+| User intent | Route token | Route |
 |---|---|---|
-| flagship "综述", narrative synthesis, method survey | Narrative review / method survey | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [DOMAINS.md](references/DOMAINS.md) |
-| evidence map, "what exists", gap mapping | Scoping review | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) |
-| systematic review, meta-analysis, diagnostic-accuracy evidence | Systematic review route | [REVIEW_TYPES.md](references/REVIEW_TYPES.md), [REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) |
+| Interpret a field | narrative | Narrative review |
+| Compare method families | method-survey | Method survey |
+| Map available evidence and research gaps | scoping | Scoping review |
+| Answer a focused question without statistical pooling | systematic | Systematic review with qualitative synthesis |
 
-If the manuscript uses the phrase "systematic review", it must contain reproducible search strings, eligibility criteria, screening flow, extraction fields, and risk-of-bias methods. Otherwise, call it a narrative review, method survey, or scoping review.
+Do not perform a meta-analysis, network meta-analysis, individual-participant-data meta-analysis, or umbrella review with this skill. If the request requires pooled estimates, heterogeneity statistics, forest or funnel plots, review-overlap analysis, or review-level appraisal, stop and prepare a handoff to a specialized methods workflow. Do not approximate those methods with prose or simple averaging.
 
----
+Read [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) before collecting literature or drafting. Use only narrative, method-survey, scoping, or systematic as route tokens; systematic always means qualitative synthesis in this skill. Before evidence collection begins, a corrected route may be recorded with an explicit decision note. After collection begins, the project route is immutable: freeze the old project and initialize a new project for a different route, carrying forward only logged, provenance-preserving artifacts.
 
-## Core Principles
+## Intake gate
 
-### Writing voice — match strength to evidence, not hedge by default
+Before starting a multi-step review, confirm and record:
 
-Calibrate language to evidence strength, not to a fixed hedging register.
+1. Review route and research question.
+2. Population, modality, anatomy, task, setting, and outcomes or concepts in scope.
+3. Target journal or audience and any binding instructions.
+4. Search date range, language limits, databases, grey-literature policy, and evidence cutoff.
+5. Expected deliverable and current project stage.
+6. Named human roles for screening, extraction or charting, adjudication, risk-of-bias assessment, and certainty assessment when applicable.
+7. Planned AI assistance and disclosure.
 
-When ≥2 independent peer-reviewed groups confirm a finding, state it strongly. When evidence is single-source or contested, state it cautiously. When evidence is absent, say so.
+For scoping and systematic routes, read [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) before protocol or search design. If a required decision is missing, continue only with clearly labeled planning options; do not silently choose a consequential protocol rule.
 
-**Avoid the LLM tells:**
-- "has shown promising results"
-- "may suggest"
-- "interestingly,"
-- "it is worth noting that"
-- "in recent years,"
-- "demonstrates the effectiveness of"
-- "may offer significant advantages"
+## Project contract
 
-These phrases are AI-detector top features. Real flagship-review authors don't use them. Strip them.
+Initialize every new multi-step project with the bundled script:
 
-**Take a position when evidence supports it.** Neutral catalogue is the LLM default and the failure mode to avoid. See [Verdict sentences](#verdict-sentences) below.
+    python3 <skill_dir>/scripts/init_review_project.py --parent <workspace-root> --name <topic-slug> --route <narrative|method-survey|scoping|systematic>
 
-### Citations — every claim verified before commit
+Use a lowercase kebab-case topic slug. The initializer prints the newly created project path:
 
-Every `[N]` citation must satisfy these checks (the full 5-rule protocol is in [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md)):
+    review_project/<topic-slug>-<YYYYMMDD-HHMMSS>-<8hex>/
 
-1. The cited paper **exists** (DOI / PMID resolves on PubMed or Crossref) with **no placeholder DOI**.
-2. The **author list** matches the first-source (especially first and last author).
-3. The **numeric claim** in the body sentence (Dice, HR, sample size, etc.) appears in the cited paper's abstract or results section.
-4. The **directional claim** in the body sentence (higher/lower, increased/decreased) matches the source's stated direction.
-5. Clinical claims cite a **peer-reviewed primary source**, not a vendor white paper or regulatory letter.
+Treat that printed path as <project_dir> for the rest of the workflow. The initializer refuses an existing target and never writes into another project directory. Do not pre-create, reuse, rename, or flatten the generated child. When resuming work, select the exact existing <project_dir> instead of running initialization again.
 
-If any check fails, the citation is broken — fix before continuing. This is a hard gate: even a single broken citation must be fixed before delivery.
+Core generated artifacts include:
 
-### Method descriptions — read first, write after
+    <project_dir>/
+    ├── review_config.yaml
+    ├── REVIEW_CONTEXT.md
+    ├── IMPLEMENTATION_PLAN.md
+    ├── PARADIGM.md
+    ├── manuscript.md
+    ├── references.bib
+    ├── claim_ledger.csv
+    ├── AI_USE_DISCLOSURE.md
+    └── route-specific subdirectories
 
-Do **not** fill in a template like `[Author] et al. [ref] proposed [method]... Achieves Dice of X.XX`. That template is a hallucination trap.
+Use REVIEW_CONTEXT.md as the portable project brief and review_config.yaml as the source of truth for route, scope, standards, human roles, AI use, evidence cutoff, and status. Re-read both at the start of each work session. Do not depend on a tool-specific instruction filename.
 
-Use this discipline instead:
+Before changing an artifact, inspect <project_dir>. Never overwrite, truncate, reset, or replace existing content. Preserve unrelated content and apply a narrow patch or merge. Ask before resolving a material conflict. A bounded advisory answer can remain inline; do not initialize a project unless the task needs persistent artifacts.
 
-1. **Read** the actual paper (abstract + methods + results). Use whatever first-source route is available: PubMed/DOI pages, arXiv pages or PDFs, Zotero full text, local PDFs, institutional copies, or journal pages. Confirm available tools before assuming a specific MCP name.
-2. **Note** the actual module names, the actual benchmark, the actual numbers, in your own working notes — not in the manuscript yet.
-3. **Write** the method description from those notes, citing specific numbers and module names verbatim from the paper.
-4. **Verify** by spot-checking 1-2 of the numbers against the paper one more time before moving on.
+When a first-stage plan requires persistent artifacts, the response must explicitly show the initializer command that was run, the collision-safe <project_dir> printed by the initializer, and the current project status; do not imply that a project exists before the initializer succeeds.
 
-If you can't access the paper, do not write about its internal architecture or specific performance numbers — and do not assert **priority or novelty** ("first to", "首个", "earliest", "novel"). Priority claims are strong, falsifiable, and frequently wrong; asserting one you haven't verified is a hallucination. Instead, cite it for a neutral, non-priority contribution ("applied X to Y") and, if useful, note the claim is unverified — or leave it out.
+## Stable citations and claim ledger
 
-### Heading depth — match the target article type
+Use stable citekeys during research and drafting, for example [@smith2024model]. Keep `references.bib` as the project bibliography used for drafting and rendering. Preserve any user-approved RIS, EndNote, Zotero, or other export as an immutable import artifact, then normalize accepted records into `references.bib` without changing their stable source identifiers. Do not use mutable numeric citations such as [17] in the working draft. Render the target journal's numeric or author-date style only from stable citekeys at the final formatting stage.
 
-- **H2** (`##`) for top-level sections (Introduction, Methods, Applications, Discussion, ...).
-- **H3** (`###`) for subsections.
-- In flagship narrative reviews, avoid H4 in body; use bold lead-in `**Topic.**` paragraph starters for deeper grouping.
-- In systematic/scoping reviews, method subheadings may follow journal or PRISMA conventions even if that creates a more formal Methods section.
-- Avoid number prefixes (`1.`, `1.1`, `1.2.3`) unless the target journal explicitly requires numbered sections.
+Keep the initializer's exact claim_ledger.csv header. Each row is one atomic claim-source pair: one material claim type, metric, direction, and locally bound citekey set; split compound sentences before verification rather than assigning every sentence-level citation to every clause.
 
-### Equations — in a Box, not in body
+    claim_id,section,claim_text,claim_type,citekey,source_id,source_locator,evidence_excerpt,population_or_dataset,data_split,split_unit,comparator,metric,estimate,unit,uncertainty_interval,direction,access_level,source_role,access_uri,accessed_at,verification_status,verified_by,verified_at,notes
 
-Display equations (DSC, IoU, clDice, FedAvg, GCN propagation, ...) appear in **Boxes**, not inline in body paragraphs. Textbook formulas can be referenced ("the Dice similarity coefficient — see Box 1") but should not be displayed inline.
+Do not rename, reorder, remove, or append columns without a schema-versioned migration.
 
-If a formula has no methodological insight worth displaying (e.g., FedAvg averaging), describe it in prose instead of showing it.
+Treat any pre-vNext 22-column ledger as an immutable legacy import, not as schema 2.0. Create a fresh schema-2.0 ledger, map values by named columns in a dated migration manifest, explicitly populate or mark unresolved the new evidence_excerpt, split_unit, and source_role fields, and preserve the legacy file. Never pad, reorder, or reinterpret a legacy row silently; migrated claims remain pending until a named human verifies the mapped record.
 
-### Vendor names — table-first, sparing in prose
+For every factual, quantitative, directional, novelty, regulatory, or comparative claim:
 
-Vendor names (HeartFlow, Cleerly, Caristo, Keya, Shukun, ...) belong primarily in the Commercial Products / Regulatory & Validation table. In body text use category descriptors unless the product name is necessary to define a regulatory fact, trial population, or head-to-head distinction.
+1. Link one or more stable citekeys.
+2. Record the exact supporting page, table, figure, section, or abstract passage.
+3. Verify metadata and claim support against a first source.
+4. Record who verified it and when.
+5. Keep the claim out of polished prose while verification_status is unresolved.
 
-- ✗ "HeartFlow's CT-FFR product was validated in NXT, ADVANCE, and PACIFIC..."
-- ✓ "The first FDA-cleared CT-FFR product (Table N, row 1) was validated in NXT, ADVANCE, and PACIFIC..."
-- ✓ "The table lists HeartFlow, Cleerly, Caristo, and other products with their regulatory status and peer-reviewed validation evidence."
+If only an abstract is accessible, restrict the claim to what the abstract directly supports. Do not infer internal architecture, exact performance, causal direction, or priority claims such as first from inaccessible text. See [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md).
 
-Reason: repeated product names in body text read like marketing copy. Use exact product names when precision matters; cite peer-reviewed evidence for clinical claims.
+## Human governance gates
 
----
+LLM agents may assist with search translation, deduplication suggestions, prioritization, extraction drafts, consistency checks, and prose. They do not count as independent human reviewers and must never be listed as such.
 
-## Default Narrative / Method Survey Structure
+For a formal scoping or systematic review:
 
-```markdown
-# [Title]: <evocative subtitle>
+- Two named human reviewers must independently complete title/abstract and full-text screening. A named human adjudicator resolves conflicts.
+- Data charting or extraction must use two named humans, either independent duplicate extraction or one extractor plus independent human verification, as pre-specified in the protocol.
+- Risk-of-bias judgments require independent human assessment and documented consensus or adjudication.
+- Certainty-of-evidence judgments, when used, require human approval.
+- Formal-route screening decisions must be preserved in <project_dir>/screening/screening_decisions.csv.
+- AI assistance, model or tool identity, task, date, human oversight, and any validation sample must be recorded in <project_dir>/AI_USE_DISCLOSURE.md according to journal and institutional requirements.
 
-## Key Points
-- 4-5 bullets, each 1-3 sentences, expressing the main conclusions.
+If the human team or required records are unavailable, stop at a clearly labeled provisional protocol, search set, screening suggestion, extraction draft, or appraisal draft. Do not claim that formal screening, extraction, risk-of-bias assessment, or the review itself is complete.
 
-## Abstract
+## Standards roles
 
-## Introduction
-### Clinical background
-### Technical challenge
-### Scope and contributions
+Keep four layers separate:
 
-## Datasets and evaluation metrics
-(Table 1: public datasets)
-(Box 1: evaluation metrics with equations)
+1. Conduct guidance defines how the review is carried out.
+2. Review reporting guidance defines what the review reports.
+3. Primary-study reporting frameworks help extract reporting completeness; they are not risk-of-bias tools.
+4. Risk-of-bias and certainty frameworks judge different levels of evidence and are not interchangeable.
 
-## Methods                              # 3-axis grouping is the default for method surveys
-### Architectural priors
-**CNN-based design.** ... (bold lead-in for sub-grouping)
-**Transformer-based design.** ...
-**Mamba and state-space design.** ...
+Select and version these layers in review_config.yaml. Use [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) for the route-specific matrix.
 
-### Inductive priors
-**Topology-aware design.** ...
-**Multi-task design.** ...
-**Graph-based design.** ...
+## Style hierarchy
 
-### Data regime
-**Self-supervised pre-training.** ...
-**Foundation models.** ...
-**Federated learning.** ...
-**Physics-informed models.** ...
+Resolve style decisions in this order:
 
-(Table 2: representative methods with modality / family / dataset / metric)
+1. Target-journal requirements.
+2. Review-method and reporting requirements.
+3. Explicit user requirements.
+4. Patterns observed in verified exemplars.
+5. This skill's defaults.
 
-## Downstream applications
-### [Application 1]
-### [Application 2]
-### [Application 3]
+Style preferences such as heading depth, numbered headings, boxes, table count, citation density, vendor placement, key-points format, and phrasing are warnings only. They never override the hierarchy above and never fail a review by themselves. Factual integrity, route validity, reproducibility, human provenance, and unresolved bias or certainty gates can block progress.
 
-## Translation to clinical practice
-(Table 3: commercial products with regulatory + validation)
+Read [references/PARADIGM.md](references/PARADIGM.md) only when exemplar analysis is useful. Treat an exemplar as evidence of style, not evidence for scientific claims.
 
-## Outstanding challenges
+## Route-aware workflow
 
-## Future directions
+1. Route and configure. Complete intake, choose one supported route, record the decision, standards, roles, and evidence cutoff.
+2. Initialize safely. Run init_review_project.py once and capture the printed <project_dir>.
+3. Design methods. For scoping or systematic work, freeze the protocol and database-specific search plan before screening.
+4. Collect and register sources. Preserve exact queries, platforms, dates, exports, deduplication decisions, stable citekeys, and source provenance.
+5. Pass human gates. Complete and log screening, charting or extraction, risk-of-bias, and certainty steps required by the route.
+6. Synthesize within scope. Narrative reviews interpret a justified corpus; scoping reviews map evidence; systematic qualitative reviews synthesize without statistical pooling.
+7. Draft from verified records. Write <project_dir>/manuscript.md from REVIEW_CONTEXT.md, extraction or charting tables, and claim_ledger.csv rather than model memory.
+8. Validate and report status. Run relevant checks, list unresolved gates, and label the deliverable accurately.
 
-## References
-```
+Do not convert a qualitative systematic review into a meta-analysis inside this workflow. If pooling becomes necessary, freeze the current artifacts and hand them to the specialized workflow.
 
-Notes:
-- No number prefixes on headings unless the journal requires them.
-- In narrative AI method surveys, §Methods is usually 3 H3 subsections (the three axes), with bold lead-ins for each method family inside.
-- In systematic/scoping reviews, use the structure in [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) instead of forcing the 3-axis method taxonomy.
-- Tables 1, 2, 3 are typically enough. Box 1 (metrics) is typical. Avoid 5+ tables.
-- Verdict sentences cluster at the end of §Methods axis subsections and at the end of clinical translation discussions — not after every paragraph.
+## Evidence and source access
 
----
+Discover the tools available in the current session before selecting a route. Prefer purpose-built literature connectors, the user's authorized Zotero library, local PDFs, and first-source pages. Do not assume a particular MCP server is installed. Do not edit tool configuration or install a connector unless the user explicitly asks.
 
-## Verdict Sentences
+For tool adapters and fallbacks, read [references/MCP_SETUP.md](references/MCP_SETUP.md). Search breadth, dates, and result counts must follow the research question and frozen protocol; this skill sets no universal count or recency quota.
 
-For narrative reviews and method surveys, each major method-axis subsection (Architectural priors / Inductive priors / Data regime) should close with **one verdict sentence** expressing authorial position. Choose the 3-5 most opinionated positions across the whole manuscript — don't put verdicts on every paragraph.
+## Audit interface
 
-For systematic and scoping reviews, verdicts must be constrained by the protocol and evidence map. Prefer "the included studies show..." over broad field-wide claims unless the search was designed to support the broader claim.
+After a working manuscript exists, run:
 
-Verdict templates:
-- "[Family] is currently the most cost-effective design choice for [problem]."
-- "[Family] has yet to demonstrate clear advantage over [alternative] in clinical-grade evaluations."
-- "[Family] is best understood as complementary to [alternative], not a replacement."
-- "The next [N] years will determine whether [family] becomes the default backbone or remains a research curiosity."
+    python3 <skill_dir>/scripts/audit_manuscript.py <project_dir>/manuscript.md --route <narrative|method-survey|scoping|systematic> --project-dir <project_dir> --fail-on critical --output <project_dir>/review_outputs/audit_report.md
 
-Neutral catalogue is the LLM default and exactly what flagship review editors push back on. Force yourself to take 3-5 positions.
+Add --profile <project_dir>/style_profile.json only when that profile was populated from current journal requirements or verified exemplars. The profile controls warning-only style checks.
 
----
+The positional manuscript path, --route, and --project-dir must describe the same generated project. --fail-on critical returns a failing status for critical automated findings; --output writes the Markdown report. Zero automated findings must be reported as not_assessed for substantive checks, never as a compliance pass, a draft ready for journal submission, or expert approval. Automated success does not prove source support, route compliance, human-gate completion, or expert approval.
 
-## Required Elements
+## Delivery language
 
-- **Review type declaration** before writing starts.
-- **Key Points box** (4-5 bullets, 1-3 sentences each) after the title for narrative/flagship-style manuscripts.
-- **Tables 1-3** for narrative/method surveys: datasets, methods, commercial products.
-- **Systematic/scoping tables** when applicable: search strategy, study characteristics, extraction variables, risk-of-bias summary.
-- **Box 1**: evaluation metrics with formulas when useful; for systematic reviews, move formal methods definitions into Methods if the target journal prefers that.
-- **Figures**: typically 3-5 for narrative reviews; systematic/scoping reviews require a PRISMA-style flow diagram.
-- **References**: cite only what supports the argument. Quantity is downstream of substance — don't pad to a target count.
-- **Verdict sentences**: 3-5 across narrative/method surveys, clustered at axis-section ends.
-- **Audit report**: run the bundled `scripts/audit_manuscript.py` before delivery (resolve the path relative to this skill directory). The script is a **triage** tool — it flags likely issues from surface patterns; it does not prove any citation or number is correct. Delivery requires **both** a clean script pass (0 critical/high) **and** a manual source-level spot-check of quantitative and directional claims. A green script alone is not sufficient.
+State what is complete and what is not. Useful status labels include:
 
----
+- protocol draft awaiting human approval
+- search executed; deduplication pending
+- screening suggestions awaiting two-human decisions
+- extraction draft awaiting human verification
+- risk-of-bias draft awaiting human consensus
+- qualitative synthesis ready from verified included studies
+- narrative or method-survey draft in manuscript.md with unresolved claims listed in claim_ledger.csv
 
-## Formatting Quick Reference
+Never collapse engineering completion, scientific-method completion, and human adjudication into one status.
 
-Full rationale is in [Core Principles](#core-principles) above; this is the at-a-glance recap.
-
-- **Heading depth** — max 2 body levels (H2/H3); no number prefixes unless journal-required; deeper grouping via bold lead-in `**Topic.**`; systematic/scoping Methods may follow PRISMA/journal conventions. ([details](#heading-depth--match-the-target-article-type))
-- **Equations** — display equations (`$$…$$`) live in Box 1 (rarely additional Boxes); textbook formulas with no methodological insight go in prose, not inline. ([details](#equations--in-a-box-not-in-body))
-- **Vendor names** — Table 3 by default; sparse body mentions only where regulatory or comparative precision requires them. ([details](#vendor-names--table-first-sparing-in-prose))
-
----
-
-## Citation Style
-
-```markdown
-# Data citation
-"...achieved Dice of 0.730 on ImageCAS [N]"
-
-# Method citation
-"Xu et al. [N] introduced..."
-
-# Multi-citation (max 4 in one bracket — beyond that, regroup the claim)
-"Multiple groups demonstrated this effect [N1, N2, N3]"
-
-# Comparative
-"While [N1] focused on architecture, [N2] addressed the data side"
-```
-
-`[N]` in body must match the bibliography entry [N], and bibliography [N] must be the paper the body sentence is actually attributing the claim to. See [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) Rule 3.
-
----
-
-## Literature Sources
-
-Use source types in combination. Confirm which tools are available in the current environment before using tool-specific names.
-
-| Source | Best for | Preferred route | Fallback |
-|---|---|---|---|
-| **ArXiv** | Methodological preprints, ML/AI advances | Available arXiv MCP or paper search | arXiv abstract/PDF URLs |
-| **PubMed** | Peer-reviewed clinical / validation studies | PubMed MCP or NCBI/PubMed search | PubMed URL by PMID |
-| **Zotero** | User's local library (closed-access journals) | Available Zotero MCP or local Zotero API | user-provided PDFs |
-| **Crossref** | DOI verification | Crossref API/WebFetch | DOI resolver and publisher page |
-| **Local PDFs** | Exemplar reviews and closed-access papers | PDF text extraction | visual/manual reading |
-
-For closed-access journals (Med Image Anal, Eur Radiol, Lancet family) the user's local Zotero library is often the only path. Always check Zotero before assuming a paper is inaccessible.
-
-For tool-adapter guidance, see [references/MCP_SETUP.md](references/MCP_SETUP.md).
-
----
-
-## Reference Files
+## Reference files
 
 | File | Read when |
 |---|---|
-| [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) | Before starting — choose narrative, scoping, systematic, meta-analysis, or umbrella route |
-| [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) | Whenever the manuscript claims systematic/scoping methods or appraises AI studies |
-| [references/WORKFLOW.md](references/WORKFLOW.md) | Starting a new review or moving between phases |
-| [references/PARADIGM.md](references/PARADIGM.md) | Phase 0: capturing exemplar review style spec |
-| [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) | Phase 2 (collection) and Phase 4 (write) — every citation must follow the 5 rules |
-| [references/HALLUCINATION_PATTERNS.md](references/HALLUCINATION_PATTERNS.md) | Phase 4 (write) and Phase 5 (peer review) — checklist of 10 LLM hallucination indicators to self-check against |
-| [references/DOMAINS.md](references/DOMAINS.md) | Phase 3 (outline) — 3-axis method groupings per domain |
-| [references/TEMPLATES.md](references/TEMPLATES.md) | Phase 1 (init) — CLAUDE.md, IMPLEMENTATION_PLAN.md, table templates |
-| [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md) | Before delivering a draft to the user |
-| [references/MCP_SETUP.md](references/MCP_SETUP.md) | Tool adapters and fallbacks for arXiv / PubMed / Zotero / Crossref |
-
----
-
-## Related Skills
-
-For revising an existing AI-drafted review (whether your own previous output or someone else's draft), use `ai-review-revision` if it is installed. That skill is the dedicated tool for fixing draft-quality issues — multi-agent diagnostic, factual reset, structural reset, content polish, submission prep.
-
-This skill (`medical-imaging-review`) is the dedicated tool for producing draft-quality content correctly the first time. They are complementary:
-
-- **medical-imaging-review** = write-side (produce submission-quality first draft)
-- **ai-review-revision** = revise-side (rescue a draft that already has quality issues)
-
-If a draft produced by this skill still ends up needing the `ai-review-revision` workflow to land, that's a bug — flag it so this skill can be improved.
-
----
-
-## Version Notes
-
-v3.0.0 was rewritten after the `coronary-cta-paper` draft exposed recurring failure modes: placeholder DOIs, citation drift, fabricated method modules, wrong performance numbers, vendor-style citations, flat method taxonomy, and AI-tone hedging.
-
-v3.1.0 adds review-type routing, reporting-standard guidance, tool portability, softer structure rules, CCTA terminology correction, and an executable manuscript audit script.
-
-v3.2.0 hardens the guardrails: the audit script now detects author↔citation mismatches under standard "Author et al. [N]" typesetting and recognises internationalised reference headings (`## 参考文献`, etc.) so Chinese drafts no longer mis-flag every citation; a fixture test suite (`scripts/tests/`) locks these in. Hard factual errors are now zero-tolerance (not gated behind a "5-or-more" threshold), unverified priority/novelty claims are forbidden, Phase 5 peer review is rewritten as executable sub-agent passes, and DOMAINS.md gains a generative/multimodal (VLM, diffusion, promptable-segmentation) paradigm section.
-
-Consolidated fix ledger (v3.0.0 → v3.2.0):
-
-| Earlier failure | Current fix |
-|---|---|
-| Hedging mandate; 80-120 reference target | Removed — match voice to evidence; cite what supports the argument |
-| Method fill-in template; flat 10-subsection taxonomy | Read-first/write-after discipline; 3-axis grouping default |
-| Structural-only QA; no source verification | Per-claim verification (Phase 4) + CITATION_INTEGRITY 5 rules + HALLUCINATION_PATTERNS |
-| Systematic label without methods; hard-coded MCP names | Review-type routing (PRISMA/QUADAS/CLAIM/TRIPOD) + tool-adapter fallbacks |
-| Numbered headings; scattered vendors; inline equations; neutral catalogue | Bold lead-ins; Table-3-first; Box-1 equations; 3-5 required verdicts; Phase 0 PARADIGM |
-| Audit gate ineffective on standard/Chinese citations | Marker-anchored author check + i18n reference headings + fixture tests (v3.2.0) |
+| [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) | Before starting or changing route |
+| [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) | Selecting conduct, reporting, primary-reporting, risk-of-bias, or certainty guidance |
+| [references/WORKFLOW.md](references/WORKFLOW.md) | Executing the selected route phase by phase |
+| [references/TEMPLATES.md](references/TEMPLATES.md) | Understanding the generated <project_dir> artifact contracts |
+| [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) | Registering sources and verifying claims |
+| [references/MCP_SETUP.md](references/MCP_SETUP.md) | Discovering available tools and choosing source fallbacks |
+| [references/PARADIGM.md](references/PARADIGM.md) | Deriving non-binding style guidance from exemplars |
+| [references/DOMAINS.md](references/DOMAINS.md) | Considering a domain taxonomy for narrative or method surveys |
+| [references/HALLUCINATION_PATTERNS.md](references/HALLUCINATION_PATTERNS.md) | Checking factual and attribution failure modes |
+| [references/QUALITY_CHECKLIST.md](references/QUALITY_CHECKLIST.md) | Auditing a route-specific deliverable and unresolved gates |

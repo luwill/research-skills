@@ -1,188 +1,203 @@
 # Quality Checklist for Medical Imaging AI Reviews
 
-This checklist runs at multiple checkpoints — end of each section, end of each writing day, before peer-review phase, before submission.
+Use this checklist at route selection, after search/selection/extraction, during drafting, before automated audit, and before expert sign-off.
 
-**v3 changes from v2:** Dropped "hedging language used", "80-120 references", and format-only metric checks. Replaced with substance checks (citation integrity, conclusion direction, verdict presence, structural discipline).
+The checklist separates:
 
----
+- **blocking integrity gates**: evidence or method requirements that cannot be waived by style;
+- **route gates**: artifacts required by narrative, method-survey, scoping, or systematic methods;
+- **profile warnings**: target-journal or exemplar preferences;
+- **not_assessed items**: substantive judgments automation cannot make.
 
-## Citation Integrity (Hard Gate)
-
-These are non-negotiable. Any failure must be fixed before continuing.
-
-- [ ] No placeholder DOIs (grep `xxx`, `[TBD]`, `x):xxx`)
-- [ ] Every reference's first and last author verified against first-source
-- [ ] Body↔bibliography `[N]` reconciliation — spot-check 10 random citations per section
-- [ ] Every directional claim (higher/lower, increased/decreased) verified against source
-- [ ] No vendor white papers cited as if peer-reviewed
-- [ ] No duplicate references (same paper listed under two numbers)
-
-See [CITATION_INTEGRITY.md](CITATION_INTEGRITY.md) for the full 5-rule protocol.
+The target output may be labeled **expert-signoff-ready draft and evidence package** only after the blocking gates below are complete; otherwise it remains a draft awaiting expert assessment.
 
 ---
 
-## Review-Type And Reporting-Standard Fit (Hard Gate)
+## Project identity and collision safety — blocking
 
-- [ ] Review type is declared before drafting: narrative, method survey, scoping, systematic, systematic + meta-analysis, or umbrella.
-- [ ] Title, abstract, and Methods use language consistent with the route.
-- [ ] If "systematic review" appears, PRISMA 2020 items are present: search strings, databases, eligibility criteria, screening flow, extraction fields, and risk-of-bias methods.
-- [ ] If "scoping review" appears, PRISMA-ScR items are present: PCC question, charting table, evidence map, and flow diagram.
-- [ ] If diagnostic accuracy is reviewed, QUADAS-family risk-of-bias domains are addressed.
-- [ ] If AI primary studies are appraised, CLAIM/TRIPOD+AI-style fields are extracted where relevant.
-- [ ] No meta-analysis language appears unless pooling methods, heterogeneity, and comparable outcomes are documented.
-
-See [REVIEW_TYPES.md](REVIEW_TYPES.md) and [REPORTING_STANDARDS.md](REPORTING_STANDARDS.md).
+- [ ] All review artifacts are under review_project/<project-id>/.
+- [ ] Project ID matches <topic-slug>-<YYYYMMDD-HHMMSS>-<8hex>.
+- [ ] The project was created by scripts/init_review_project.py and the generated target was not reused.
+- [ ] review_config.yaml contains the same immutable project ID, path, and route.
+- [ ] REVIEW_CONTEXT.md states the question, scope, route claim boundary, terminology, and unresolved issues.
+- [ ] Existing review projects were not silently reused, merged, overwritten, or deleted.
 
 ---
 
-## Structural Discipline
+## Citation and claim integrity — blocking
 
-- [ ] Heading depth ≤ 2 levels (H2 + H3 only in body)
-- [ ] No numbered headings (no `## 1.`, `### 1.1`)
-- [ ] H4 (`####`) absent from narrative body sections — deeper grouping via bold lead-in `**Topic.**`
-- [ ] Narrative/method-survey Methods uses the 3-axis grouping where appropriate; systematic/scoping reviews follow protocol-driven structure
-- [ ] Verdict sentences present in 3-5 places for narrative/method surveys (not on every paragraph, not absent entirely)
-- [ ] Key Points box has 4-5 bullets, 1-3 sentences each
-- [ ] Standard sections match the selected review route
+- [ ] references.bib is the single canonical bibliography.
+- [ ] Working manuscript citations use stable Pandoc citekeys.
+- [ ] Citekeys are immutable and collision-safe; manual numeric working citations are absent.
+- [ ] Every manuscript citekey resolves to exactly one bibliography entry.
+- [ ] Every material claim has one or more claim_ledger.csv rows.
+- [ ] Ledger rows use the initializer header and contain source_locator, population_or_dataset, data_split, split_unit, comparator, metric, estimate, unit, uncertainty_interval, direction, access_level, source_role, access_uri, accessed_at, verification_status, verified_by, verified_at, and notes as applicable.
+- [ ] Precise numeric and directional claims use only verification_status=verified rows.
+- [ ] Critical systematic data preserve two distinct human extraction decisions in extraction/critical_data.csv.
+- [ ] Abstract-only or metadata-only access is not used for architecture internals, priority, subgroup, adjusted-effect, or insufficiently contextualized performance claims.
+- [ ] Corrections, expressions of concern, retractions, versions, companion reports, shared cohorts, and reused test sets were checked.
+- [ ] A missing DOI did not cause automatic exclusion when another stable identifier exists.
+- [ ] Tables, figure captions, abstract, key points, and supplements are reconciled with the same rigor as body prose.
 
----
-
-## Voice and Register
-
-- [ ] No "has shown promising results" / "may suggest" / "interestingly" / "in recent years," / "it is worth noting" anywhere
-- [ ] Hedging used only when evidence genuinely supports caution, not as default register
-- [ ] Strong findings (≥2 independent groups confirming) stated strongly
-- [ ] Each major method axis (3 axes in §Methods) closes with a verdict sentence
-- [ ] No "neutral catalogue" stretches longer than 3 paragraphs without a verdict / position
+See CITATION_INTEGRITY.md.
 
 ---
 
-## Equations and Boxes
+## Route and search boundary — blocking
 
-- [ ] Display equations (`$$...$$`) appear only in Boxes, not in body paragraphs
-- [ ] Textbook formulas (DSC, IoU, FedAvg) handled in prose if not in Box 1, not displayed inline
-- [ ] Box 1 (metrics) present and complete
-- [ ] Total Box count appropriate for target journal (typically 1-3)
+- [ ] Route is exactly narrative, method-survey, scoping, or systematic.
+- [ ] Quantitative pooling or an overview-of-reviews request was stopped and handed to a specialist workflow.
+- [ ] Route was chosen before collection; after collection began, any different route used a newly initialized project rather than an in-place protocol/deviation change.
+- [ ] No route inherited a default paper count, recency window, language, publication type, or study-design filter.
+- [ ] Every deliberate search limit has a question-specific rationale and consequence.
 
----
+### Narrative and method-survey
 
-## Vendor Names
+- [ ] search/narrative_exploration_log.csv records source, query/navigation, date, result reference, decision, and rationale.
+- [ ] search/selection_rationale.md discloses discovery routes, selection logic, limits, and blind spots.
+- [ ] Manuscript language describes a transparent, non-exhaustive exploration.
+- [ ] Important counterevidence, negative findings, validation failures, leakage risks, and equity limitations were actively sought.
+- [ ] Narrative or method-survey text does not claim systematic/comprehensive coverage or PRISMA-style inclusion.
 
-- [ ] Vendor names (HeartFlow, Cleerly, Caristo, Keya, Shukun, etc.) appear primarily in the commercial/regulatory table
-- [ ] Any body mention of a vendor/product is necessary for regulatory, trial, or comparative precision
-- [ ] Clinical-effectiveness claims use peer-reviewed evidence, not vendor white papers or clearance letters
-- [ ] Body uses category descriptors with table cross-reference when product names are not necessary
+### Scoping
 
-```bash
-# Quick check
-python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
-# Inspect "Vendor body mentions"; justify or rewrite each hit.
-```
+- [ ] PCC or another justified scoping framework is explicit.
+- [ ] Protocol and exact database/platform strategies exist.
+- [ ] Immutable exports and exact strategies exist, and search/search_log.csv, search/deduplication_log.csv, screening/screening_decisions.csv, screening/full_text_exclusions.csv, screening/calibration_log.md, adjudication/conflict_log.csv, and extraction/charting_table.csv are populated.
+- [ ] Reviewer number, independence, automation, calibration, and conflict handling are reported.
+- [ ] Evidence map/charting answers the protocol question without estimating effects.
+- [ ] PRISMA-ScR checklist and flow counts are completed.
+- [ ] AI assistance and protocol deviations are disclosed.
 
----
+### Systematic
 
-## Tables
+- [ ] Protocol/registration status and amendments are transparent.
+- [ ] Exact search strategies, sources, platforms, dates, limits, peer review, raw exports, deduplication, and update search are documented.
+- [ ] Two distinct humans independently screened full texts; title/abstract screening also follows the protocol-defined dual process.
+- [ ] Two distinct humans independently extracted critical data.
+- [ ] Two distinct humans independently assessed risk of bias with the design-matched tool.
+- [ ] Original decisions and all conflicts/adjudications are preserved.
+- [ ] Study/report/cohort linkage prevents duplicate counting and pseudo-replication.
+- [ ] Certainty and reporting-bias methods/results are present when applicable.
+- [ ] PRISMA checklist, flow counts, and protocol deviations are complete.
+- [ ] human_review_gate.json satisfies the exact TEMPLATES.md contract.
+- [ ] human_review_gate.json status is complete and its reviewer_ids are two or more distinct, non-empty human IDs.
+- [ ] Gate evidence paths remain screening/screening_decisions.csv, extraction/critical_data.csv, risk_of_bias/assessments.csv, adjudication/conflict_log.csv, and AI_USE_DISCLOSURE.md.
+- [ ] AI assistance is disclosed and no AI identity occupies a human reviewer or adjudicator slot.
 
-- [ ] Table 1: Public datasets (year, cases, annotation type, access)
-- [ ] Table 2: Method comparison (modality / family / dataset / metric — pick 12-20 papers)
-- [ ] Table 3: Commercial products with regulatory evidence
-- [ ] Total tables ≤ 4 (typical flagship reviews stay at 2-3)
-- [ ] Each table has a title, body, and footnote explaining abbreviations / caveats
-
----
-
-## Figures
-
-- [ ] Figure 1: Review overview / taxonomy
-- [ ] Figure 2: Representative architectures or method evolution
-- [ ] Figure 3: Clinical workflow or downstream applications
-- [ ] (Optional) Figure 4: Data-driven plot (e.g., performance landscape, trial effect sizes)
-- [ ] All figures have ≤ 100-word captions following Nature style: bold lead-in title sentence + body sentences
-- [ ] No `[Figure placeholder]` strings before submission
-
----
-
-## Content Coverage
-
-- [ ] Narrative/method surveys cover all relevant method axes (Architectural / Inductive / Data regime) or document a better taxonomy
-- [ ] Systematic/scoping reviews cover all protocol-specified outcomes, concepts, and extraction/charting domains
-- [ ] Negative trials included where they exist (LLM bias: only positive)
-- [ ] Inter-vendor reproducibility / cross-site validation discussed where relevant
-- [ ] Demographic bias / fairness considerations addressed where relevant
-- [ ] Dataset leakage, split integrity, external validation, calibration, and benchmark comparability discussed where relevant
-- [ ] Code/model/data availability and reproducibility addressed where relevant
-- [ ] Controversies and unresolved questions engaged, not glossed
-- [ ] Future directions specific and actionable (not "more research is needed" platitudes)
+An incomplete systematic gate is blocking. It cannot be downgraded to a limitation.
 
 ---
 
-## Self-check Commands
+## Study appraisal and synthesis — blocking
 
-```bash
-# Full audit
-python <skill_dir>/scripts/audit_manuscript.py manuscript_draft.md --output review_outputs/audit_report.md
-
-# Numbered headings
-grep -cE "^#{2,4} [0-9]" manuscript_draft.md
-# Expected: 0
-
-# Heading depth violation
-grep -c "^#### " manuscript_draft.md
-# Expected: 0
-
-# Placeholder DOIs
-grep -c "xxx\|x):xxx\|\[TBD\]" manuscript_draft.md
-# Expected: 0
-
-# LLM tell phrases
-for tell in "has shown promising" "may suggest" "interestingly," "in recent years," "it is worth noting"; do
-  echo "=== $tell ==="
-  grep -nF "$tell" manuscript_draft.md
-done
-# Expected: 0 per tell
-
-# Vendor names in body
-for vendor in HeartFlow Cleerly Caristo; do
-  count=$(grep -c "$vendor" manuscript_draft.md)
-  in_table=$(grep "| $vendor " manuscript_draft.md | wc -l)
-  echo "$vendor: total $count, in table $in_table, in body $((count - in_table))"
-done
-# Expected: in body == 0 for each
-
-# Inline equations
-grep -n '\$\$' manuscript_draft.md
-# All hits should be inside Box context (check 2 lines before)
-
-# Verdict-sentence presence
-grep -nE "currently the most|has yet to demonstrate|best understood as|next [0-9]+ years will" manuscript_draft.md
-# Expected: ≥ 3 hits
-
-# Citation count (no quantity target — but useful for sanity)
-grep -cE "^[0-9]+\." manuscript_draft.md
-# Use as input for body↔bib reconciliation
-```
+- [ ] Risk-of-bias tool matches the primary-study design and review question.
+- [ ] Reporting-completeness guidelines are not presented as risk-of-bias tools.
+- [ ] Appraisal judgments include source locators, rationale, reviewer IDs, and adjudication status.
+- [ ] External validation terminology matches the source and the protocol definition.
+- [ ] Dataset split and unit of analysis are visible beside performance values.
+- [ ] Cross-study metrics are not ranked as comparable without comparable cohort, split, unit, reference standard, threshold, and evaluation conditions.
+- [ ] Multiple reports, model versions, thresholds, outcomes, and shared datasets are handled explicitly.
+- [ ] Synthesis statements are bounded by the narrative/method-survey corpus, scoping map, or systematic protocol and certainty judgments.
+- [ ] Conclusions distinguish absence of evidence, evidence of no clear difference, and evidence of harm or inferiority.
+- [ ] Clinical effectiveness is not inferred from regulatory authorization, reimbursement, product documentation, or benchmark accuracy alone.
 
 ---
 
-## What's NOT on this checklist (intentional removals from v2)
+## Regulatory, reimbursement, and commercial claims — blocking
 
-- ❌ "Hedging language used" — was actively harmful; hedging-by-default is the LLM tell, not the flagship-review voice
-- ❌ "80-120 references" — was driving Claude to pad the bibliography, which encouraged fabrication
-- ❌ "Performance metrics consistent (Dice: 0.XXX format)" — checking format ≠ checking correctness
-- ❌ "All major methods covered" — was driving exhaustive enumeration over selective synthesis
-- ❌ "Recent literature included (>50% from last 3 years)" — date-based filter has no relationship to quality
-
-These were structural illusions of quality. They've been replaced with substantive checks above.
+- [ ] Regulatory status and reimbursement status occupy separate fields/columns.
+- [ ] Each regulatory claim uses a current official jurisdiction-specific regulator record.
+- [ ] Each reimbursement/coding/coverage claim uses a current official payer or coding-authority record.
+- [ ] Regulatory and reimbursement facts have access dates and are rechecked immediately before expert sign-off.
+- [ ] Product documentation is labeled as such and is not used as clinical-effectiveness evidence.
+- [ ] Peer-reviewed clinical evidence is cited separately.
+- [ ] Unverified current status is reported as not_verified, not inferred.
 
 ---
 
-## Severity Levels for Failures
+## AI assistance, privacy, and human authority — blocking
 
-When a checklist item fails during writing:
+- [ ] AI_USE_DISCLOSURE.md names tools/models, versions or dates, providers, data shared, tasks, human decision-makers, checks, and limitations.
+- [ ] Sensitive or restricted source content was handled according to access, privacy, and license requirements.
+- [ ] AI assistance did not replace required human screening, extraction, risk-of-bias assessment, adjudication, or expert sign-off.
+- [ ] Material AI errors and corrections are logged.
+- [ ] protocol_deviations.md records timing, rationale, impact, corrective action, and human approval for every deviation.
 
-| Severity | Examples | Action |
-|---|---|---|
-| **CRITICAL** | Placeholder DOI, wrong-author list on real paper, citation direction flipped, systematic-review label without systematic methods | **STOP and fix immediately**. These are reviewer-facing trust-killers. |
-| **HIGH** | Body↔bib drift, vendor name in body, verdict absent in axis section | Fix before completing the current section. |
-| **MEDIUM** | Heading numbered, equation inline | Fix at section end. |
-| **LOW** | Multi-citation bracket > 4 refs, table > 20 rows | Note and address during peer-review phase. |
+---
+
+## Style and presentation — profile-driven warnings only
+
+Evaluate these only against style_profile.json or current target-journal instructions:
+
+- [ ] Heading depth and numbering.
+- [ ] Section order and labels.
+- [ ] Key-points presence and length.
+- [ ] Equation placement and notation.
+- [ ] Box, table, and figure count.
+- [ ] Caption length and format.
+- [ ] Vendor/product placement.
+- [ ] Citation density and grouping.
+- [ ] Paragraph length and rhetorical pattern.
+- [ ] Terminology, spelling, and abbreviation style.
+
+These are warnings unless a documented target requirement says otherwise. There is no universal ban on numbered headings, H4 headings, equations in body text, vendor names in prose, cautious wording, or any fixed number of tables, figures, boxes, citations, or conclusion sentences.
+
+Style warnings cannot block evidence work and cannot force stronger language than the evidence supports.
+
+---
+
+## Automated audit
+
+Run:
+
+~~~bash
+python3 <skill_dir>/scripts/audit_manuscript.py review_project/<project-id>/manuscript.md --route <narrative|method-survey|scoping|systematic> --project-dir review_project/<project-id> --fail-on critical --output review_project/<project-id>/review_outputs/audit_report.md
+~~~
+
+The --profile argument is optional and accepts a JSON profile path. Omit it when no explicit profile exists.
+
+Required auditor semantics:
+
+- Individual findings may use **critical/high/medium/low** severities.
+- The global `gate_status` is only **fail**, **warning**, or **not_assessed**; it is never `pass`.
+- Profile-dependent findings are warning-only and cannot fail the gate.
+- Factual support, full-text interpretation, search adequacy, appraisal correctness, synthesis validity, certainty, and other substantive judgments remain **not_assessed** unless the appropriate humans complete them outside the auditor.
+
+Zero automated findings must still report substantive checks as not_assessed. The phrase no findings must not be rendered as compliant, validated, approved, or factually correct.
+
+---
+
+## Evidence-package inventory
+
+- [ ] review_config.yaml
+- [ ] REVIEW_CONTEXT.md
+- [ ] IMPLEMENTATION_PLAN.md
+- [ ] PARADIGM.md and optional style_profile.json
+- [ ] manuscript.md and rendered preview
+- [ ] references.bib and, when required, a current verified target CSL file
+- [ ] claim_ledger.csv
+- [ ] route-specific search/selection/extraction/appraisal artifacts
+- [ ] human_review_gate.json for systematic route
+- [ ] reporting checklist and flow counts where applicable
+- [ ] AI_USE_DISCLOSURE.md
+- [ ] protocol_deviations.md
+- [ ] audit report with not_assessed items
+- [ ] unresolved-issues register
+- [ ] EXPERT_SIGNOFF.md
+
+---
+
+## Expert sign-off
+
+Before handoff, name the people or roles still required to review:
+
+- clinical/domain interpretation;
+- information retrieval/search;
+- evidence-synthesis methods;
+- statistics, if any quantitative analysis appears;
+- risk of bias and certainty;
+- regulatory/reimbursement claims, if present;
+- authorship, conflicts, funding, data/code availability, and journal requirements.
+
+Use the label **expert-signoff-ready draft + evidence package** only after every blocking integrity and route gate above is complete and all `not_assessed` items have a named expert owner for sign-off. Otherwise label the output **draft awaiting expert assessment** and list the unresolved gates. Approval, compliance, validation, publication, and submission decisions remain with the named humans and target journal.
