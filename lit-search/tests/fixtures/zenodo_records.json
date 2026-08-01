@@ -1,0 +1,2006 @@
+{
+ "hits": {
+  "hits": [
+   {
+    "created": "2024-04-18T09:07:49.662376+00:00",
+    "modified": "2024-07-06T10:47:12.231202+00:00",
+    "id": 10991145,
+    "conceptrecid": "10991144",
+    "doi": "10.5281/zenodo.10991145",
+    "conceptdoi": "10.5281/zenodo.10991144",
+    "doi_url": "https://doi.org/10.5281/zenodo.10991145",
+    "metadata": {
+     "title": "Ischemic Stroke Lesion Segmentation Challenge 2024",
+     "doi": "10.5281/zenodo.10991145",
+     "publication_date": "2024-04-18",
+     "description": "<p>Accurate segmentation of ischemic lesions in stroke is essential both during acute stages to guide treatment decisions (e.g., determine a patient's eligibility for thrombectomy treatment), and during sub-acute and chronic stages for evaluating disease outcomes, clinical follow-up, and for defining optimal therapeutic and rehabilitation strategies to maximize critical windows for recovery. The Ischemic Stroke Lesion Segmentation (ISLES) Challenge (https://www.isles-challenge.org/), an initiative aimed at advancing stroke image analysis, involves neurointervention, radiology, and computer science professionals and researchers from multiple leading institutions in the field. The ISLES challenge has been hosted at five MICCAI conferences (2015, 2016, 2017, 2018, 2022). In its inaugural edition, ISLES'15 [1], participants were tasked with segmenting sub-acute ischemic stroke lesions from post-interventional MRI and acute perfusion lesions from pre-interventional MRI. Subsequent editions, ISLES'16 and ISLES'17 [2], focused on stroke outcome prediction, requiring the segmentation of follow-up stroke lesions from acute multimodal MR imaging and the estimation of patient outcome disability scores. In ISLES'18 [3], acute stroke segmentation was approached indirectly and in a cross-modality fashion, with teams predicting the core tissue delineated in concomitant MRI from acute perfusion CT series. The most recent challenge, ISLES'22, addressed acute, sub-acute, and chronic ischemic stroke segmentation in over 2000 MRI scans [4,5]. Over the years, ISLES events have garnered significant attention from the research community. There were 120 database downloads until the ISLES'15 challenge day with 14 participating teams, and the number of participating teams was roughly duplicated in the ISLES'18 edition. The datasets released in ISLES'22 have been downloaded over 2000 times each, serving as reference datasets in prominent clinical and image analysis research [6,7,8]. The ISLES challenge has played a pivotal role in stroke image analysis for over eight years, contributing to the development of open stroke imaging datasets and benchmarking state-of-the-art image processing algorithms. Based on the experience gained from these previous editions, ISLES'24 seeks to benchmark final infarct segmentation algorithms. Unlike ISLES'16-17 editions, which share common points with this year's one, ISLES'24 makes use of standard-of-care acute stroke CT imaging (including non-contrast CT, perfusion CT, and CT angiography) and sub-acute stroke MRI (follow-up DWI with delineated infarct labels), coupled with clinical and demographic tabular data, highlighting its clinical relevance. Furthermore, we will release four times more imaging data through this challenge than ISLES'17. ISLES'24 aims to identify prominent final infarct segmentation algorithms from pre-interventional data, thus providing outputs that could, from a clinical standpoint, help optimize reperfusion treatment decision-making. Overall, the diversity of ISLES'24 imaging and clinical data and the clinical relevance of the task will provide participants with a unique challenge.</p>\n<p><strong>References</strong></p>\n<p>1. Maier, Oskar, et al. \"ISLES 2015-A public evaluation benchmark for ischemic stroke lesion segmentation from multispectral MRI.\" Medical image analysis 35 (2017): 250-269.<br>2. Winzeck, Stefan, et al. \"ISLES 2016 and 2017-benchmarking ischemic stroke lesion outcome prediction based on multispectral MRI.\" Frontiers in neurology 9 (2018): 679.<br>3. Hakim, Arsany, et al. \"Predicting infarct core from computed tomography perfusion in acute ischemia with machine learning: Lessons from the ISLES challenge.\" Stroke 52.7 (2021): 2328-2337.<br>4. Hernandez Petzsche, Moritz R., et al. \"ISLES 2022: A multi-center magnetic resonance imaging stroke lesion segmentation dataset.\" Scientific data 9.1 (2022): 762.<br>5. Liew, Sook-Lei, et al. \"A large, curated, open-source stroke neuroimaging dataset to improve lesion segmentation algorithms.\" Scientific data 9.1 (2022): 320.<br>6. Iglesias, Juan E., et al. \"SynthSR: A public AI tool to turn heterogeneous clinical brain scans into high-resolution T1-weighted images for 3D morphometry.\" Science advances 9.5 (2023): eadd3607.<br>7. Liew, Sook-Lei, et al. \"Association of Brain Age, Lesion Volume, and Functional Outcome in Patients With Stroke.\" Neurology 100.20 (2023): e2103-e2113.<br>8. Ashtari, Pooya, et al. \"Factorizer: A scalable interpretable approach to context modeling for medical image segmentation.\" Medical image analysis 84 (2023): 102706.</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "de la Rosa, Ezequiel",
+       "affiliation": "University of Zurich, Switzerland"
+      },
+      {
+       "name": "Kirschke, Jan S.",
+       "affiliation": "Klinikum rechts der Isar, Technical University of Munich, Germany"
+      },
+      {
+       "name": "Wiestler, Benedikt",
+       "affiliation": "Klinikum rechts der Isar, Technical University of Munich, Germany"
+      },
+      {
+       "name": "Wiest, Roland",
+       "affiliation": "University of Bern, Switzerland"
+      },
+      {
+       "name": "Reyes, Mauricio",
+       "affiliation": "University of Bern, Switzerland"
+      },
+      {
+       "name": "Su, Ruisheng",
+       "affiliation": "Erasmus University Medical Center, The Netherlands"
+      },
+      {
+       "name": "Wegener, Susanne",
+       "affiliation": "University of Zurich, Switzerland"
+      },
+      {
+       "name": "Menze, Bjoern",
+       "affiliation": "University of Zurich, Switzerland"
+      }
+     ],
+     "keywords": [
+      "ischemic stroke",
+      "final infarct",
+      "segmentation",
+      "MICCAI 2024 challenges"
+     ],
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "meeting": {
+      "title": "27th International Conference on Medical Image Computing and Computer Assisted Intervention",
+      "acronym": "MICCAI 2024"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "10991144"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Ischemic Stroke Lesion Segmentation Challenge 2024",
+    "links": {
+     "self": "https://zenodo.org/api/records/10991145",
+     "self_html": "https://zenodo.org/records/10991145",
+     "preview_html": "https://zenodo.org/records/10991145?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.10991145",
+     "self_doi": "https://doi.org/10.5281/zenodo.10991145",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10991145",
+     "reserve_doi": "https://zenodo.org/api/records/10991145/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/10991144",
+     "parent_html": "https://zenodo.org/records/10991144",
+     "parent_doi": "https://doi.org/10.5281/zenodo.10991144",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.10991144",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:10991145/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:10991145/sequence/default",
+     "files": "https://zenodo.org/api/records/10991145/files",
+     "media_files": "https://zenodo.org/api/records/10991145/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:10991145:Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/10991145/files-archive",
+     "archive_media": "https://zenodo.org/api/records/10991145/media-files-archive",
+     "latest": "https://zenodo.org/api/records/10991145/versions/latest",
+     "latest_html": "https://zenodo.org/records/10991145/latest",
+     "versions": "https://zenodo.org/api/records/10991145/versions",
+     "draft": "https://zenodo.org/api/records/10991145/draft",
+     "access_links": "https://zenodo.org/api/records/10991145/access/links",
+     "access_grants": "https://zenodo.org/api/records/10991145/access/grants",
+     "access_users": "https://zenodo.org/api/records/10991145/access/users",
+     "access_request": "https://zenodo.org/api/records/10991145/access/request",
+     "access": "https://zenodo.org/api/records/10991145/access",
+     "communities": "https://zenodo.org/api/records/10991145/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/10991145/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/10991145/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/10991145/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/10991145/quota-increase",
+     "requests": "https://zenodo.org/api/records/10991145/requests"
+    },
+    "updated": "2024-07-06T10:47:12.231202+00:00",
+    "recid": "10991145",
+    "revision": 6,
+    "files": [
+     {
+      "id": "57e9c0b4-96f1-4899-b6d5-4a4f10f5be59",
+      "key": "Ischemic Stroke Lesion Segmentation Challenge 2024.pdf",
+      "size": 100993,
+      "checksum": "md5:d50e77a1c4d95d68a1332ccf24c21bb7",
+      "links": {
+       "self": "https://zenodo.org/api/records/10991145/files/Ischemic%20Stroke%20Lesion%20Segmentation%20Challenge%202024.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "87637"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 1897,
+     "unique_downloads": 1569,
+     "views": 2601,
+     "unique_views": 2406,
+     "version_downloads": 1897,
+     "version_unique_downloads": 1569,
+     "version_unique_views": 2406,
+     "version_views": 2601
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2024-11-01T19:54:06.736162+00:00",
+    "modified": "2024-11-01T19:54:06.884405+00:00",
+    "id": 14026715,
+    "conceptrecid": "14026714",
+    "doi": "10.48550/arXiv.2403.19425",
+    "doi_url": "https://doi.org/10.48550/arXiv.2403.19425",
+    "metadata": {
+     "title": "Model weights- The ISLES'22 Ensemble Algorithm",
+     "doi": "10.48550/arXiv.2403.19425",
+     "publication_date": "2024-11-01",
+     "description": "<p>Model weights for running <a href=\"https://github.com/Tabrisrei/ISLES22_Ensemble\">The ISLES'22 Ensemble Algorithm</a>&nbsp;</p>\n<p>&nbsp;</p>\n<p>Reference:</p>\n<p>de la Rosa, E., Reyes, M., Liew, S. L., Hutton, A., Wiest, R., Kaesmacher, J., ... &amp; Wiestler, B. (2024). A Robust Ensemble Algorithm for Ischemic Stroke Lesion Segmentation: Generalizability and Clinical Utility Beyond the ISLES Challenge. arXiv preprint arXiv:2403.19425.</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "de la Rosa, Ezequiel",
+       "affiliation": null
+      },
+      {
+       "name": "Reyes, Mauricio",
+       "affiliation": null
+      },
+      {
+       "name": "Liew, Sook-Lei",
+       "affiliation": null
+      },
+      {
+       "name": "Hutton, Alexandre",
+       "affiliation": null
+      },
+      {
+       "name": "Wiest, Roland",
+       "affiliation": null
+      },
+      {
+       "name": "Kaesmacher, Johannes",
+       "affiliation": null
+      },
+      {
+       "name": "Hanning, Uta",
+       "affiliation": null
+      },
+      {
+       "name": "Hakim, Arsany",
+       "affiliation": null
+      },
+      {
+       "name": "Zubal, Richard",
+       "affiliation": null
+      },
+      {
+       "name": "Valenzuela, Waldo",
+       "affiliation": null
+      },
+      {
+       "name": "Robben, David",
+       "affiliation": null
+      },
+      {
+       "name": "Sima, Diana M.",
+       "affiliation": null
+      },
+      {
+       "name": "Vincenzo, Anania",
+       "affiliation": null
+      },
+      {
+       "name": "Brys, Arne",
+       "affiliation": null
+      },
+      {
+       "name": "Meakin, James A.",
+       "affiliation": null
+      },
+      {
+       "name": "Mickan, Anne",
+       "affiliation": null
+      },
+      {
+       "name": "Broocks, Gabriel",
+       "affiliation": null
+      },
+      {
+       "name": "Heitkamp, Christian",
+       "affiliation": null
+      },
+      {
+       "name": "Gao, Shengbo",
+       "affiliation": null
+      },
+      {
+       "name": "Liang, Kongming",
+       "affiliation": null
+      },
+      {
+       "name": "Zhang, Ziji",
+       "affiliation": null
+      },
+      {
+       "name": "Rahman Siddiquee, Md Mahfuzur",
+       "affiliation": null
+      },
+      {
+       "name": "Myronenko, Andriy",
+       "affiliation": null
+      },
+      {
+       "name": "Ashtari, Pooya",
+       "affiliation": null
+      },
+      {
+       "name": "Van Huffel, Sabine",
+       "affiliation": null
+      },
+      {
+       "name": "Van Huffel, Sabine",
+       "affiliation": null
+      },
+      {
+       "name": "Jeong, Hyun-su",
+       "affiliation": null
+      },
+      {
+       "name": "Yoon, Chi-ho",
+       "affiliation": null
+      },
+      {
+       "name": "Kim, Chulhong",
+       "affiliation": null
+      },
+      {
+       "name": "Huo, Jiayu",
+       "affiliation": null
+      },
+      {
+       "name": "Ourselin, Sebastien",
+       "affiliation": null
+      },
+      {
+       "name": "Sparks, Rachel",
+       "affiliation": null
+      },
+      {
+       "name": "Clerigues, Albert",
+       "affiliation": null
+      },
+      {
+       "name": "Oliver, Arnau",
+       "affiliation": null
+      },
+      {
+       "name": "Llado´, Xavier",
+       "affiliation": null
+      },
+      {
+       "name": "Chalcroft, Liam",
+       "affiliation": null
+      },
+      {
+       "name": "Pappas, Ioannis",
+       "affiliation": null
+      },
+      {
+       "name": "Bertels, Jeroen",
+       "affiliation": null
+      },
+      {
+       "name": "Heylen, Ewout",
+       "affiliation": null
+      },
+      {
+       "name": "Moreau, Juliette",
+       "affiliation": null
+      },
+      {
+       "name": "Hatami, Nima",
+       "affiliation": null
+      },
+      {
+       "name": "Frindel, Carole",
+       "affiliation": null
+      },
+      {
+       "name": "Qayyum, Abdul",
+       "affiliation": null
+      },
+      {
+       "name": "Mazher, Moona",
+       "affiliation": null
+      },
+      {
+       "name": "Puig, Domenec",
+       "affiliation": null
+      },
+      {
+       "name": "Lin, Shao-Chieh",
+       "affiliation": null
+      },
+      {
+       "name": "Juan, Chun-Jung",
+       "affiliation": null
+      },
+      {
+       "name": "Hu, Tianxi",
+       "affiliation": null
+      },
+      {
+       "name": "Boone, Lyndon",
+       "affiliation": null
+      },
+      {
+       "name": "Goubran, Maged",
+       "affiliation": null
+      },
+      {
+       "name": "Liu, Yi-Jui",
+       "affiliation": null
+      },
+      {
+       "name": "Wegener, Susanne",
+       "affiliation": null
+      },
+      {
+       "name": "Kofler, Florian",
+       "affiliation": null
+      },
+      {
+       "name": "Ezhov, Ivan",
+       "affiliation": null
+      },
+      {
+       "name": "Shit, Suprosanna",
+       "affiliation": null
+      },
+      {
+       "name": "Hernandez, Moritz R.",
+       "affiliation": null
+      },
+      {
+       "name": "Menze, Bjoern",
+       "affiliation": null
+      },
+      {
+       "name": "Kirschke, Jan S.",
+       "affiliation": null
+      },
+      {
+       "name": "Wiestler, Benedikt",
+       "affiliation": null
+      }
+     ],
+     "custom": {
+      "code:codeRepository": "https://github.com/Tabrisrei/ISLES22_Ensemble"
+     },
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "license": {
+      "id": "apache2.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "14026714"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Model weights- The ISLES'22 Ensemble Algorithm",
+    "links": {
+     "self": "https://zenodo.org/api/records/14026715",
+     "self_html": "https://zenodo.org/records/14026715",
+     "preview_html": "https://zenodo.org/records/14026715?preview=1",
+     "doi": "https://doi.org/10.48550/arXiv.2403.19425",
+     "self_doi": "https://doi.org/10.48550/arXiv.2403.19425",
+     "self_doi_html": "https://zenodo.org/doi/10.48550/arXiv.2403.19425",
+     "reserve_doi": "https://zenodo.org/api/records/14026715/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/14026714",
+     "parent_html": "https://zenodo.org/records/14026714",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:14026715/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:14026715/sequence/default",
+     "files": "https://zenodo.org/api/records/14026715/files",
+     "media_files": "https://zenodo.org/api/records/14026715/media-files",
+     "archive": "https://zenodo.org/api/records/14026715/files-archive",
+     "archive_media": "https://zenodo.org/api/records/14026715/media-files-archive",
+     "latest": "https://zenodo.org/api/records/14026715/versions/latest",
+     "latest_html": "https://zenodo.org/records/14026715/latest",
+     "versions": "https://zenodo.org/api/records/14026715/versions",
+     "draft": "https://zenodo.org/api/records/14026715/draft",
+     "access_links": "https://zenodo.org/api/records/14026715/access/links",
+     "access_grants": "https://zenodo.org/api/records/14026715/access/grants",
+     "access_users": "https://zenodo.org/api/records/14026715/access/users",
+     "access_request": "https://zenodo.org/api/records/14026715/access/request",
+     "access": "https://zenodo.org/api/records/14026715/access",
+     "communities": "https://zenodo.org/api/records/14026715/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/14026715/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/14026715/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/14026715/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/14026715/quota-increase",
+     "requests": "https://zenodo.org/api/records/14026715/requests"
+    },
+    "updated": "2024-11-01T19:54:06.884405+00:00",
+    "recid": "14026715",
+    "revision": 4,
+    "files": [
+     {
+      "id": "1be013fd-08b6-46af-8bef-33013d2aa319",
+      "key": "stroke_ensemble_weights.7z",
+      "size": 9092870389,
+      "checksum": "md5:be5b6dfcd66b55c2e6dc6db9a5880f7f",
+      "links": {
+       "self": "https://zenodo.org/api/records/14026715/files/stroke_ensemble_weights.7z/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "354417"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 1618,
+     "unique_downloads": 528,
+     "views": 481,
+     "unique_views": 426,
+     "version_downloads": 1618,
+     "version_unique_downloads": 528,
+     "version_unique_views": 426,
+     "version_views": 481
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-04-29T12:24:17.774219+00:00",
+    "modified": "2026-04-29T12:24:18.063202+00:00",
+    "id": 19886303,
+    "conceptrecid": "19856505",
+    "doi": "10.5281/zenodo.19886303",
+    "conceptdoi": "10.5281/zenodo.19856505",
+    "doi_url": "https://doi.org/10.5281/zenodo.19886303",
+    "metadata": {
+     "title": "Ischemic Stroke Lesion Segmentation Challenge (ISLES) 2026",
+     "doi": "10.5281/zenodo.19886303",
+     "publication_date": "2026-04-29",
+     "description": "<p>Accurate infarct segmentation in brain stroke is one of the critical requirements across the disease trajectory, from acute-stage treatment guidance (e.g., reperfusion eligibility) to sub-acute and chronic-stage evaluation of patient outcome, clinical follow-up, and optimized therapeutic/rehabilitation strategies. The Ischemic Stroke Segmentation Challenge (ISLES) has served as a foundational benchmark for the scientific community since 2015, systematically addressing infarct segmentation across diverse modalities (CT/MR), disease stages (hyper-acute to chronic), and multicenter cohorts. The established open ISLES datasets have attracted significant community interest, evidenced by over 6,000 downloads of our ISLES&rsquo;22 [1] and ATLAS [2] datasets, respectively. While initial challenges focused on technical segmentation tasks (e.g., ISLES&rsquo;2015 [3]), recent editions have increasingly emphasized clinical relevance and real-world transferability. For instance, ISLES&rsquo;2022 algorithms were subsequently stress-tested on real-world cohorts and implemented into a standalone software for clinical utility [4]. Furthermore, our ISLES&rsquo;24 challenge setting envisioned personalized patient phenotyping through detailed multimodal datasets, enabling algorithms to capture a comprehensive patient picture for final infarct prediction [5,6].</p>\n<p>The ISLES'26 edition specifically aims to establish a robust benchmark for generalized stroke infarct segmentation on T1-weighted MRI scans, covering acute, sub-acute, and chronic disease stages. Participants will develop methodologies on the largest-ever annotated stroke infarct dataset, comprising approximately 2,000 scans sourced from over 60 international centers. This initiative directly addresses generalization gaps identified in ISLES&rsquo;22-ATLAS (a prior attempt to this task we organized), by providing a 40% increase in data diversity and a greater than 2-fold expansion in training data. Furthermore, the expanded dataset also includes crucial clinical variables, enabling the organizing team to conduct post-MICCAI evaluations of algorithmic clinical utility through analyses of patient outcome measures.</p>\n<p>The complexity of ISLES&rsquo;26 requires algorithms to robustly manage the full clinical spectrum, including diverse lesion sizes, complex anatomical patterns, and inherent heterogeneity from multi-center, multi-scanner, un-harmonized MR scans. Our ultimate goal is to facilitate the direct transfer of successful algorithms into standalone software for practical clinical utility. For MICCAI&rsquo;26, ISLES would be happy to collaborate with the SWITCH+ workshop, TopBrain2, and TopAneu to organize a joint, comprehensive full-day satellite event focusing on the advances and persistent challenges in neurovascular image analysis.</p>\n<p>&nbsp;</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "de la Rosa, Ezequiel",
+       "affiliation": "University of Zurich"
+      },
+      {
+       "name": "Menze, Bjoern",
+       "affiliation": "University of Zurich"
+      },
+      {
+       "name": "Deseoe, Julian",
+       "affiliation": "University of Zurich"
+      },
+      {
+       "name": "Wiestler, Benedikt",
+       "affiliation": "Technical University of Munich"
+      },
+      {
+       "name": "Kirschke, Jan",
+       "affiliation": "Technical University of Munich"
+      },
+      {
+       "name": "Yalcin, Çansu",
+       "affiliation": "University of Girona"
+      },
+      {
+       "name": "Cabezas, Mariano",
+       "affiliation": "University of Girona"
+      },
+      {
+       "name": "Rorden, Chris",
+       "affiliation": "University of South Carolina"
+      },
+      {
+       "name": "Khan, Mahir",
+       "affiliation": "University of Southern California"
+      },
+      {
+       "name": "Liew, Sook-Lei",
+       "affiliation": "University of Southern California"
+      },
+      {
+       "name": "Reyes, Mauricio",
+       "affiliation": "University of Bern"
+      },
+      {
+       "name": "Wiest, Roland",
+       "affiliation": "University of Bern"
+      },
+      {
+       "name": "Su, Ruisheng",
+       "affiliation": "Eindhoven University of Technology"
+      }
+     ],
+     "keywords": [
+      "Stroke",
+      "brain imaging",
+      "MRI",
+      "deep learning",
+      "image segmentation",
+      "image processing",
+      "MICCAI 2026 challenge"
+     ],
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "meeting": {
+      "title": "International Conference on Medical Image Computing and Computer Assisted Intervention 2026",
+      "acronym": "MICCAI"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 1,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "19856505"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Ischemic Stroke Lesion Segmentation Challenge (ISLES) 2026",
+    "links": {
+     "self": "https://zenodo.org/api/records/19886303",
+     "self_html": "https://zenodo.org/records/19886303",
+     "preview_html": "https://zenodo.org/records/19886303?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.19886303",
+     "self_doi": "https://doi.org/10.5281/zenodo.19886303",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19886303",
+     "reserve_doi": "https://zenodo.org/api/records/19886303/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/19856505",
+     "parent_html": "https://zenodo.org/records/19856505",
+     "parent_doi": "https://doi.org/10.5281/zenodo.19856505",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19856505",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:19886303/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:19886303/sequence/default",
+     "files": "https://zenodo.org/api/records/19886303/files",
+     "media_files": "https://zenodo.org/api/records/19886303/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:19886303:323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/19886303/files-archive",
+     "archive_media": "https://zenodo.org/api/records/19886303/media-files-archive",
+     "latest": "https://zenodo.org/api/records/19886303/versions/latest",
+     "latest_html": "https://zenodo.org/records/19886303/latest",
+     "versions": "https://zenodo.org/api/records/19886303/versions",
+     "draft": "https://zenodo.org/api/records/19886303/draft",
+     "access_links": "https://zenodo.org/api/records/19886303/access/links",
+     "access_grants": "https://zenodo.org/api/records/19886303/access/grants",
+     "access_users": "https://zenodo.org/api/records/19886303/access/users",
+     "access_request": "https://zenodo.org/api/records/19886303/access/request",
+     "access": "https://zenodo.org/api/records/19886303/access",
+     "communities": "https://zenodo.org/api/records/19886303/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/19886303/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/19886303/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/19886303/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/19886303/quota-increase",
+     "requests": "https://zenodo.org/api/records/19886303/requests"
+    },
+    "updated": "2026-04-29T12:24:18.063202+00:00",
+    "recid": "19886303",
+    "revision": 4,
+    "files": [
+     {
+      "id": "f188c9d1-7062-4fd7-afb8-74158fcc19ca",
+      "key": "323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf",
+      "size": 114364,
+      "checksum": "md5:77c035af4c400e3399471e0cac380d00",
+      "links": {
+       "self": "https://zenodo.org/api/records/19886303/files/323-Ischemic_Stroke_Lesion_Segmentation_Challenge_(ISLES)_2026_2026-04-23T20-48-46.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "87637"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 701,
+     "unique_downloads": 652,
+     "views": 1024,
+     "unique_views": 996,
+     "version_downloads": 366,
+     "version_unique_downloads": 342,
+     "version_unique_views": 428,
+     "version_views": 439
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-03-20T16:38:47.124507+00:00",
+    "modified": "2026-03-20T16:38:47.381337+00:00",
+    "id": 19135955,
+    "conceptrecid": "17736411",
+    "doi": "10.5281/zenodo.19135955",
+    "conceptdoi": "10.5281/zenodo.17736411",
+    "doi_url": "https://doi.org/10.5281/zenodo.19135955",
+    "metadata": {
+     "title": "ISLES (Ischemic Stroke Lesion Segmentation/Prediction) Challenge Datasets (2015, 2016, 2017, 2018)",
+     "doi": "10.5281/zenodo.19135955",
+     "publication_date": "2026-03",
+     "description": "<div dir=\"ltr\">\n<p>&nbsp;</p>\n<h2><strong>ISLES (Ischemic Stroke Lesion Segmentation/Prediction) Challenge Datasets (2015, 2016, 2017, 2018)</strong></h2>\n<p>The ISLES (Ischemic Stroke Lesion Segmentation/Prediction) Challenge is a continuous, globally recognized initiative in the medical image computing community. Launched in 2015, ISLES provides standardized, high-quality, multi-center datasets to serve as public benchmarks for the development and objective comparison of novel algorithms.</p>\n<p>Specifically, the challenge focuses on automating the complex tasks of segmenting ischemic stroke lesions and predicting patient outcomes using multi-parametric Magnetic Resonance Imaging (MRI). By ensuring a level playing field, ISLES has played a critical role in advancing translational AI methods for clinical stroke analysis.</p>\n<h3><strong>1. Overview and Rationale</strong></h3>\n<p>This dataset is a compilation of the official <strong>training and testing data</strong> from the <strong>Ischemic Stroke Lesion (ISLES) Challenge</strong> series, spanning the years 2015, 2016, 2017, and 2018. The ISLES challenges were organized in conjunction with major medical imaging conferences, such as MICCAI, to establish public benchmarks for developing and evaluating algorithms in automated <strong>ischemic stroke analysis</strong> from multispectral Magnetic Resonance Imaging (MRI).</p>\n<p>The primary focus areas include:</p>\n<ul>\n<li>\n<p><strong>ISLES 2015:</strong> Segmentation of sub-acute lesions (SISS) and estimation of acute perfusion lesions (SPES).</p>\n</li>\n<li>\n<p><strong>ISLES 2016, 2017, 2018:</strong> Prediction of stroke lesion outcome based on acute multispectral MRI.</p>\n</li>\n</ul>\n<p>The data consists of anonymized, multi-center, multi-parametric MRI scans, with corresponding expert-annotated ground truth masks in the training sets.</p>\n<p>&nbsp;</p>\n<h3><strong>2. Data History and Format</strong></h3>\n<p>&nbsp;</p>\n<p><strong>Previous Repository:</strong> This data was originally hosted on the <strong>SICAS Medical Image Repository (SMIR)</strong>platform (<code>smir.ch</code>), which is no longer active. This Zenodo release ensures the continued availability and accessibility of these crucial benchmark datasets for the scientific community.</p>\n<p><strong>Challenge Website:</strong> For detailed competition rules, evaluation metrics, and leaderboard results, please refer to the official challenge website: <a href=\"https://www.isles-challenge.org/\" target=\"_blank\" rel=\"noopener\">https://www.isles-challenge.org/</a></p>\n<p><strong>File Format:</strong> All imaging data is provided in <strong>NIfTI</strong> (<code>.nii</code>) format.</p>\n<p>&nbsp;</p>\n<strong>3. Detailed Dataset Structure by Year</strong>\n<p>&nbsp;</p>\n<p>The root folders correspond to the challenge years: <strong>2015, 2016, 2017, and 2018</strong>.</p>\n<p>&nbsp;</p>\n<h4><strong>ISLES 2015</strong></h4>\n<p>&nbsp;</p>\n<p>The 2015 challenge focused on two sub-challenges: Sub-Acute Stroke Lesion Segmentation (SISS) and Stroke Perfusion Estimation (SPES).</p>\n<table style=\"width: 53.308129%; height: 95px;\">\n<thead>\n<tr style=\"height: 19px;\">\n<td style=\"width: 33.904034%; height: 19px;\"><strong>Root Folder</strong></td>\n<td style=\"width: 30.834441%; height: 19px;\"><strong>Challenge Focus</strong></td>\n<td style=\"width: 27.803635%; height: 19px;\"><strong>Content</strong></td>\n</tr>\n</thead>\n<tbody>\n<tr style=\"height: 38px;\">\n<td style=\"width: 33.904034%; height: 38px;\"><code>ISLES2015_SISS_Testing</code></td>\n<td style=\"width: 30.834441%; height: 38px;\">Sub-Acute Segmentation</td>\n<td style=\"width: 27.803635%; height: 38px;\">Sub-acute stroke cases.</td>\n</tr>\n<tr style=\"height: 38px;\">\n<td style=\"width: 33.904034%; height: 38px;\"><code>ISLES2015_SPES_Training/Testing</code></td>\n<td style=\"width: 30.834441%; height: 38px;\">Acute Perfusion Estimation</td>\n<td style=\"width: 27.803635%; height: 38px;\">Acute stroke cases.</td>\n</tr>\n</tbody>\n</table>\n<p>Internal Structure (Example: SISS):</p>\n<p>Inside each testing folder, cases are organized by case number (&lt;case number&gt;). Within the case folder, you will find four sub-folders, each containing a .nii volume for a specific modality.</p>\n<table>\n<thead>\n<tr>\n<td><strong>Modality Folder Name</strong></td>\n<td><strong>Modality</strong></td>\n<td><strong>Description</strong></td>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>VSD.Brain.XX.O.MR_DWI.&lt;ID&gt;</code></td>\n<td><strong>DWI</strong> (Diffusion-Weighted Imaging)</td>\n<td>Imaging sequence sensitive to acute ischemia.</td>\n</tr>\n<tr>\n<td><code>VSD.Brain.XX.O.MR_Flair.&lt;ID&gt;</code></td>\n<td><strong>FLAIR</strong> (Fluid-Attenuated Inversion Recovery)</td>\n<td>Imaging sequence sensitive to sub-acute/chronic lesions.</td>\n</tr>\n<tr>\n<td><code>VSD.Brain.XX.O.MR_T1.&lt;ID&gt;</code></td>\n<td><strong>T1-weighted</strong></td>\n<td>Anatomical reference.</td>\n</tr>\n<tr>\n<td><code>VSD.Brain.XX.O.MR_T2.&lt;ID&gt;</code></td>\n<td><strong>T2-weighted</strong></td>\n<td>Anatomical reference.</td>\n</tr>\n</tbody>\n</table>\n<p><em>Note: The trailing number in the folder name (<code>&lt;ID&gt;</code>) is an internal system ID and is not relevant for data interpretation.</em></p>\n<p>&nbsp;</p>\n<h4><strong>ISLES 2016</strong></h4>\n<p>The 2016 challenge shifted focus to&nbsp;<strong>Lesion Outcome Prediction</strong> based on multi-parametric MRI from the acute phase. The folders distinguish between training/testing sets and between native and co-registered spatial domains.</p>\n<table>\n<thead>\n<tr>\n<td><strong>Root Folder</strong></td>\n<td><strong>Set &amp; Registration</strong></td>\n<td><strong>Content</strong></td>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>ISLES2016_Training_CoRegistered</code></td>\n<td>Training set, Co-Registered</td>\n<td>Includes ground truth lesion outcome masks.</td>\n</tr>\n<tr>\n<td><code>ISLES2016_Testing_CoRegistered</code></td>\n<td>Testing set, Co-Registered</td>\n<td>Used for evaluation (no public ground truth).</td>\n</tr>\n<tr>\n<td><code>ISLES2016_Training_Native</code></td>\n<td>Training set, Native Space</td>\n<td>Includes ground truth lesion outcome masks.</td>\n</tr>\n<tr>\n<td><code>ISLES2016_Testing_Native</code></td>\n<td>Testing set, Native Space</td>\n<td>Used for evaluation (no public ground truth).</td>\n</tr>\n</tbody>\n</table>\n<p><strong>Registration Type:</strong></p>\n<ul>\n<li>\n<p><strong>Native:</strong> The MRI data is in the patient's original, acquired space.</p>\n</li>\n<li>\n<p><strong>CoRegistered:</strong> The MRI data has been registered to a common anatomical reference or template, providing spatial alignment across modalities and patients.</p>\n</li>\n</ul>\n<p>Modalities Included (Perfusion and Diffusion Maps):</p>\n<p>The dataset includes the following perfusion and diffusion maps: PWI, ADC, MTT (Mean Transit Time), rCBF (relative Cerebral Blood Flow), rCBV (relative Cerebral Blood Volume), TMax (Time-to-Maximum), and TTP (Time-to-Peak).</p>\n<p>&nbsp;</p>\n<h4><strong>ISLES 2017 and ISLES 2018</strong></h4>\n<p>The 2017 and 2018 challenges continued the focus on lesion outcome prediction and segmentation tasks. The data is organized into simple Training and Testing splits.</p>\n<table>\n<thead>\n<tr>\n<td><strong>Root Folder</strong></td>\n<td><strong>Content</strong></td>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>ISLES2017_Training</code> / <code>ISLES2018_Training</code></td>\n<td>Includes the <strong>segmentation masks</strong> (ground truth lesion labels).</td>\n</tr>\n<tr>\n<td><code>ISLES2017_Testing</code> / <code>ISLES2018_Testing</code></td>\n<td>Contains imaging data for challenge evaluation (no public ground truth).</td>\n</tr>\n</tbody>\n</table>\n<p>&nbsp;</p>\n<h3><strong>4. Latest Research and Recommended Model: DeepISLES</strong></h3>\n<p>&nbsp;</p>\n<p>The ISLES challenges have driven the development of state-of-the-art AI algorithms. We encourage users of this dataset to explore the <strong>DeepISLES</strong> model, a robust, clinically validated solution derived from top submissions to the <strong>ISLES'22</strong> challenge.</p>\n<p>DeepISLES is a high-performing ensemble algorithm that achieves superior accuracy and generalizability in detecting and segmenting ischemic lesions from DWI and other MRI sequences. In external validation, neuroradiologists even showed a preference for the algorithm's segmentations over manual expert efforts in a Turing-like test, highlighting its potential for real-world clinical utility.</p>\n<p>For full details on the model, its validation, and to access the software, please refer to our recent publication:</p>\n<p><strong>Publication:</strong></p>\n<blockquote>\n<p>DeepISLES: a clinically validated ischemic stroke segmentation model from the ISLES&rsquo;22 challenge</p>\n<p>Nature Communications</p>\n<p>https://www.nature.com/articles/s41467-025-62373-x</p>\n</blockquote>\n<p>&nbsp;</p>\n<h3><strong>5. Recommended Citations</strong></h3>\n<p>&nbsp;</p>\n<p>Please cite the relevant ISLES challenge paper(s) when using this dataset in your work:</p>\n<ul>\n<li>\n<p><strong>For ISLES 2015 Data:</strong></p>\n<blockquote>\n<p>Maier, O., Menze, B. H., von der Gablentz, J., et al. (2017). ISLES 2015 - A public evaluation benchmark for ischemic stroke lesion segmentation from multispectral MRI. <em>Medical Image Analysis</em>, 35, 250&ndash;269.</p>\n</blockquote>\n</li>\n<li>\n<p><strong>For ISLES 2016 and 2017 Data:</strong></p>\n<blockquote>\n<p>Winzeck, S., Hakim, A., Acland, P., et al. (2018). ISLES 2016 &amp; 2017 - Benchmarking Ischemic Stroke Lesion Outcome Prediction Based on Multispectral MRI. <em>Frontiers in Neurology</em>, 9(679).</p>\n</blockquote>\n</li>\n<li>\n<p><strong>For DeepISLES Model or related methods:</strong></p>\n<blockquote>\n<p>De la Rosa, E., Reyes, M., Liew, S. L., et al. (2025). DeepISLES: a clinically validated ischemic stroke segmentation model from the ISLES&rsquo;22 challenge. <em>Nature Communications</em>, 16(1), 7357.</p>\n</blockquote>\n</li>\n</ul>\n<p>&nbsp;</p>\n<h3><strong>Keywords</strong></h3>\n<p>&nbsp;</p>\n<p>Ischemic Stroke, MRI, Multispectral Imaging, Segmentation, Lesion Outcome Prediction, ISLES Challenge, NIfTI, Medical Imaging, Deep Learning, Benchmarking, DWI, FLAIR, Perfusion, SMIR.</p>\n</div>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Reyes, Mauricio",
+       "affiliation": "University of Bern",
+       "orcid": "0000-0002-2434-9990"
+      },
+      {
+       "name": "de la Rosa, Ezequiel",
+       "affiliation": "University of Zurich",
+       "orcid": "0000-0002-9042-1962"
+      },
+      {
+       "name": "Menze, Bjoern",
+       "affiliation": "Univerisity of Zurich",
+       "orcid": "0000-0003-4136-5690"
+      }
+     ],
+     "contributors": [
+      {
+       "name": "Hakim, Arsany",
+       "affiliation": "University of Bern, Inselspital",
+       "type": null,
+       "orcid": "0000-0001-9431-1069"
+      },
+      {
+       "name": "Wiest, Roland",
+       "affiliation": "University Hospital of Bern",
+       "type": "DataManager",
+       "orcid": "0000-0001-7030-2045"
+      }
+     ],
+     "keywords": [
+      "MRI"
+     ],
+     "language": "eng",
+     "custom": {
+      "code:codeRepository": "https://github.com/ezequieldlrosa/DeepIsles",
+      "code:developmentStatus": {
+       "id": "active",
+       "title": {
+        "en": "Active"
+       }
+      }
+     },
+     "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+     },
+     "journal": {
+      "title": "DeepISLES: a clinically validated ischemic stroke segmentation model from the ISLES'22 challenge",
+      "volume": "16"
+     },
+     "license": {
+      "id": "cc-by-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 2,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "17736411"
+        }
+       }
+      ]
+     }
+    },
+    "title": "ISLES (Ischemic Stroke Lesion Segmentation/Prediction) Challenge Datasets (2015, 2016, 2017, 2018)",
+    "links": {
+     "self": "https://zenodo.org/api/records/19135955",
+     "self_html": "https://zenodo.org/records/19135955",
+     "preview_html": "https://zenodo.org/records/19135955?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.19135955",
+     "self_doi": "https://doi.org/10.5281/zenodo.19135955",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19135955",
+     "reserve_doi": "https://zenodo.org/api/records/19135955/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/17736411",
+     "parent_html": "https://zenodo.org/records/17736411",
+     "parent_doi": "https://doi.org/10.5281/zenodo.17736411",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.17736411",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:19135955/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:19135955/sequence/default",
+     "files": "https://zenodo.org/api/records/19135955/files",
+     "media_files": "https://zenodo.org/api/records/19135955/media-files",
+     "archive": "https://zenodo.org/api/records/19135955/files-archive",
+     "archive_media": "https://zenodo.org/api/records/19135955/media-files-archive",
+     "latest": "https://zenodo.org/api/records/19135955/versions/latest",
+     "latest_html": "https://zenodo.org/records/19135955/latest",
+     "versions": "https://zenodo.org/api/records/19135955/versions",
+     "draft": "https://zenodo.org/api/records/19135955/draft",
+     "access_links": "https://zenodo.org/api/records/19135955/access/links",
+     "access_grants": "https://zenodo.org/api/records/19135955/access/grants",
+     "access_users": "https://zenodo.org/api/records/19135955/access/users",
+     "access_request": "https://zenodo.org/api/records/19135955/access/request",
+     "access": "https://zenodo.org/api/records/19135955/access",
+     "communities": "https://zenodo.org/api/records/19135955/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/19135955/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/19135955/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/19135955/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/19135955/quota-increase",
+     "requests": "https://zenodo.org/api/records/19135955/requests"
+    },
+    "updated": "2026-03-20T16:38:47.381337+00:00",
+    "recid": "19135955",
+    "revision": 4,
+    "files": [
+     {
+      "id": "8c035a2c-6add-4c8b-acda-648859d2c692",
+      "key": "ISLES2015.zip",
+      "size": 763354621,
+      "checksum": "md5:3b6a2226e3814faf272868a96e4837d1",
+      "links": {
+       "self": "https://zenodo.org/api/records/19135955/files/ISLES2015.zip/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1475454"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 1293,
+     "unique_downloads": 982,
+     "views": 1864,
+     "unique_views": 1636,
+     "version_downloads": 101,
+     "version_unique_downloads": 57,
+     "version_unique_views": 223,
+     "version_views": 268
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2022-05-04T09:18:32.512960+00:00",
+    "modified": "2024-07-16T19:53:04.696018+00:00",
+    "id": 6517002,
+    "conceptrecid": "6362387",
+    "doi": "10.5281/zenodo.6517002",
+    "conceptdoi": "10.5281/zenodo.6362387",
+    "doi_url": "https://doi.org/10.5281/zenodo.6517002",
+    "metadata": {
+     "title": "Ischemic Stroke Lesion Segmentation Challenge 2022: Acute, sub-acute and chronic stroke infarct segmentation",
+     "doi": "10.5281/zenodo.6517002",
+     "publication_date": "2022-03-16",
+     "description": "<p>Infarct segmentation in ischemic stroke is crucial at i) acute stages to guide treatment decision making (whether to<br>\nreperfuse or not, and type of treatment) and at ii) sub-acute and chronic stages to evaluate the patients&#39; disease<br>\noutcome, for their clinical follow-up and to define optimal therapeutical and rehabilitation strategies to maximize<br>\ncritical windows for recovery.</p>\n\n<p><br>\nIn ISLES&#39;18 [1], our last organized event, acute stroke segmentation (i) was addressed in an indirect and crossmodality fashion, where teams predicted the MRI-delineated infarcts from a perfusion CT series. In addition, the segmentation of sub-acute ischemic stroke lesions (ii) was addressed in ISLES&#39;15 (task &#39;SISS&#39;, [2]), where teams directly delineated infarcts in post-interventional MRI images. Both ISLES events received major attention from the research community: there were 120 database downloads until the ISLES15 challenge day with 14 participating teams, and the number of participating teams was roughly duplicated in our latest ISLES&#39;18 edition. The ISLES&#39;15 and ISLES&#39;18 challenges played a crucial role in identifying prominent methods for acute and sub-acute ischemic stroke lesion segmentation. These datasets have since served as important benchmarks for the scientific community.</p>\n\n<p><br>\nBased on the experience gained from these previous editions [3], ISLES&#39;22 aims to benchmark acute, sub-acute and chronic ischemic stroke MRI segmentation using more than a thousand MRI scans. This MICCAI 2022 challenge edition is organized as a two-task event, namely: 1) DWI infarct segmentation in acute and sub-acute stroke and 2) Single channel T1-weighted lesion segmentation in acute, sub-acute and chronic stroke. ISLES&#39;22 differs in several ways from the previous challenge editions in ischemic stroke by: 1) targeting the delineation of not only large infarct lesions, but also of multiple embolic and/or cortical infarcts (typically seen after mechanical recanalization), and 2) by evaluating both pre- and post- interventional MRI images and by including for the very first time chronic stroke images. In addition, the ISLES&#39;22 challenge introduces a new challenge of segmenting T1-weighted MRIs across acute, sub-acute, and chronic stroke. Altogether, ISLES&#39;22 provides a considerably larger dataset than before<br>\n(more than 20x scans than in the ISLES&#39;15 edition).</p>\n\n<p><br>\nFrom a clinical perspective, ISLES&#39;22 focuses on the clinical growing interest of acute embolic infarct patterns, both pre-intervention (i.e. at a very early disease state) and post-intervention (typical, post-interventional sub-acute infarct patterns not restricted to a single vessel territory). This clinical problem also challenges the participants from a technical perspective: teams will deal with a wider ischemic stroke disease spectra, involving variable lesion size and burden, more complex infarct patterns and variable anatomically located lesions in data from multiple centers. In addition, for the first time, ISLES&#39;22 will also examine lesions in chronic stroke, which are pathologically different from acute and sub-acute scans, have a different follow-up regimen than acute cases, and introduce additional complexity. The diversity of the ISLES&#39;22 dataset will provide a unique challenge for participants.</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Ezequiel de la Rosa",
+       "affiliation": "icometrix, Belgium / Technical University of Munich, Germany"
+      },
+      {
+       "name": "Uta Hanning",
+       "affiliation": "Department of Diagnostic and Interventional Neuroradiology, University Medical Center Hamburg-Eppendorf, Germany"
+      },
+      {
+       "name": "Jan Kirschke",
+       "affiliation": "Klinikum rechts der Isar, Technical University of Munich, Germany"
+      },
+      {
+       "name": "Bjoern Menze",
+       "affiliation": "University of Zurich, Switzerland"
+      },
+      {
+       "name": "Mauricio Reyes",
+       "affiliation": "University of Bern, Switzerland"
+      },
+      {
+       "name": "Roland Wiest",
+       "affiliation": "University of Bern, Switzerland"
+      },
+      {
+       "name": "Benedikt Wiestler",
+       "affiliation": "Klinikum rechts der Isar, Technical University of Munich, Germany"
+      }
+     ],
+     "keywords": [
+      "ischemic stroke",
+      "infarcts, emboli",
+      "segmentation",
+      "MRI",
+      "MICCAI",
+      "Challenge"
+     ],
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "meeting": {
+      "title": "25th International Conference on Medical Image Computing and Computer Assisted Intervention",
+      "acronym": "MICCAI 2022"
+     },
+     "license": {
+      "id": "cc-by-nd-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 1,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "6362387"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Ischemic Stroke Lesion Segmentation Challenge 2022: Acute, sub-acute and chronic stroke infarct segmentation",
+    "links": {
+     "self": "https://zenodo.org/api/records/6517002",
+     "self_html": "https://zenodo.org/records/6517002",
+     "preview_html": "https://zenodo.org/records/6517002?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.6517002",
+     "self_doi": "https://doi.org/10.5281/zenodo.6517002",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6517002",
+     "reserve_doi": "https://zenodo.org/api/records/6517002/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/6362387",
+     "parent_html": "https://zenodo.org/records/6362387",
+     "parent_doi": "https://doi.org/10.5281/zenodo.6362387",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6362387",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:6517002/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:6517002/sequence/default",
+     "files": "https://zenodo.org/api/records/6517002/files",
+     "media_files": "https://zenodo.org/api/records/6517002/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:6517002:IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/6517002/files-archive",
+     "archive_media": "https://zenodo.org/api/records/6517002/media-files-archive",
+     "latest": "https://zenodo.org/api/records/6517002/versions/latest",
+     "latest_html": "https://zenodo.org/records/6517002/latest",
+     "versions": "https://zenodo.org/api/records/6517002/versions",
+     "draft": "https://zenodo.org/api/records/6517002/draft",
+     "access_links": "https://zenodo.org/api/records/6517002/access/links",
+     "access_grants": "https://zenodo.org/api/records/6517002/access/grants",
+     "access_users": "https://zenodo.org/api/records/6517002/access/users",
+     "access_request": "https://zenodo.org/api/records/6517002/access/request",
+     "access": "https://zenodo.org/api/records/6517002/access",
+     "communities": "https://zenodo.org/api/records/6517002/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/6517002/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/6517002/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/6517002/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/6517002/quota-increase",
+     "requests": "https://zenodo.org/api/records/6517002/requests"
+    },
+    "updated": "2024-07-16T19:53:04.696018+00:00",
+    "recid": "6517002",
+    "revision": 4,
+    "files": [
+     {
+      "id": "70debaae-cffb-4d78-8b58-18b6d465c8ef",
+      "key": "IschemicStrokeLesionSegmentationChallenge2022 Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf",
+      "size": 139324,
+      "checksum": "md5:fbb0e5514a108768e6b8a46a939dcdb1",
+      "links": {
+       "self": "https://zenodo.org/api/records/6517002/files/IschemicStrokeLesionSegmentationChallenge2022%20Acute,sub-acuteandchronicstrokeinfarctsegmentation_v2.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "87637"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 3879,
+     "unique_downloads": 3017,
+     "views": 3437,
+     "unique_views": 3202,
+     "version_downloads": 1121,
+     "version_unique_downloads": 1004,
+     "version_unique_views": 949,
+     "version_views": 997
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2025-01-14T19:33:32.935218+00:00",
+    "modified": "2025-01-14T19:33:33.200543+00:00",
+    "id": 14647829,
+    "conceptrecid": "14623727",
+    "doi": "10.5281/zenodo.14647829",
+    "conceptdoi": "10.5281/zenodo.14623727",
+    "doi_url": "https://doi.org/10.5281/zenodo.14647829",
+    "metadata": {
+     "title": "DeepISLES - Standalone software with GUI",
+     "doi": "10.5281/zenodo.14647829",
+     "publication_date": "2025-01-14",
+     "description": "<p>A standalone release of DeepISLES that includes a user-friendly graphical interface for both single and batch MRI processing. DeepISLES provides state-of-the-art stroke lesion segmentation in MRI.<br>Source code is available <a href=\"https://github.com/ezequieldlrosa/DeepIsles\">here</a>.<br><br></p>\n<h2>Installation and Requirements</h2>\n<h3>Linux (Ubuntu &ge; 20.04)</h3>\n<ol>\n<li>\n<p><strong>Install Docker Desktop</strong></p>\n<ul>\n<li>Docker Desktop for Linux:<br><a href=\"https://www.docker.com/products/docker-desktop\" target=\"_new\" rel=\"noopener\">https://www.docker.com/products/docker-desktop</a></li>\n</ul>\n</li>\n<li>\n<p><strong>Install NVIDIA Container Toolkit</strong></p>\n<ul>\n<li>NVIDIA Container Toolkit:<br><a href=\"https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#\" target=\"_new\" rel=\"noopener\">https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#</a></li>\n</ul>\n</li>\n<li>\n<p><strong>Run the DeepISLES Installer</strong></p>\n<ul>\n<li>Execute the here-in provided installer to complete setup</li>\n</ul>\n</li>\n</ol>\n<h3>Windows (10/11)</h3>\n<ol>\n<li>\n<p><strong>Install Docker Desktop</strong></p>\n<ul>\n<li>Docker Desktop for Windows:<br><a href=\"https://www.docker.com/products/docker-desktop\" target=\"_new\" rel=\"noopener\">https://www.docker.com/products/docker-desktop</a></li>\n</ul>\n</li>\n<li>\n<p><strong>Configure Docker for WSL 2</strong></p>\n<ul>\n<li>Run Docker Desktop as Administrator</li>\n<li>Open <em>Settings</em> and enable <em>WSL 2</em></li>\n</ul>\n</li>\n<li>\n<p><strong>Run the DeepISLES Installer</strong></p>\n<ul>\n<li>Execute the here-in provided installer to complete setup<br><br></li>\n</ul>\n</li>\n</ol>\n<h2>Please Cite</h2>\n<ul>\n<li>\n<p>de la Rosa, E., Reyes, M., Liew, S. L., Hutton, A., Wiest, R., Kaesmacher, J., &hellip; &amp; Wiestler, B. (2024).<br><em>A Robust Ensemble Algorithm for Ischemic Stroke Lesion Segmentation: Generalizability and Clinical Utility Beyond the ISLES Challenge.</em><br>arXiv:2403.19425</p>\n</li>\n<li>\n<p>Hernandez Petzsche, M. R., de la Rosa, E., Hanning, U., Wiest, R., Valenzuela, W., Reyes, M., &hellip; &amp; Kirschke, J. S. (2022).<br><em>ISLES 2022: A multi-center magnetic resonance imaging stroke lesion segmentation dataset.</em><br><em>Scientific Data</em>, 9(1), 762.</p>\n</li>\n</ul>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "de la Rosa, Ezequiel",
+       "affiliation": "University of Zurich"
+      },
+      {
+       "name": "Reyes, Mauricio",
+       "affiliation": "University of Bern"
+      },
+      {
+       "name": "Liew, Sook-Lei",
+       "affiliation": null
+      },
+      {
+       "name": "Hutton, Alexandre",
+       "affiliation": null
+      },
+      {
+       "name": "Wiest, Roland",
+       "affiliation": null
+      },
+      {
+       "name": "Kaesmacher, Johannes",
+       "affiliation": null
+      },
+      {
+       "name": "Hanning, Uta",
+       "affiliation": null
+      },
+      {
+       "name": "Hakim, Arsany",
+       "affiliation": null
+      },
+      {
+       "name": "Zubal, Richard",
+       "affiliation": null
+      },
+      {
+       "name": "Valenzuela, Waldo",
+       "affiliation": null
+      },
+      {
+       "name": "Robben, David",
+       "affiliation": null
+      },
+      {
+       "name": "Sima, Diana",
+       "affiliation": null
+      },
+      {
+       "name": "Anania, Vincenzo",
+       "affiliation": null
+      },
+      {
+       "name": "Brys, Arne",
+       "affiliation": null
+      },
+      {
+       "name": "Meakin, James",
+       "affiliation": null
+      },
+      {
+       "name": "Mickan, Anne",
+       "affiliation": null
+      },
+      {
+       "name": "Broocks, Gabriel",
+       "affiliation": null
+      },
+      {
+       "name": "Heitkamp, Christian",
+       "affiliation": null
+      },
+      {
+       "name": "Gao, Shengbo",
+       "affiliation": null
+      },
+      {
+       "name": "Liang, Kongming",
+       "affiliation": null
+      },
+      {
+       "name": "Zhang, Ziji",
+       "affiliation": null
+      },
+      {
+       "name": "Rahman Siddiquee, Md Mahfuzur",
+       "affiliation": null
+      },
+      {
+       "name": "Myronenko, Andriy",
+       "affiliation": null
+      },
+      {
+       "name": "Ashtari, Pooya",
+       "affiliation": null
+      },
+      {
+       "name": "Van Huffel, Sabine",
+       "affiliation": null
+      },
+      {
+       "name": "Jeong, Hyun-su",
+       "affiliation": null
+      },
+      {
+       "name": "Yoon, Chi-ho",
+       "affiliation": null
+      },
+      {
+       "name": "Kim, Chulhong",
+       "affiliation": null
+      },
+      {
+       "name": "Huo, Jiayu",
+       "affiliation": null
+      },
+      {
+       "name": "Ourselin, Sebastien",
+       "affiliation": null
+      },
+      {
+       "name": "Sparks, Rachel",
+       "affiliation": null
+      },
+      {
+       "name": "Clèrigues, Albert",
+       "affiliation": null
+      },
+      {
+       "name": "Oliver, Arnau",
+       "affiliation": null
+      },
+      {
+       "name": "Lladó, Xavier",
+       "affiliation": null
+      },
+      {
+       "name": "Chalcroft, Liam",
+       "affiliation": null
+      },
+      {
+       "name": "Pappas, Ioannis",
+       "affiliation": null
+      },
+      {
+       "name": "Bertels, Jeroen",
+       "affiliation": null
+      },
+      {
+       "name": "Heylen, Ewout",
+       "affiliation": null
+      },
+      {
+       "name": "Moreau, Juliette",
+       "affiliation": null
+      },
+      {
+       "name": "Hatami, Nima",
+       "affiliation": null
+      },
+      {
+       "name": "Frindel, Carole",
+       "affiliation": null
+      },
+      {
+       "name": "Qayyum, Abdul",
+       "affiliation": null
+      },
+      {
+       "name": "Mazher, Moona",
+       "affiliation": null
+      },
+      {
+       "name": "Puig, Domenec",
+       "affiliation": null
+      },
+      {
+       "name": "Lin, Shao-Chieh",
+       "affiliation": null
+      },
+      {
+       "name": "Juan, Chun-Jung Juan",
+       "affiliation": null
+      },
+      {
+       "name": "Hu, Tianxi",
+       "affiliation": null
+      },
+      {
+       "name": "Boone, Lyndon",
+       "affiliation": null
+      },
+      {
+       "name": "Goubran, Maged",
+       "affiliation": null
+      },
+      {
+       "name": "Liu, Yi-Jui",
+       "affiliation": null
+      },
+      {
+       "name": "Wegener, Susanne",
+       "affiliation": null
+      },
+      {
+       "name": "Kofler, Florian",
+       "affiliation": null
+      },
+      {
+       "name": "Ezhov, Ivan",
+       "affiliation": null
+      },
+      {
+       "name": "Shit,, Suprosanna",
+       "affiliation": null
+      },
+      {
+       "name": "Hernandez Petzsche, Moritz R.",
+       "affiliation": null
+      },
+      {
+       "name": "Müller, Michael",
+       "affiliation": null
+      },
+      {
+       "name": "Menze, Bjoern",
+       "affiliation": null
+      },
+      {
+       "name": "Kirschke, Jan",
+       "affiliation": null
+      },
+      {
+       "name": "Wiestler, Benedikt",
+       "affiliation": null
+      }
+     ],
+     "resource_type": {
+      "title": "Software",
+      "type": "software"
+     },
+     "license": {
+      "id": "apache2.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 2,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "14623727"
+        }
+       }
+      ]
+     }
+    },
+    "title": "DeepISLES - Standalone software with GUI",
+    "links": {
+     "self": "https://zenodo.org/api/records/14647829",
+     "self_html": "https://zenodo.org/records/14647829",
+     "preview_html": "https://zenodo.org/records/14647829?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.14647829",
+     "self_doi": "https://doi.org/10.5281/zenodo.14647829",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.14647829",
+     "reserve_doi": "https://zenodo.org/api/records/14647829/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/14623727",
+     "parent_html": "https://zenodo.org/records/14623727",
+     "parent_doi": "https://doi.org/10.5281/zenodo.14623727",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.14623727",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:14647829/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:14647829/sequence/default",
+     "files": "https://zenodo.org/api/records/14647829/files",
+     "media_files": "https://zenodo.org/api/records/14647829/media-files",
+     "archive": "https://zenodo.org/api/records/14647829/files-archive",
+     "archive_media": "https://zenodo.org/api/records/14647829/media-files-archive",
+     "latest": "https://zenodo.org/api/records/14647829/versions/latest",
+     "latest_html": "https://zenodo.org/records/14647829/latest",
+     "versions": "https://zenodo.org/api/records/14647829/versions",
+     "draft": "https://zenodo.org/api/records/14647829/draft",
+     "access_links": "https://zenodo.org/api/records/14647829/access/links",
+     "access_grants": "https://zenodo.org/api/records/14647829/access/grants",
+     "access_users": "https://zenodo.org/api/records/14647829/access/users",
+     "access_request": "https://zenodo.org/api/records/14647829/access/request",
+     "access": "https://zenodo.org/api/records/14647829/access",
+     "communities": "https://zenodo.org/api/records/14647829/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/14647829/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/14647829/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/14647829/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/14647829/quota-increase",
+     "requests": "https://zenodo.org/api/records/14647829/requests"
+    },
+    "updated": "2025-01-14T19:33:33.200543+00:00",
+    "recid": "14647829",
+    "revision": 4,
+    "files": [
+     {
+      "id": "8ddace04-1db9-41bf-9362-d4571c0de381",
+      "key": "DeepISLES_100_64bit.exe",
+      "size": 105257982,
+      "checksum": "md5:9c9b620e5b53b3fe8e819a6e14b7f572",
+      "links": {
+       "self": "https://zenodo.org/api/records/14647829/files/DeepISLES_100_64bit.exe/content"
+      }
+     },
+     {
+      "id": "8ee6c3b5-894d-4a8c-9368-663375db0eb9",
+      "key": "deepISLES_100_64bit.deb",
+      "size": 123937188,
+      "checksum": "md5:3f07c4f447e8a08f66c1295ef2f63f21",
+      "links": {
+       "self": "https://zenodo.org/api/records/14647829/files/deepISLES_100_64bit.deb/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "354417"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 516,
+     "unique_downloads": 484,
+     "views": 1006,
+     "unique_views": 946,
+     "version_downloads": 391,
+     "version_unique_downloads": 362,
+     "version_unique_views": 732,
+     "version_views": 771
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2022-03-16T10:07:34.872734+00:00",
+    "modified": "2024-07-17T09:00:26.044117+00:00",
+    "id": 6361886,
+    "conceptrecid": "6361885",
+    "doi": "10.5281/zenodo.6361886",
+    "conceptdoi": "10.5281/zenodo.6361885",
+    "doi_url": "https://doi.org/10.5281/zenodo.6361886",
+    "metadata": {
+     "title": "Cross-Modality Domain Adaptation for Medical Image Segmentation and Classification",
+     "doi": "10.5281/zenodo.6361886",
+     "publication_date": "2022-03-16",
+     "description": "<p>Domain Adaptation (DA) has recently raised strong interests in the medical imaging community. By encouraging algorithms to be robust to unseen situations or different input data domains, Domain Adaptation improves the applicability of machine learning approaches to various clinical settings. While a large variety of DA techniques has been proposed, most of these techniques have been validated either on private datasets [4,5] or on small publicly available datasets [6,7,8,9]. Moreover, these datasets mostly address single-class problems. To tackle these limitations, the crossMoDA challenge introduced the first large and multi-class dataset for unsupervised crossmodality Domain Adaptation. Compared to the previous crossMoDA instance, which made use of singleinstitution data and featured a single segmentation task, the 2022 edition extends the segmentation task by including multi-institutional data and introduces a new classification task.</p>\n\n<p><br>\nThe goal of the segmentation task (Task 1) is to segment two key brain structures (tumour and cochlea) involved in the follow-up and treatment planning of vestibular schwannoma (VS). The segmentation of these two structures is required for radiosurgery, a common VS treatment. Moreover, tumour volume measurement has also been shown to be the most accurate measurement for the evaluation of VS growth. Currently, the diagnosis and surveillance in patients with VS are commonly performed using contrast-enhanced T1 (ceT1) MR imaging. However, there is growing interest in using non-contrast imaging sequences such as high-resolution T2 (hrT2) imaging, as it mitigates the risks associated with gadolinium-containing contrast agents [1,2]. In addition to improving patient safety, hrT2 imaging is 10 times more cost-efficient than ceT1 imaging [17]. For this reason, we proposed an unsupervised<br>\ncross-modality segmentation benchmark (from ceT1 to hrT2) that aims to automatically perform VS and cochlea segmentation on hrT2 scans. The training source and target sets are respectively unpaired annotated ceT1 and non-annotated hrT2 scans from both pre-operative and post-operative time points. To validate the robustness of the proposed approaches on different hrT2 settings, multi-institutional scans from centres in London, UK and Tilburg, NL are used in this task.</p>\n\n<p>The goal of the classification task (Task 2) is to automatically classify hrT2 images with VS according to the Koos grade [14]. The Koos grading scale is a classification system for VS that characterises the tumour and its impact on adjacent brain structures (e.g., brain stem, cerebellum). The Koos classification is commonly determined to decide on the treatment plan (surveillance, radiosurgery, open surgery). Similarly to the VS segmentation, Koos grading is currently performed on ceT1 scans, but hrT2 could be used. For this reason, we propose an unsupervised crossmodality classification benchmark (from ceT1 to hrT2) that aims to automatically determine the Koos grade on hrT2 scans. Only pre-operative data is used for this task. Again, multi-institutional scans from centres in London, UK and Tilburg, NL are used in this task.</p>\n\n<p>Participants are free to choose whether they want to focus only on one or both tasks and use the data from one task for the other task.</p>\n\n<p>References</p>\n\n<p>[1] Shapey, J., et al: An artificial intelligence framework for automatic segmentation and volumetry of Vestibular Schwannomas from contrast-enhanced t1-weighted and high-resolution t2-weighted MRI. In: Journal of Neurosurgery JNS. (2019)<br>\n[2] Wang, G., et al: Automatic segmentation of Vestibular Schwannoma from T2-weighted MRI by deep spatial attention with hardness-weighted loss. In: MICCAI 2019. (2019)<br>\n[3] Van de Langenberg, R., et al: Follow-up assessment of vestibular schwannomas: volume quantification versus two-dimensional measurements. In: Neuroradiology 51, 517 (2009).<br>\n[4] Kamnitsas, K., et al: Unsupervised domain adaptation in brain lesion segmentation with adversarial networks. In: IPMI (2017)<br>\n[5] Yang, J., et al: Unsupervised Domain Adaptation via Disentangled Representations: Application to Cross- Modality Liver Segmentation. In: MICCAI 2019. (2019)<br>\n[6] Chen, C., el al: Synergistic Image and Feature Adaptation: Towards Cross-Modality Domain Adaptation for Medical Image Segmentation. In: AAAI-19. (2019)<br>\n[7] Dou, Q., et al: Pnp-adanet: Plug-and-play adversarial domain adaptation network with a benchmark at crossmodality cardiac segmentation. ArXiv. (2018)<br>\n[8] Orbes-Arteaga, et al: Multi-domain adaptation in brain MRI through paired consistency and adversarial learning. In: DART - Domain Adaptation and Representation Transfer and Medical Image Learning with Less Labels and Imperfect Data. (2019)<br>\n[9] Xue, Y., el al: Dual-task Self-supervision for Cross-Modality Domain Adaptation. In: MICCAI 2020. (2020)<br>\n[10] Maier-Hein, L., Eisenmann, M., et al: &ldquo;Is the winner really the best? A critical analysis of common research practice in biomedical image analysis competitions&rdquo;. ArXiv:1806.02051, (2018)<br>\n[11] Milchenko, M., Marcus, D. Obscuring Surface Anatomy in Volumetric Imaging Data. In: Neuroinform 11, 65&ndash;75 (2013).<br>\n[12] Bakas, S., et al: &quot;Identifying the Best Machine Learning Algorithms for Brain Tumor Segmentation, Progression Assessment, and Overall Survival Prediction in the BRATS Challenge&quot;. ArXiv:1811.02629 (2018).<br>\n[13] Maier, O., et al: &quot;ISLES 2015 - A public evaluation benchmark for ischemic stroke lesion segmentation from multispectral MRI&quot;. Medical Image Analysis (2017).<br>\n[14] Koos WT, et al: &quot;Neurotopographic considerations in the microsurgical treatment of small acoustic neurinomas&quot;. Journal of Neurosurgery (1998)<br>\n[15] Dale, A.M., et al: &quot;Cortical surface-based analysis. I. Segmentation and surface reconstruction&quot;. Neuroimage (1999).<br>\n[16] Cardoso, J., et al: &quot;Geodesic Information Flows: Spatially-Variant Graphs and Their Application to Segmentation and Fusion&quot;. Transactions on Medical Imaging (2015)<br>\n[17] Coelho, D, et al: &quot;MRI surveillance of vestibular schwannomas without contrast enhancement: Clinical and economic evaluation&quot;. Laryngoscope (2018)<br>\n[18] Baccianella, S, et al: &quot;Evaluation Measures for Ordinal Regression&quot;. International Conference on Intelligent Systems Design and Applications (ISDA) (2009)</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Reuben Dorent",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Aaron Kujawa",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Jonathan Shapey",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Stefan Cornelissen",
+       "affiliation": "Elisabeth-TweeSteden Hospital, Tilburg, Netherlands"
+      },
+      {
+       "name": "Patrick Langenhuizen",
+       "affiliation": "Elisabeth-TweeSteden Hospital, Tilburg, Netherlands"
+      },
+      {
+       "name": "Samuel Joutard",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Nicola Rieke",
+       "affiliation": "NVIDIA"
+      },
+      {
+       "name": "Spyridon Bakas",
+       "affiliation": "University of Pennsylvania, Center for Biomedical Image Computing and Analytics, Philadelphia, USA"
+      },
+      {
+       "name": "Ben Glocker",
+       "affiliation": "Department of Computing, Imperial College London, Department of Computing, London, UK"
+      },
+      {
+       "name": "Tom Vercauteren",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      }
+     ],
+     "keywords": [
+      "Domain Adaptation",
+      "Segmentation",
+      "Classification",
+      "Cross-Modality",
+      "MICCAI",
+      "Challenge"
+     ],
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "meeting": {
+      "title": "25th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI 2022)",
+      "acronym": "MICCAI 2022"
+     },
+     "license": {
+      "id": "cc-by-nd-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "6361885"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Cross-Modality Domain Adaptation for Medical Image Segmentation and Classification",
+    "links": {
+     "self": "https://zenodo.org/api/records/6361886",
+     "self_html": "https://zenodo.org/records/6361886",
+     "preview_html": "https://zenodo.org/records/6361886?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.6361886",
+     "self_doi": "https://doi.org/10.5281/zenodo.6361886",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6361886",
+     "reserve_doi": "https://zenodo.org/api/records/6361886/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/6361885",
+     "parent_html": "https://zenodo.org/records/6361885",
+     "parent_doi": "https://doi.org/10.5281/zenodo.6361885",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.6361885",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:6361886/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:6361886/sequence/default",
+     "files": "https://zenodo.org/api/records/6361886/files",
+     "media_files": "https://zenodo.org/api/records/6361886/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:6361886:Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/6361886/files-archive",
+     "archive_media": "https://zenodo.org/api/records/6361886/media-files-archive",
+     "latest": "https://zenodo.org/api/records/6361886/versions/latest",
+     "latest_html": "https://zenodo.org/records/6361886/latest",
+     "versions": "https://zenodo.org/api/records/6361886/versions",
+     "draft": "https://zenodo.org/api/records/6361886/draft",
+     "access_links": "https://zenodo.org/api/records/6361886/access/links",
+     "access_grants": "https://zenodo.org/api/records/6361886/access/grants",
+     "access_users": "https://zenodo.org/api/records/6361886/access/users",
+     "access_request": "https://zenodo.org/api/records/6361886/access/request",
+     "access": "https://zenodo.org/api/records/6361886/access",
+     "communities": "https://zenodo.org/api/records/6361886/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/6361886/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/6361886/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/6361886/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/6361886/quota-increase",
+     "requests": "https://zenodo.org/api/records/6361886/requests"
+    },
+    "updated": "2024-07-17T09:00:26.044117+00:00",
+    "recid": "6361886",
+    "revision": 6,
+    "files": [
+     {
+      "id": "d977a8f6-6366-45f2-9b14-4382976537e8",
+      "key": "Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf",
+      "size": 4863218,
+      "checksum": "md5:d08f18b7cdd07e5e2a3c0551dddabd47",
+      "links": {
+       "self": "https://zenodo.org/api/records/6361886/files/Cross-ModalityDomainAdaptationforMedicalImageSegmentationandClassification_03-16-2022_10-25-30.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "87637"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 841,
+     "unique_downloads": 745,
+     "views": 1140,
+     "unique_views": 1077,
+     "version_downloads": 840,
+     "version_unique_downloads": 744,
+     "version_unique_views": 1076,
+     "version_views": 1139
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2023-04-18T14:49:29.622000+00:00",
+    "modified": "2024-07-12T06:57:58.763135+00:00",
+    "id": 7842455,
+    "conceptrecid": "7842454",
+    "doi": "10.5281/zenodo.7842455",
+    "conceptdoi": "10.5281/zenodo.7842454",
+    "doi_url": "https://doi.org/10.5281/zenodo.7842455",
+    "metadata": {
+     "title": "Cross-Modality Domain Adaptation for Medical Image Segmentation",
+     "doi": "10.5281/zenodo.7842455",
+     "publication_date": "2023-04-18",
+     "description": "<p>Domain Adaptation (DA) has recently raised strong interest in the medical imaging community. By encouraging algorithms to be robust to unseen situations or different input<br>\ndata domains, Domain Adaptation improves the applicability of machine learning approaches to various clinical settings. While a large variety of DA techniques has been<br>\nproposed, most of these techniques have been validated either on private datasets [4,5] or on small publicly available datasets [6,7,8,9]. Moreover, these datasets mostly address single-class problems. To tackle these limitations, the crossMoDA challenge introduced the first large and multi-class dataset for unsupervised cross-modality Domain Adaptation. From an application perspective, crossMoDA focuses on MRI segmentation for Vestibular Schwannoma. Compared to the previous crossMoDA instance, which made use of multiinstitutional data acquired in controlled conditions for radiosurgery planning and focused on a 2 class segmentation task (tumour and cochlea), the 2023 edition extends the segmentation task by including multi-institutional, heterogenous data acquired for routine surveillance purposes and introduces a sub-segmentation for the tumour (intra- and extrameatal components) thereby leading to a 3 class problem.</p>\n\n<p>The goal of the segmentation task is to segment two key brain structures (tumour and cochlea) involved in the follow-up and treatment planning of vestibular schwannoma (VS). The segmentation of these two structures is required for radiosurgery, a common VS treatment, and is also key to improve routine surveillance. Anatomically, the tumour region can be divided into two sub regions, called intra- and extra-meatal regions, corresponding to being inside or outside the inner ear canal respectively. The guidelines for reporting&nbsp; results in vestibular schwannoma mention that the intra-meatal and extra-meatal portions of the tumour must be distinguished, and the largest extra-meatal diameter should be used to report the size of the tumour [18]. Moreover, the size and volume features extracted from the extra-meatal region are considered as the most sensitive radiomic features for the evaluation of VS growth [19]. For crossMoDA 2023, we introduce for the first time the segmentation of the tumour split into the intra- and extra-meatal regions.</p>\n\n<p>Currently, the diagnosis and surveillance of patients with VS are commonly performed using contrast-enhanced T1 (ceT1) MR imaging. However, there is growing interest in using noncontrast imaging sequences such as high-resolution T2 imaging, as it mitigates the risks associated with gadolinium-containing contrast agents [1,2]. In addition to improving patient safety, T2 imaging is 10 times more cost-efficient than ceT1 imaging [16]. For this reason, we initially proposed and continue to focus on an unsupervised cross-modality segmentation benchmark (from ceT1 to T2) that aims to automatically perform VS (including intra-/extrameatal sub-segmentation) and cochlea segmentation on T2 scans. The training source and target sets are respectively unpaired annotated ceT1 and non-annotated T2 scans. To validate the robustness of the proposed approaches on different T2 settings, multiinstitutional, heterogeneous scans from centres in the UK and Tilburg, NL are used in this task.</p>\n\n<p>&nbsp;</p>\n\n<p>[1] Shapey, J., et al: An artificial intelligence framework for automatic segmentation and volumetry of Vestibular Schwannomas from contrast-enhanced t1-weighted and high-resolution t2-weighted MRI. In: Journal of Neurosurgery JNS. (2019)<br>\n[2] Wang, G., et al: Automatic segmentation of Vestibular Schwannoma from T2-weighted MRI by deep spatial attention with hardness-weighted loss. In: MICCAI 2019. (2019)<br>\n[3] Van de Langenberg, R., et al: Follow-up assessment of vestibular schwannomas: volume quantification versus two-dimensional measurements. In: Neuroradiology 51, 517 (2009).<br>\n[4] Kamnitsas, K., et al: Unsupervised domain adaptation in brain lesion segmentation with adversarial networks. In: IPMI (2017)<br>\n[5] Yang, J., et al: Unsupervised Domain Adaptation via Disentangled Representations: Application to Cross- Modality Liver Segmentation. In: MICCAI 2019. (2019)<br>\n[6] Chen, C., el al: Synergistic Image and Feature Adaptation: Towards Cross-Modality Domain Adaptation for Medical Image Segmentation. In: AAAI-19. (2019)<br>\n[7] Dou, Q., et al: Pnp-adanet: Plug-and-play adversarial domain adaptation network with a benchmark at cross- modality cardiac segmentation. ArXiv. (2018)<br>\n[8] Orbes-Arteaga, et al: Multi-domain adaptation in brain MRI through paired consistency and adversarial learning. In: DART - Domain Adaptation and Representation Transfer and Medical Image Learning with Less Labels and Imperfect Data. (2019)<br>\n[9] Xue, Y., el al: Dual-task Self-supervision for Cross-Modality Domain Adaptation. In: MICCAI 2020. (2020)<br>\n[10] Maier-Hein, L., Eisenmann, M., et al: &ldquo;Is the winner really the best? A critical analysis of common research practice in biomedical image analysis competitions&rdquo;. ArXiv:1806.02051, (2018)<br>\n[11] Bakas, S., et al: &quot;Identifying the Best Machine Learning Algorithms for Brain Tumor Segmentation, Progression Assessment, and Overall Survival Prediction in the BRATS Challenge&quot;. ArXiv:1811.02629 (2018).<br>\n[12] Maier, O., et al: &quot;ISLES 2015 - A public evaluation benchmark for ischemic stroke lesion segmentation from multispectral MRI&quot;. Medical Image Analysis (2017).<br>\n[13] Koos WT, et al: &quot;Neurotopographic considerations in the microsurgical treatment of small acoustic neurinomas&quot;. Journal of Neurosurgery (1998)<br>\n[14] Dale, A.M., et al: &quot;Cortical surface-based analysis. I. Segmentation and surface reconstruction&quot;. Neuroimage (1999).<br>\n[15] Cardoso, J., et al: &quot;Geodesic Information Flows: Spatially-Variant Graphs and Their Application to Segmentation and Fusion&quot;. Transactions on Medical Imaging (2015)<br>\n[16] Coelho, D, et al: &quot;MRI surveillance of vestibular schwannomas without contrast enhancement: Clinical and economic evaluation&quot;. Laryngoscope (2018)<br>\n[17] Baccianella, S, et al: &quot;Evaluation Measures for Ordinal Regression&quot;. International Conference on Intelligent Systems Design and Applications (ISDA) (2009)<br>\n[18] Kanzaki, Jin, et al. &quot;New and modified reporting systems from the consensus meeting on systems for reporting results in vestibular schwannoma.&quot; Otology &amp; neurotology 24.4 (2003): 642-649.<br>\n[19] Connor, Steve EJ. &quot;Imaging of the vestibular schwannoma: diagnosis, monitoring, and treatment planning.&quot; Neuroimaging Clinics 31.4 (2021): 451-471.<br>\n[20] Wijethilake, Navodini, et al. &quot;Boundary Distance Loss for Intra-/Extra-meatal Segmentation of Vestibular Schwannoma.&quot; International Workshop on Machine Learning in Clinical Neuroimaging. Springer, Cham, 2022.<br>\n[21] Kujawa, Aaron, et al. &quot;Deep Learning for Automatic Segmentation of Vestibular Schwannoma: A Retrospective Study from Multi-Centre Routine MRI.&quot; medRxiv (2022).<br>\n[22] Dorent, Reuben, et al. &quot;CrossMoDA 2021 challenge: Benchmark of cross-modality domain adaptation techniques for vestibular schwannoma and cochlea segmentation.&quot; Medical Image Analysis 83 (2023): 102628.</p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Navodini Wijethilake",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Reuben Dorent",
+       "affiliation": "Harvard Medical School, Brigham and Women's Hospital, Boston, USA"
+      },
+      {
+       "name": "Marina Ivory",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Aaron Kujawa",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Jonathan Shapey",
+       "affiliation": "King's College Hospital, Department of Neurosurgery, & King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Stefan Cornelissen",
+       "affiliation": "Elisabeth-TweeSteden Hospital, Tilburg, Netherlands"
+      },
+      {
+       "name": "Patrick Langenhuizen",
+       "affiliation": "Elisabeth-TweeSteden Hospital, Tilburg, Netherlands"
+      },
+      {
+       "name": "Samuel Joutard",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      },
+      {
+       "name": "Nicola Rieke",
+       "affiliation": "NVIDIA"
+      },
+      {
+       "name": "Spyridon Bakas",
+       "affiliation": "University of Pennsylvania, Center for Biomedical Image Computing and Analytics, Philadelphia, USA"
+      },
+      {
+       "name": "Tom Vercauteren",
+       "affiliation": "King's College London, School of Biomedical Engineering & Imaging Sciences, London, UK"
+      }
+     ],
+     "keywords": [
+      "Domain Adaptation",
+      "Segmentation",
+      "Cross-Modality",
+      "MICCAI Challenges"
+     ],
+     "resource_type": {
+      "title": "Other",
+      "type": "other"
+     },
+     "meeting": {
+      "title": "International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI) 2023",
+      "acronym": "MICCAI 2023"
+     },
+     "license": {
+      "id": "cc-by-nc-nd-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "7842454"
+        }
+       }
+      ]
+     }
+    },
+    "title": "Cross-Modality Domain Adaptation for Medical Image Segmentation",
+    "links": {
+     "self": "https://zenodo.org/api/records/7842455",
+     "self_html": "https://zenodo.org/records/7842455",
+     "preview_html": "https://zenodo.org/records/7842455?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.7842455",
+     "self_doi": "https://doi.org/10.5281/zenodo.7842455",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7842455",
+     "reserve_doi": "https://zenodo.org/api/records/7842455/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/7842454",
+     "parent_html": "https://zenodo.org/records/7842454",
+     "parent_doi": "https://doi.org/10.5281/zenodo.7842454",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.7842454",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:7842455/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:7842455/sequence/default",
+     "files": "https://zenodo.org/api/records/7842455/files",
+     "media_files": "https://zenodo.org/api/records/7842455/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:7842455:Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/7842455/files-archive",
+     "archive_media": "https://zenodo.org/api/records/7842455/media-files-archive",
+     "latest": "https://zenodo.org/api/records/7842455/versions/latest",
+     "latest_html": "https://zenodo.org/records/7842455/latest",
+     "versions": "https://zenodo.org/api/records/7842455/versions",
+     "draft": "https://zenodo.org/api/records/7842455/draft",
+     "access_links": "https://zenodo.org/api/records/7842455/access/links",
+     "access_grants": "https://zenodo.org/api/records/7842455/access/grants",
+     "access_users": "https://zenodo.org/api/records/7842455/access/users",
+     "access_request": "https://zenodo.org/api/records/7842455/access/request",
+     "access": "https://zenodo.org/api/records/7842455/access",
+     "communities": "https://zenodo.org/api/records/7842455/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/7842455/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/7842455/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/7842455/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/7842455/quota-increase",
+     "requests": "https://zenodo.org/api/records/7842455/requests"
+    },
+    "updated": "2024-07-12T06:57:58.763135+00:00",
+    "recid": "7842455",
+    "revision": 5,
+    "files": [
+     {
+      "id": "7d2749cd-ba19-4448-8b5e-50a8f852b92e",
+      "key": "Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf",
+      "size": 2707831,
+      "checksum": "md5:05a3aa24160bf0ed837b9414714952f2",
+      "links": {
+       "self": "https://zenodo.org/api/records/7842455/files/Cross-ModalityDomainAdaptationforMedicalImageSegmentation_04-18-2023_04-48-50.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "87637"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 735,
+     "unique_downloads": 643,
+     "views": 745,
+     "unique_views": 694,
+     "version_downloads": 729,
+     "version_unique_downloads": 637,
+     "version_unique_views": 688,
+     "version_views": 739
+    },
+    "state": "done",
+    "submitted": true
+   },
+   {
+    "created": "2026-02-27T13:27:24.475306+00:00",
+    "modified": "2026-02-27T13:27:24.788296+00:00",
+    "id": 18802086,
+    "conceptrecid": "18802085",
+    "doi": "10.5281/zenodo.18802086",
+    "conceptdoi": "10.5281/zenodo.18802085",
+    "doi_url": "https://doi.org/10.5281/zenodo.18802086",
+    "metadata": {
+     "title": "External Validation and Systematic Error Characterization of Automated Stroke Lesion Segmentation with Exploratory Spatial-Clinical Modeling",
+     "doi": "10.5281/zenodo.18802086",
+     "publication_date": "2026-02-27",
+     "description": "<p><span>Accurate infarct segmentation is essential for quantitative stroke imaging and reproducible downstream analyses. We performed external validation of a deep learning&ndash;based automated stroke lesion segmentation framework on an independent cohort of acute ischemic stroke patients (N=138). Segmentation performance was evaluated using Dice similarity coefficient (DSC), precision, recall, and 95th percentile Hausdorff distance (HD95). The model achieved an overall DSC of 0.78 &plusmn; 0.18 and HD95 of 6.9 &plusmn; 13.1 mm. Stratified analysis revealed reduced performance in small infarcts (&lt;5 mL; DSC 0.61) and a systematic size-dependent bias in medium-sized lesions. Comprehensive failure case analysis identified boundary uncertainty, partial volume effects, and small-lesion detectability as primary error sources. Exploratory spatial-clinical modeling demonstrated modest associations between lesion volume and admission NIHSS (r=0.198, p=0.030). Incorporating spatial features showed a non-significant trend toward improved discrimination of severe stroke (AUC 0.665 vs. 0.603). These findings confirm robust external performance of automated stroke segmentation while highlighting systematic error patterns and the limited explanatory capacity of imaging-only clinical models. The results support cautious integration of topology-aware imaging biomarkers in stroke outcome research.</span></p>",
+     "access_right": "open",
+     "creators": [
+      {
+       "name": "Yiğit Hasan Arı",
+       "affiliation": null
+      }
+     ],
+     "keywords": [
+      "Ischemic Stroke",
+      "Deep Learning",
+      "Medical Imaging",
+      "Segmentation"
+     ],
+     "references": [
+      "Eickhoff, S. B., et al. (2005). A new SPM toolbox for combining probabilistic cytoarchitectonic maps and functional imaging data. Neuroimage, 25(4), 1325-1335. (Juelich Atlas).",
+      "SEALS Model Authors (2022). SEALS: Spatial-Edge Aware Lesion Segmentation. Winning Solution for the ISLES 2022 Challenge.",
+      "Hernandez Petzsche, M. R., et al. (2022). ISLES 2022: A multicenter magnetic resonance imaging stroke lesion segmentation dataset. Scientific Data, 9(1), 762.",
+      "Riedel, C., et al. (2024). ISLES 2024: Ischemic Stroke Lesion Segmentation Challenge. (Dataset and Challenge overview)."
+     ],
+     "custom": {
+      "code:programmingLanguage": [
+       {
+        "id": "python",
+        "title": {
+         "en": "Python"
+        }
+       }
+      ]
+     },
+     "resource_type": {
+      "title": "Preprint",
+      "type": "publication",
+      "subtype": "preprint"
+     },
+     "license": {
+      "id": "cc-by-nd-4.0"
+     },
+     "relations": {
+      "version": [
+       {
+        "index": 0,
+        "is_last": true,
+        "parent": {
+         "pid_type": "recid",
+         "pid_value": "18802085"
+        }
+       }
+      ]
+     }
+    },
+    "title": "External Validation and Systematic Error Characterization of Automated Stroke Lesion Segmentation with Exploratory Spatial-Clinical Modeling",
+    "links": {
+     "self": "https://zenodo.org/api/records/18802086",
+     "self_html": "https://zenodo.org/records/18802086",
+     "preview_html": "https://zenodo.org/records/18802086?preview=1",
+     "doi": "https://doi.org/10.5281/zenodo.18802086",
+     "self_doi": "https://doi.org/10.5281/zenodo.18802086",
+     "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18802086",
+     "reserve_doi": "https://zenodo.org/api/records/18802086/draft/pids/doi",
+     "parent": "https://zenodo.org/api/records/18802085",
+     "parent_html": "https://zenodo.org/records/18802085",
+     "parent_doi": "https://doi.org/10.5281/zenodo.18802085",
+     "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18802085",
+     "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18802086/manifest",
+     "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18802086/sequence/default",
+     "files": "https://zenodo.org/api/records/18802086/files",
+     "media_files": "https://zenodo.org/api/records/18802086/media-files",
+     "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E10,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E50,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E100,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E250,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E750,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:18802086:External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/full/%5E1200,/0/default.jpg"
+     },
+     "archive": "https://zenodo.org/api/records/18802086/files-archive",
+     "archive_media": "https://zenodo.org/api/records/18802086/media-files-archive",
+     "latest": "https://zenodo.org/api/records/18802086/versions/latest",
+     "latest_html": "https://zenodo.org/records/18802086/latest",
+     "versions": "https://zenodo.org/api/records/18802086/versions",
+     "draft": "https://zenodo.org/api/records/18802086/draft",
+     "access_links": "https://zenodo.org/api/records/18802086/access/links",
+     "access_grants": "https://zenodo.org/api/records/18802086/access/grants",
+     "access_users": "https://zenodo.org/api/records/18802086/access/users",
+     "access_request": "https://zenodo.org/api/records/18802086/access/request",
+     "access": "https://zenodo.org/api/records/18802086/access",
+     "communities": "https://zenodo.org/api/records/18802086/communities",
+     "communities-suggestions": "https://zenodo.org/api/records/18802086/communities-suggestions",
+     "request_deletion": "https://zenodo.org/api/records/18802086/request-deletion",
+     "file_modification": "https://zenodo.org/api/records/18802086/file-modification",
+     "quota_increase": "https://zenodo.org/api/records/18802086/quota-increase",
+     "requests": "https://zenodo.org/api/records/18802086/requests"
+    },
+    "updated": "2026-02-27T13:27:24.788296+00:00",
+    "recid": "18802086",
+    "revision": 3,
+    "files": [
+     {
+      "id": "904b397a-ce43-4f8e-9c7c-f9115e895688",
+      "key": "External Validation and Systematic Error Characterization of Automated Stroke Lesion Segmentation with Exploratory Spatial.pdf",
+      "size": 146171,
+      "checksum": "md5:265967c1150771ac20a196d488305f29",
+      "links": {
+       "self": "https://zenodo.org/api/records/18802086/files/External%20Validation%20and%20Systematic%20Error%20Characterization%20of%20Automated%20Stroke%20Lesion%20Segmentation%20with%20Exploratory%20Spatial.pdf/content"
+      }
+     }
+    ],
+    "swh": null,
+    "owners": [
+     {
+      "id": "1559371"
+     }
+    ],
+    "status": "published",
+    "stats": {
+     "downloads": 15,
+     "unique_downloads": 13,
+     "views": 52,
+     "unique_views": 41,
+     "version_downloads": 15,
+     "version_unique_downloads": 13,
+     "version_unique_views": 41,
+     "version_views": 52
+    },
+    "state": "done",
+    "submitted": true
+   }
+  ],
+  "total": 9
+ },
+ "aggregations": {
+  "publication_date": {
+   "buckets": [
+    {
+     "key": "2022",
+     "doc_count": 2,
+     "label": "2022",
+     "is_selected": false
+    },
+    {
+     "key": "2023",
+     "doc_count": 1,
+     "label": "2023",
+     "is_selected": false
+    },
+    {
+     "key": "2024",
+     "doc_count": 2,
+     "label": "2024",
+     "is_selected": false
+    },
+    {
+     "key": "2025",
+     "doc_count": 1,
+     "label": "2025",
+     "is_selected": false
+    },
+    {
+     "key": "2026",
+     "doc_count": 3,
+     "label": "2026",
+     "is_selected": false
+    }
+   ],
+   "label": "Publication date"
+  },
+  "access_status": {
+   "buckets": [
+    {
+     "key": "open",
+     "doc_count": 9,
+     "label": "Open",
+     "is_selected": false
+    }
+   ],
+   "label": "Access status"
+  },
+  "resource_type": {
+   "buckets": [
+    {
+     "key": "other",
+     "doc_count": 6,
+     "label": "Other",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "dataset",
+     "doc_count": 1,
+     "label": "Dataset",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    },
+    {
+     "key": "publication",
+     "doc_count": 1,
+     "label": "Publication",
+     "is_selected": false,
+     "inner": {
+      "buckets": [
+       {
+        "key": "publication-preprint",
+        "doc_count": 1,
+        "label": "Preprint",
+        "is_selected": false
+       }
+      ]
+     }
+    },
+    {
+     "key": "software",
+     "doc_count": 1,
+     "label": "Software",
+     "is_selected": false,
+     "inner": {
+      "buckets": []
+     }
+    }
+   ],
+   "label": "Resource types"
+  },
+  "subject": {
+   "buckets": [
+    {
+     "key": "MRI",
+     "doc_count": 3,
+     "label": "MRI",
+     "is_selected": false
+    },
+    {
+     "key": "Segmentation",
+     "doc_count": 3,
+     "label": "Segmentation",
+     "is_selected": false
+    },
+    {
+     "key": "Challenge",
+     "doc_count": 2,
+     "label": "Challenge",
+     "is_selected": false
+    },
+    {
+     "key": "Cross-Modality",
+     "doc_count": 2,
+     "label": "Cross-Modality",
+     "is_selected": false
+    },
+    {
+     "key": "Domain Adaptation",
+     "doc_count": 2,
+     "label": "Domain Adaptation",
+     "is_selected": false
+    },
+    {
+     "key": "MICCAI",
+     "doc_count": 2,
+     "label": "MICCAI",
+     "is_selected": false
+    },
+    {
+     "key": "Stroke",
+     "doc_count": 2,
+     "label": "Stroke",
+     "is_selected": false
+    },
+    {
+     "key": "ischemic stroke",
+     "doc_count": 2,
+     "label": "ischemic stroke",
+     "is_selected": false
+    },
+    {
+     "key": "segmentation",
+     "doc_count": 2,
+     "label": "segmentation",
+     "is_selected": false
+    },
+    {
+     "key": "Classification",
+     "doc_count": 1,
+     "label": "Classification",
+     "is_selected": false
+    }
+   ],
+   "label": "Subjects"
+  },
+  "file_type": {
+   "buckets": [
+    {
+     "key": "pdf",
+     "doc_count": 6,
+     "label": "PDF",
+     "is_selected": false
+    },
+    {
+     "key": "7z",
+     "doc_count": 1,
+     "label": "7Z",
+     "is_selected": false
+    },
+    {
+     "key": "deb",
+     "doc_count": 1,
+     "label": "DEB",
+     "is_selected": false
+    },
+    {
+     "key": "exe",
+     "doc_count": 1,
+     "label": "EXE",
+     "is_selected": false
+    },
+    {
+     "key": "zip",
+     "doc_count": 1,
+     "label": "ZIP",
+     "is_selected": false
+    }
+   ],
+   "label": "File type"
+  }
+ },
+ "links": {
+  "self": "https://zenodo.org/api/records?page=1&q=%22ischemic+stroke+lesion+segmentation%22&size=10&sort=bestmatch"
+ }
+}

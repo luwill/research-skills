@@ -1,0 +1,1933 @@
+{
+ "notes": [
+  {
+   "content": {
+    "summary": {
+     "value": "This paper presents a training scheme compatible with the nnU-Net framework to improve the calibration of an ischemic stroke lesion segmentation model. This method also enables uncertainty quantification. Propose method is applied to ischemic stroke lesion segmentation"
+    },
+    "strengths": {
+     "value": "This paper is clear and well-written. It deals with the important problem of uncertainty quantification and model calibration. DL models are often poorly calibrated. Proposed method is very interesting. The authors trained an nnU-Net model to segment ischemic stroke lesions on acute-phase Diffusion-Weighted Imaging (DWI) MRI and applied a Bayesian posterior sampling approach to estimate uncertainty and improve model calibration."
+    },
+    "weaknesses": {
+     "value": "There is no specific weakness for this short paper."
+    },
+    "confidence": {
+     "value": 5
+    },
+    "rating": {
+     "value": 5
+    }
+   },
+   "parentInvitations": "MIDL.io/2025/Short_Papers/-/Official_Review",
+   "nonreaders": [],
+   "tmdate": 1746120027662,
+   "tcdate": 1745833836665,
+   "writers": [
+    "MIDL.io/2025/Short_Papers",
+    "MIDL.io/2025/Short_Papers/Submission110/Reviewer_XcXc"
+   ],
+   "signatures": [
+    "MIDL.io/2025/Short_Papers/Submission110/Reviewer_XcXc"
+   ],
+   "forum": "BXCmwipKRb",
+   "number": 1,
+   "license": "CC BY 4.0",
+   "cdate": 1745833836665,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "MIDL.io/2025/Short_Papers/Submission110/-/Official_Review",
+    "MIDL.io/2025/Short_Papers/-/Edit"
+   ],
+   "mdate": 1746120027662,
+   "domain": "MIDL.io/2025/Short_Papers",
+   "replyto": "BXCmwipKRb",
+   "id": "4wM1rKlxcN",
+   "forumContent": {
+    "TLDR": {
+     "value": "Bayesian posterior sampling for uncertainty estimation and calibration in nnU-Net."
+    },
+    "venue": {
+     "value": "MIDL 2025 - Short Papers"
+    },
+    "pdf": {
+     "value": "/pdf/d16226ea45d1a093bd480f1692fd2ee70df5710a.pdf"
+    },
+    "keywords": {
+     "value": [
+      "nnU-Net",
+      "Model Calibration",
+      "Uncertainty Estimation",
+      "Ischemic Stroke"
+     ]
+    },
+    "venueid": {
+     "value": "MIDL.io/2025/Short_Papers"
+    },
+    "paperhash": {
+     "value": "heylen|uncertainty_estimation_and_calibration_in_nnunetbased_ischemic_stroke_lesion_segmentation"
+    },
+    "authorids": {
+     "value": [
+      "~Ewout_Heylen1",
+      "jelle.demeestere@uzleuven.be",
+      "anke.wouters@uzleuven.be",
+      "pierre.seners@gmail.com",
+      "sorench@gmail.com",
+      "nyuen@stanford.edu",
+      "mmlynash@stanford.edu",
+      "skemp@stanford.edu",
+      "jheit@stanford.edu",
+      "albers@stanford.edu",
+      "seenad@stanford.edu",
+      "robin.lemmens@uzleuven.be",
+      "lansberg@stanford.edu",
+      "~Frederik_Maes1"
+     ]
+    },
+    "abstract": {
+     "value": "nnU-Net has become widely recognized as a state-of-the-art semantic segmentation framework. However, deep learning models are often poorly calibrated, resulting in unreliable probability estimates. Additionally, they lack meaningful uncertainty quantification. We trained an nnU-Net model to segment ischemic stroke lesions on acute-phase Diffusion-Weighted Imaging (DWI) MRI and applied a Bayesian posterior sampling approach to estimate uncertainty and improve model calibration. Our findings show that the Bayesian posterior sampling approach yields better calibration compared to a conventional nnU-Net, while providing uncertainty estimates and maintaining comparable segmentation performance."
+    },
+    "_bibtex": {
+     "value": "@inproceedings{\nheylen2025uncertainty,\ntitle={Uncertainty Estimation and Calibration in nnU-Net-Based Ischemic Stroke Lesion Segmentation},\nauthor={Ewout Heylen and Jelle Demeestere and Anke Wouters and Pierre Seners and Soren Christensen and Nicole Yuen and Michael Mlynash and Stephanie Kemp and Jeremy J. Heit and Gregory W. Albers and Seena Dehkharghani and Robin Lemmens and Maarten Lansberg and Frederik Maes},\nbooktitle={Medical Imaging with Deep Learning - Short Papers},\nyear={2025},\nurl={https://openreview.net/forum?id=BXCmwipKRb}\n}"
+    },
+    "title": {
+     "value": "Uncertainty Estimation and Calibration in nnU-Net-Based Ischemic Stroke Lesion Segmentation"
+    },
+    "authors": {
+     "value": [
+      "Ewout Heylen",
+      "Jelle Demeestere",
+      "Anke Wouters",
+      "Pierre Seners",
+      "Soren Christensen",
+      "Nicole Yuen",
+      "Michael Mlynash",
+      "Stephanie Kemp",
+      "Jeremy J. Heit",
+      "Gregory W. Albers",
+      "Seena Dehkharghani",
+      "Robin Lemmens",
+      "Maarten Lansberg",
+      "Frederik Maes"
+     ]
+    }
+   },
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Int. J. Comput. Intell. Syst. 2021"
+    },
+    "pdf": {
+     "value": "https://www.atlantis-press.com/article/125952597.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/IJCISYS/2021"
+    },
+    "paperhash": {
+     "value": "zhao|automatic_acute_ischemic_stroke_lesion_segmentation_using_semisupervised_learning"
+    },
+    "authorids": {
+     "value": [
+      "~Bin_Zhao8",
+      "https://dblp.org/search/pid/api?q=author:Shuxue_Ding:",
+      "https://dblp.org/search/pid/api?q=author:Hong_Wu:",
+      "https://dblp.org/search/pid/api?q=author:Guohua_Liu:",
+      "https://dblp.org/search/pid/api?q=author:Chen_Cao_0007:",
+      "https://dblp.org/search/pid/api?q=author:Song_Jin:",
+      "https://dblp.org/search/pid/api?q=author:Zhiyang_Liu:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.2991/ijcis.d.210205.001"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/ijcisys/ZhaoDWLCJL21,\n  author={Bin Zhao and Shuxue Ding and Hong Wu and Guohua Liu and Chen Cao and Song Jin and Zhiyang Liu},\n  title={Automatic Acute Ischemic Stroke Lesion Segmentation Using Semi-supervised Learning},\n  year={2021},\n  cdate={1609459200000},\n  journal={Int. J. Comput. Intell. Syst.},\n  volume={14},\n  number={1},\n  pages={723-733},\n  url={https://doi.org/10.2991/ijcis.d.210205.001}\n}\n"
+    },
+    "abstract": {
+     "value": "Ischemic stroke has been a common disease in the elderly population, which can cause long-term disability and even death. However, the time window for treatment of ischemic stroke in its acute stage is very short. To fast localize and quantitively evaluate the acute ischemic stroke (AIS) lesions, many deep-learning-based lesion segmentation methods..."
+    },
+    "title": {
+     "value": "Automatic Acute Ischemic Stroke Lesion Segmentation Using Semi-supervised Learning"
+    },
+    "authors": {
+     "value": [
+      "Bin Zhao",
+      "Shuxue Ding",
+      "Hong Wu",
+      "Guohua Liu",
+      "Chen Cao",
+      "Song Jin",
+      "Zhiyang Liu"
+     ]
+    }
+   },
+   "tmdate": 1770124794907,
+   "pdate": 1640908800000,
+   "externalIds": [
+    "dblp:journals/ijcisys/ZhaoDWLCJL21"
+   ],
+   "tcdate": 1770124779329,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Bin_Zhao8"
+   ],
+   "forum": "LIzgQrH6oK",
+   "license": "CC BY-SA 4.0",
+   "number": 818989,
+   "cdate": 1609459200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1770124794907,
+   "domain": "DBLP.org",
+   "id": "LIzgQrH6oK",
+   "version": 2
+  },
+  {
+   "content": {
+    "TLDR": {
+     "value": "Bayesian posterior sampling for uncertainty estimation and calibration in nnU-Net."
+    },
+    "venue": {
+     "value": "MIDL 2025 - Short Papers"
+    },
+    "pdf": {
+     "value": "/pdf/d16226ea45d1a093bd480f1692fd2ee70df5710a.pdf"
+    },
+    "keywords": {
+     "value": [
+      "nnU-Net",
+      "Model Calibration",
+      "Uncertainty Estimation",
+      "Ischemic Stroke"
+     ]
+    },
+    "venueid": {
+     "value": "MIDL.io/2025/Short_Papers"
+    },
+    "paperhash": {
+     "value": "heylen|uncertainty_estimation_and_calibration_in_nnunetbased_ischemic_stroke_lesion_segmentation"
+    },
+    "authorids": {
+     "value": [
+      "~Ewout_Heylen1",
+      "jelle.demeestere@uzleuven.be",
+      "anke.wouters@uzleuven.be",
+      "pierre.seners@gmail.com",
+      "sorench@gmail.com",
+      "nyuen@stanford.edu",
+      "mmlynash@stanford.edu",
+      "skemp@stanford.edu",
+      "jheit@stanford.edu",
+      "albers@stanford.edu",
+      "seenad@stanford.edu",
+      "robin.lemmens@uzleuven.be",
+      "lansberg@stanford.edu",
+      "~Frederik_Maes1"
+     ]
+    },
+    "abstract": {
+     "value": "nnU-Net has become widely recognized as a state-of-the-art semantic segmentation framework. However, deep learning models are often poorly calibrated, resulting in unreliable probability estimates. Additionally, they lack meaningful uncertainty quantification. We trained an nnU-Net model to segment ischemic stroke lesions on acute-phase Diffusion-Weighted Imaging (DWI) MRI and applied a Bayesian posterior sampling approach to estimate uncertainty and improve model calibration. Our findings show that the Bayesian posterior sampling approach yields better calibration compared to a conventional nnU-Net, while providing uncertainty estimates and maintaining comparable segmentation performance."
+    },
+    "_bibtex": {
+     "value": "@inproceedings{\nheylen2025uncertainty,\ntitle={Uncertainty Estimation and Calibration in nnU-Net-Based Ischemic Stroke Lesion Segmentation},\nauthor={Ewout Heylen and Jelle Demeestere and Anke Wouters and Pierre Seners and Soren Christensen and Nicole Yuen and Michael Mlynash and Stephanie Kemp and Jeremy J. Heit and Gregory W. Albers and Seena Dehkharghani and Robin Lemmens and Maarten Lansberg and Frederik Maes},\nbooktitle={Medical Imaging with Deep Learning - Short Papers},\nyear={2025},\nurl={https://openreview.net/forum?id=BXCmwipKRb}\n}"
+    },
+    "title": {
+     "value": "Uncertainty Estimation and Calibration in nnU-Net-Based Ischemic Stroke Lesion Segmentation"
+    },
+    "authors": {
+     "value": [
+      "Ewout Heylen",
+      "Jelle Demeestere",
+      "Anke Wouters",
+      "Pierre Seners",
+      "Soren Christensen",
+      "Nicole Yuen",
+      "Michael Mlynash",
+      "Stephanie Kemp",
+      "Jeremy J. Heit",
+      "Gregory W. Albers",
+      "Seena Dehkharghani",
+      "Robin Lemmens",
+      "Maarten Lansberg",
+      "Frederik Maes"
+     ]
+    }
+   },
+   "tmdate": 1748838732896,
+   "pdate": 1746113376726,
+   "tcdate": 1744449542810,
+   "writers": [
+    "MIDL.io/2025/Short_Papers",
+    "MIDL.io/2025/Short_Papers/Submission110/Authors"
+   ],
+   "signatures": [
+    "MIDL.io/2025/Short_Papers/Submission110/Authors"
+   ],
+   "forum": "BXCmwipKRb",
+   "license": "CC BY 4.0",
+   "number": 110,
+   "cdate": 1744449542810,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "MIDL.io/2025/Short_Papers/-/Submission",
+    "MIDL.io/2025/Short_Papers/-/Post_Submission",
+    "MIDL.io/2025/Short_Papers/-/Edit",
+    "MIDL.io/2025/Short_Papers/Submission110/-/Camera_Ready"
+   ],
+   "mdate": 1748838732896,
+   "odate": 1744460940844,
+   "domain": "MIDL.io/2025/Short_Papers",
+   "id": "BXCmwipKRb",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "MIDL 2026 Poster"
+    },
+    "midl_latex_submission_checklist": {
+     "value": [
+      "The paper compiles correctly using the pdflatex compiler.",
+      "Created a single midl26_NNN.zip file with midl26_NNN.tex, midl26_NNN.bib, all necessary figures and files.",
+      "The LaTeX file includes the correct header commands before \\title.",
+      "Hyperref is preloaded; do not modify it.",
+      "The times package is not used.",
+      "All co-authors are listed with correct firstname, lastname, and any suffix/prefix.",
+      "Math in the title and abstract uses valid LaTeX.",
+      "References are provided through the .bib file only.",
+      "Tables and figures stay within the page margins.",
+      "The zip archive contains all necessary figures and no unused files.",
+      "Special formatting from rebuttal has been removed.",
+      "All special characters use LaTeX commands.",
+      "Appendices and supplementary material are included in the same PDF after references.",
+      "The main paper does not exceed 12 pages."
+     ]
+    },
+    "keywords": {
+     "value": [
+      "ischemic stroke",
+      "deep learning",
+      "outcome prediction",
+      "multimodal learning."
+     ]
+    },
+    "reproducibility": {
+     "value": "https://github.com/zeyad-kay/multimodal_mrs_prediction"
+    },
+    "read_cfp_and_author_instructions": {
+     "value": "Yes"
+    },
+    "originality_policy": {
+     "value": "Yes"
+    },
+    "abstract": {
+     "value": "Endovascular treatment (EVT) has been proven to be a successful treatment for some cases of acute ischemic stroke. However, neuro-radiologists rely on a small set of clinical features to select patients for treatment. This leads to the exclusion of patients who would have benefited from treatment and the inclusion of others who would not have benefited from it. Deep learning has been used to predict stroke outcome from baseline imaging and clinical data, with most studies reporting that combining imaging and clinical data slightly outperforms classical methods (e.g., logistic regression) trained on clinical data only. However, it is not clear how much of this improvement is attributed to the imaging data and whether it is robust to larger and more diverse test sets. We use one of the largest multi-center acute ischemic stroke datasets ($n = 1,105$) to determine whether combining imaging and clinical data outperforms classical methods. We show that combining imaging and clinical data matches the performance of logistic regression ($0.72$ Area Under Receiver Operating Characteristic Curve (AUROC)) when evaluated on a multi-center test set of over $600$ samples. We examine the models' predictions and weights and find that 1) both methods match each other's prediction for $78\\\\%$ of the samples, and 2) the weights associated with the imaging features are small compared to the clinical ones. This suggests that imaging features extracted from the deep learning model do not contribute to the prediction as much as the clinical ones."
+    },
+    "_bibtex": {
+     "value": "@inproceedings{\nabouyoussef2026validating,\ntitle={Validating the Benefit of Combining Imaging and Clinical Data for Ischemic Stroke Outcome Prediction},\nauthor={Zeyad Abouyoussef and Johanna Ospel and Roberto Souza},\nbooktitle={Medical Imaging with Deep Learning},\nyear={2026},\nurl={https://openreview.net/forum?id=fTobb9dclL}\n}"
+    },
+    "title": {
+     "value": "Validating the Benefit of Combining Imaging and Clinical Data for Ischemic Stroke Outcome Prediction"
+    },
+    "latex_code": {
+     "value": "/attachment/e99a0ee931529a8f0b28a3138bc16cd246792df7.zip"
+    },
+    "secondary_subject_area": {
+     "value": "Interpretability and Explainable AI"
+    },
+    "pdf": {
+     "value": "/pdf/2c9d351c79eed865be9091cf036699666142204e.pdf"
+    },
+    "copyright_form": {
+     "value": "/attachment/2ac387be76a3ccafabaa09e44945e1c64b28b4ff.pdf"
+    },
+    "visa": {
+     "value": "Yes"
+    },
+    "single_blind_notice": {
+     "value": "Yes"
+    },
+    "venueid": {
+     "value": "MIDL.io/2026/Conference"
+    },
+    "paperhash": {
+     "value": "abouyoussef|validating_the_benefit_of_combining_imaging_and_clinical_data_for_ischemic_stroke_outcome_prediction"
+    },
+    "primary_subject_area": {
+     "value": "Integration of Imaging and Clinical Data"
+    },
+    "authorids": {
+     "value": [
+      "~Zeyad_Abouyoussef1",
+      "johanna.ospel@ucalgary.ca",
+      "~Roberto_Souza2"
+     ]
+    },
+    "registration": {
+     "value": "Yes"
+    },
+    "authors": {
+     "value": [
+      "Zeyad Abouyoussef",
+      "Johanna Ospel",
+      "Roberto Souza"
+     ]
+    },
+    "llm_policy_acknowledgment": {
+     "value": "Yes"
+    }
+   },
+   "tmdate": 1774301930219,
+   "pdate": 1771084933935,
+   "tcdate": 1764798158430,
+   "writers": [
+    "MIDL.io/2026/Conference",
+    "MIDL.io/2026/Conference/Submission340/Authors"
+   ],
+   "signatures": [
+    "MIDL.io/2026/Conference/Submission340/Authors"
+   ],
+   "forum": "fTobb9dclL",
+   "license": "CC BY 4.0",
+   "number": 340,
+   "cdate": 1764798158430,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "MIDL.io/2026/Conference/-/Submission",
+    "MIDL.io/2026/Conference/-/Post_Submission",
+    "MIDL.io/2026/Conference/Submission340/-/Full_Submission",
+    "MIDL.io/2026/Conference/-/Edit",
+    "MIDL.io/2026/Conference/Submission340/-/Camera_Ready"
+   ],
+   "mdate": 1774301930219,
+   "odate": 1764851461539,
+   "domain": "MIDL.io/2026/Conference",
+   "id": "fTobb9dclL",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "ADMA 2020"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/978-3-030-65390-3_44.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/conf/ADMA/2020"
+    },
+    "paperhash": {
+     "value": "shen|decision_support_system_for_acupuncture_treatment_of_ischemic_stroke"
+    },
+    "authorids": {
+     "value": [
+      "~Ying_Shen1",
+      "https://dblp.org/search/pid/api?q=author:Joël_Colloc:",
+      "https://dblp.org/search/pid/api?q=author:Armelle_Jacquet-Andrieu:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/978-3-030-65390-3_44"
+    },
+    "_bibtex": {
+     "value": "@inproceedings{DBLP:conf/adma/ShenCJ20,\n  author={Ying Shen and Joël Colloc and Armelle Jacquet-Andrieu},\n  title={Decision Support System for Acupuncture Treatment of Ischemic Stroke},\n  year={2020},\n  cdate={1577836800000},\n  pages={582-594},\n  url={https://doi.org/10.1007/978-3-030-65390-3_44},\n  booktitle={ADMA},\n  crossref={conf/adma/2020}\n}\n"
+    },
+    "abstract": {
+     "value": "In acupuncture research, the automatic selection of acupoints for treating stroke remains challenging. We design an ontology driven clinical decision support system to assist acupuncture treatment planning in the field of ischemic stroke and provide clinical decision-making services. This paper describes the development of a decision support system for the diagnosis and therapy of ischemic stroke based on clinical prior knowledge. An ontology is established in the field of acupuncture and ischemic stroke pertaining to clinical stages and their corresponding information components. Based on the ontology, the decision support system explores an acupuncture therapy for patient by considering therapy method, stimulation points and intensity, and manipulation ways with previous therapies. A performance analysis and assessment are proposed to evaluate the effectiveness of the decision support system. Experiments show that the proposed decision support system can aid ischemic stroke therapy decision-making by recommending the most relevant treatments suggestion through ontology inference. The visualization of diagnosis making and therapy planning also verifies the benefits of the combined exploration of decision support system and ontology, which promotes the development of acupuncture from individualized empirical knowledge to large-scale evidence-based medicine."
+    },
+    "title": {
+     "value": "Decision Support System for Acupuncture Treatment of Ischemic Stroke"
+    },
+    "authors": {
+     "value": [
+      "Ying Shen",
+      "Joël Colloc",
+      "Armelle Jacquet-Andrieu"
+     ]
+    }
+   },
+   "tmdate": 1741399321326,
+   "pdate": 1577836800000,
+   "tcdate": 1741399294964,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Ying_Shen1"
+   ],
+   "forum": "nDD1BQRCuk",
+   "license": "CC BY-SA 4.0",
+   "number": 366427,
+   "cdate": 1577836800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1741399321326,
+   "domain": "DBLP.org",
+   "id": "nDD1BQRCuk",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Neuroepidemiology"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Public_Article"
+    },
+    "paperhash": {
+     "value": "yin|statin_therapy_for_preventing_recurrent_stroke_in_patients_with_ischemic_stroke"
+    },
+    "authorids": {
+     "value": [
+      "https://orcid.org/orcid-search/search?searchQuery=Yue Yin",
+      "https://orcid.org/orcid-search/search?searchQuery=Li Zhang",
+      "~Iain_James_Marshall1",
+      "https://orcid.org/0000-0001-8264-0981",
+      "https://orcid.org/0000-0002-0768-1676"
+     ]
+    },
+    "html": {
+     "value": "https://kclpure.kcl.ac.uk/portal/en/publications/d68c3df3-6b63-4432-ad6a-6526375a1f0b"
+    },
+    "abstract": {
+     "value": "INTRODUCTION: Statins are effective in preventing vascular disease and are widely recommended and used for the secondary prevention of ischemic stroke. However, there is concern from trials that statins might increase the risk of hemorrhagic stroke, partially reducing their benefit. We sought to systematically review the latest evidence on this question. METHODS: Four electronic databases were searched to identify published randomized controlled trials (RCTs) and observational cohort studies (search date December 2020). Two independent reviewers carried out the eligibility assessment based on predefined inclusion criteria. We examined the outcomes of recurrent stroke (after ischemic stroke) of any type, and separately recurrent ischemic stroke and recurrent hemorrhagic stroke. RCTs and observational cohort studies were meta-analyzed separately. Odds ratios (ORs) were used to assess the effect of statin therapy. Meta-analysis was conducted using RevMan 5.4 software. RESULTS: We retrieved 559 papers in searches, of which 11 RCTs and 12 observational cohort studies were included. Both RCTs and observational studies found that statins reduced the odds of stroke of any type in those with an initial ischemic stroke (11 RCTs: OR = 0.87, 95% CI [0.77,0.97]; p = 0.02; 12 cohort studies: OR = 0.80, 95% CI [0.66, 0.96]; p = 0.02). Both RCTs and observational studies found that recurrence of ischemic stroke was reduced by statins (6 RCTs: OR = 0.81, 95% CI [0.70, 0.93]; p = 0.002; 3 observational studies: OR = 0.67, 95% CI [0.61, 0.75]; p < 0.00001). Data from 7 RCTs and 8 cohort studies did not find a significant difference in hemorrhagic stroke but could not rule out a substantial increase or reduction (7 RCTs: OR = 1.15, 95% CI [0.62, 2.13]; p = 0.66; 8 cohort studies: OR = 0.93, 95% CI [0.71, 1.21]; p = 0.59). CONCLUSIONS: In people who have experienced an ischemic stroke, statins reduce the risk of recurrent stroke of any type medicated through a reduction of ischemic stroke. We found no increase in the risk of hemorrhagic stroke."
+    },
+    "_bibtex": {
+     "value": "@article{d68c3df36b634432ad6a6526375a1f0b,\n  title     = \"Statin Therapy for Preventing Recurrent Stroke in Patients with Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Controlled Trials and Observational Cohort Studies\",\n  abstract  = \"INTRODUCTION: Statins are effective in preventing vascular disease and are widely recommended and used for the secondary prevention of ischemic stroke. However, there is concern from trials that statins might increase the risk of hemorrhagic stroke, partially reducing their benefit. We sought to systematically review the latest evidence on this question. METHODS: Four electronic databases were searched to identify published randomized controlled trials (RCTs) and observational cohort studies (search date December 2020). Two independent reviewers carried out the eligibility assessment based on predefined inclusion criteria. We examined the outcomes of recurrent stroke (after ischemic stroke) of any type, and separately recurrent ischemic stroke and recurrent hemorrhagic stroke. RCTs and observational cohort studies were meta-analyzed separately. Odds ratios (ORs) were used to assess the effect of statin therapy. Meta-analysis was conducted using RevMan 5.4 software. RESULTS: We retrieved 559 papers in searches, of which 11 RCTs and 12 observational cohort studies were included. Both RCTs and observational studies found that statins reduced the odds of stroke of any type in those with an initial ischemic stroke (11 RCTs: OR = 0.87, 95\\% CI [0.77,0.97]; p = 0.02; 12 cohort studies: OR = 0.80, 95\\% CI [0.66, 0.96]; p = 0.02). Both RCTs and observational studies found that recurrence of ischemic stroke was reduced by statins (6 RCTs: OR = 0.81, 95\\% CI [0.70, 0.93]; p = 0.002; 3 observational studies: OR = 0.67, 95\\% CI [0.61, 0.75]; p < 0.00001). Data from 7 RCTs and 8 cohort studies did not find a significant difference in hemorrhagic stroke but could not rule out a substantial increase or reduction (7 RCTs: OR = 1.15, 95\\% CI [0.62, 2.13]; p = 0.66; 8 cohort studies: OR = 0.93, 95\\% CI [0.71, 1.21]; p = 0.59). CONCLUSIONS: In people who have experienced an ischemic stroke, statins reduce the risk of recurrent stroke of any type medicated through a reduction of ischemic stroke. We found no increase in the risk of hemorrhagic stroke.\",\n  author    = \"Yue Yin and Li Zhang and Iain Marshall and Charles Wolfe and Yanzhong Wang\",\n  note      = \"Publisher Copyright: {\\textcopyright} 2022 The Author(s). Published by S. Karger AG, Basel.\",\n  year      = \"2022\",\n  month     = sep,\n  day       = \"1\",\n  doi       = \"10.1159/000525672\",\n  language  = \"English\",\n  volume    = \"56\",\n  pages     = \"240--249\",\n  journal   = \"Neuroepidemiology\",\n  issn      = \"0251-5350\",\n  publisher = \"S. Karger AG\",\n  number    = \"4\",\n}"
+    },
+    "title": {
+     "value": "Statin Therapy for Preventing Recurrent Stroke in Patients with Ischemic Stroke"
+    },
+    "authors": {
+     "value": [
+      "Yue Yin",
+      "Li Zhang",
+      "Iain Marshall",
+      "Charles Wolfe",
+      "Yanzhong Wang"
+     ]
+    }
+   },
+   "tmdate": 1774372459678,
+   "pdate": 1661990400000,
+   "externalIds": [
+    "doi:10.1159/000525672"
+   ],
+   "tcdate": 1774372458494,
+   "writers": [
+    "~",
+    "OpenReview.net/Public_Article/ORCID.org",
+    "OpenReview.net/Support"
+   ],
+   "signatures": [
+    "~Iain_James_Marshall1"
+   ],
+   "forum": "3spvaMD2ow",
+   "license": "CC BY-SA 4.0",
+   "number": 59082,
+   "cdate": 1656710717193,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Public_Article/ORCID.org/-/Record",
+    "OpenReview.net/Public_Article/-/Edit"
+   ],
+   "mdate": 1774372459678,
+   "domain": "OpenReview.net/Public_Article",
+   "id": "3spvaMD2ow",
+   "version": 2
+  },
+  {
+   "content": {
+    "pdf": {
+     "value": "/pdf/cfebbe8cde0886e3f1fa6cd013083835f126b095.pdf"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Archive"
+    },
+    "paperhash": {
+     "value": "zhang|caunet_segmentation_makes_a_good_ischemic_stroke_risk_prediction"
+    },
+    "authorids": {
+     "value": [
+      "~Yuqi_Zhang14",
+      "~Chao_Tong1"
+     ]
+    },
+    "abstract": {
+     "value": "Stroke is still the World’s second major factor of death, as well as the third major factor of death and disability. Ischemic stroke is a type of stroke, in which early detection and treatment are the keys to preventing ischemic strokes. However, due to the limitation of privacy protection and labeling difficulties, there are only a few studies on the intelligent automatic diagnosis of stroke or ischemic stroke, and the results are unsatisfactory. Therefore, we collect some data and propose a 3D carotid Computed Tomography Angiography (CTA) image segmentation model called CA-UNet for fully automated extraction of carotid arteries. We explore the number of down-sampling times applicable to carotid segmentation and design a multi-scale loss function to resolve the loss of detailed features during the process of down-sampling. Moreover, based on CA-Unet, we propose an ischemic stroke risk prediction model to predict the risk in patients using their 3D CTA images, electronic medical records, and medical history. We have validated the efficacy of our segmentation model and prediction model through comparison tests. Our method can provide reliable diagnoses and results that benefit patients and medical professionals."
+    },
+    "title": {
+     "value": "CA-UNet Segmentation makes a good ischemic stroke risk prediction"
+    },
+    "authors": {
+     "value": [
+      "Yuqi Zhang",
+      "Chao Tong"
+     ]
+    }
+   },
+   "tmdate": 1741156417296,
+   "pdate": 1692979200000,
+   "tcdate": 1741156355051,
+   "writers": [
+    "~Yuqi_Zhang14",
+    "~Chao_Tong1"
+   ],
+   "signatures": [
+    "~Yuqi_Zhang14"
+   ],
+   "forum": "fSR5lNiBB5",
+   "license": "CC BY 4.0",
+   "number": 34013,
+   "cdate": 1741156355051,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Archive/-/Direct_Upload"
+   ],
+   "mdate": 1741156417296,
+   "domain": "OpenReview.net/Archive",
+   "id": "fSR5lNiBB5",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Int. J. Comput. Assist. Radiol. Surg. 2020"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11548-019-02060-7.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CARS/2020"
+    },
+    "paperhash": {
+     "value": "to|deep_regression_neural_networks_for_collateral_imaging_from_dynamic_susceptibility_contrastenhanced_magnetic_resonance_perfusion_in_acute_ischemic_stroke"
+    },
+    "authorids": {
+     "value": [
+      "~Minh_Nguyen_Nhat_To1",
+      "https://dblp.org/search/pid/api?q=author:Hyun_Jeong_Kim:",
+      "https://dblp.org/search/pid/api?q=author:Hong_Gee_Roh:",
+      "~Yoon-Sik_Cho1",
+      "~Jin_Tae_Kwak1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11548-019-02060-7"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/cars/ToKRCK20,\n  author={Minh Nguyen Nhat To and Hyun Jeong Kim and Hong Gee Roh and Yoon-Sik Cho and Jin Tae Kwak},\n  title={Deep regression neural networks for collateral imaging from dynamic susceptibility contrast-enhanced magnetic resonance perfusion in acute ischemic stroke},\n  year={2020},\n  cdate={1577836800000},\n  journal={Int. J. Comput. Assist. Radiol. Surg.},\n  volume={15},\n  number={1},\n  pages={151-162},\n  url={https://doi.org/10.1007/s11548-019-02060-7}\n}\n"
+    },
+    "abstract": {
+     "value": "Acute ischemic stroke is one of the primary causes of death worldwide. Recent studies have shown that the assessment of collateral status could aid in improving the treatment for patients with acute ischemic stroke. We present a 3D deep regression neural network to automatically generate the collateral images from dynamic susceptibility contrast-enhanced magnetic resonance perfusion (DSC-MRP) in acute ischemic stroke."
+    },
+    "title": {
+     "value": "Deep regression neural networks for collateral imaging from dynamic susceptibility contrast-enhanced magnetic resonance perfusion in acute ischemic stroke"
+    },
+    "authors": {
+     "value": [
+      "Minh Nguyen Nhat To",
+      "Hyun Jeong Kim",
+      "Hong Gee Roh",
+      "Yoon-Sik Cho",
+      "Jin Tae Kwak"
+     ]
+    }
+   },
+   "tmdate": 1740810181979,
+   "pdate": 1577836800000,
+   "tcdate": 1722959971354,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Yoon-Sik_Cho1"
+   ],
+   "forum": "tKaoWN2vMN",
+   "license": "CC BY-SA 4.0",
+   "number": 57076,
+   "cdate": 1577836800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit",
+    "DBLP.org/-/Author_Coreference"
+   ],
+   "mdate": 1740810181979,
+   "domain": "DBLP.org",
+   "id": "tKaoWN2vMN",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Scientific Data"
+    },
+    "pdf": {
+     "value": "https://www.nature.com/articles/s41597-026-06747-w.pdf"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Public_Article"
+    },
+    "paperhash": {
+     "value": "maiti|polysomnography_dataset_for_sleep_analysis_in_ischemic_stroke_patients"
+    },
+    "html": {
+     "value": "https://doi.org/10.1038/s41597-026-06747-w"
+    },
+    "abstract": {
+     "value": "Sleep architecture and integrity significantly influence neural recovery and cognitive restoration. These are particularly relevant in ischemic stroke survivors where sleep-disordered breathing (SDB)&nbsp;is a common comorbidity. To address the lack of stroke-specific sleep data, we present the Polysomnography Dataset for Sleep Analysis in Ischemic Stroke Patients (iSLEEPS), the first Asian and one of the largest stroke-specific sleep databases. Data collection was carried out between September-2018 and December-2021 at NIMHANS, India. iSLEEPS comprises 100 overnight PSG recordings with comprehensive expert annotations. Each recording includes sleep stages manually scored at 30-second epochs, detailed respiratory events, periodic limb movements, oxygen desaturation episodes, and clinical metrics, as per AASM&nbsp;(2017) guidelines. Our cohort demonstrates a high prevalence of SDB, enabling the investigation of stroke-sleep pathophysiology interactions. To illustrate dataset utility, we implemented automated sleep stage classification using deep learning methods. The Long Short-Term Memory model achieved the highest accuracy (74.70%), followed by Transformer (67.44%) and Convolutional Neural Network (61.65%). This dataset addresses crucial gap in stroke sleep research, supporting comprehensive analysis of post-stroke sleep disturbances."
+    },
+    "title": {
+     "value": "Polysomnography Dataset for Sleep Analysis in Ischemic Stroke Patients"
+    },
+    "authors": {
+     "value": [
+      {
+       "fullname": "Suvadeep Maiti",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Suvadeep%20Maiti"
+      },
+      {
+       "fullname": "Shivam Kumar Sharma",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Shivam%20Kumar%20Sharma"
+      },
+      {
+       "fullname": "S. Mythirayee",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=S.%20Mythirayee"
+      },
+      {
+       "fullname": "Srijithesh Rajendran",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Srijithesh%20Rajendran"
+      },
+      {
+       "fullname": "Raju S. Bapi",
+       "username": "~Raju_S._Bapi1"
+      }
+     ]
+    }
+   },
+   "tmdate": 1784900615507,
+   "pdate": 1770768000000,
+   "externalIds": [
+    "doi:10.1038/s41597-026-06747-w"
+   ],
+   "tcdate": 1784900611322,
+   "writers": [
+    "~",
+    "OpenReview.net/Public_Article/ORCID.org",
+    "OpenReview.net/Support"
+   ],
+   "signatures": [
+    "~Bapi_Raju_Surampudi1"
+   ],
+   "forum": "8lsRyvLXZw",
+   "license": "CC BY-SA 4.0",
+   "number": 88192,
+   "cdate": 1770798183632,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Public_Article/ORCID.org/-/Record",
+    "OpenReview.net/Public_Article/-/Edit"
+   ],
+   "mdate": 1784900615507,
+   "domain": "OpenReview.net/Public_Article",
+   "id": "8lsRyvLXZw",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "CoRR 2023"
+    },
+    "pdf": {
+     "value": "http://arxiv.org/pdf/2303.01332v2"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CORR/2023"
+    },
+    "paperhash": {
+     "value": "tomasetti|selfsupervised_fewshot_learning_for_ischemic_stroke_lesion_segmentation"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Luca_Tomasetti:",
+      "https://dblp.org/search/pid/api?q=author:Stine_Hansen:",
+      "https://dblp.org/search/pid/api?q=author:Mahdieh_Khanmohammadi:",
+      "https://dblp.org/search/pid/api?q=author:Kjersti_Engan:",
+      "https://dblp.org/search/pid/api?q=author:Liv_Jorunn_Høllesli:",
+      "https://dblp.org/search/pid/api?q=author:Kathinka_Dæhli_Kurz:",
+      "~Michael_Kampffmeyer1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.48550/arXiv.2303.01332"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/corr/abs-2303-01332,\n  publtype={informal},\n  author={Luca Tomasetti and Stine Hansen and Mahdieh Khanmohammadi and Kjersti Engan and Liv Jorunn Høllesli and Kathinka Dæhli Kurz and Michael Kampffmeyer},\n  title={Self-Supervised Few-Shot Learning for Ischemic Stroke Lesion Segmentation},\n  year={2023},\n  cdate={1672531200000},\n  journal={CoRR},\n  volume={abs/2303.01332},\n  url={https://doi.org/10.48550/arXiv.2303.01332}\n}\n"
+    },
+    "abstract": {
+     "value": "Precise ischemic lesion segmentation plays an essential role in improving diagnosis and treatment planning for ischemic stroke, one of the prevalent diseases with the highest mortality rate. While numerous deep neural network approaches have recently been proposed to tackle this problem, these methods require large amounts of annotated regions during training, which can be impractical in the medical domain where annotated data is scarce. As a remedy, we present a prototypical few-shot segmentation approach for ischemic lesion segmentation using only one annotated sample during training. The proposed approach leverages a novel self-supervised training mechanism that is tailored to the task of ischemic stroke lesion segmentation by exploiting color-coded parametric maps generated from Computed Tomography Perfusion scans. We illustrate the benefits of our proposed training mechanism, leading to considerable improvements in performance in the few-shot setting. Given a single annotated patient, an average Dice score of 0.58 is achieved for the segmentation of ischemic lesions."
+    },
+    "title": {
+     "value": "Self-Supervised Few-Shot Learning for Ischemic Stroke Lesion Segmentation"
+    },
+    "authors": {
+     "value": [
+      "Luca Tomasetti",
+      "Stine Hansen",
+      "Mahdieh Khanmohammadi",
+      "Kjersti Engan",
+      "Liv Jorunn Høllesli",
+      "Kathinka Dæhli Kurz",
+      "Michael Kampffmeyer"
+     ]
+    }
+   },
+   "tmdate": 1747367691508,
+   "pdate": 1672531200000,
+   "tcdate": 1747367625777,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Michael_Kampffmeyer1"
+   ],
+   "forum": "ucl78wBKJd",
+   "license": "CC BY-SA 4.0",
+   "number": 503858,
+   "cdate": 1672531200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1747367691508,
+   "domain": "DBLP.org",
+   "id": "ucl78wBKJd",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "ISBI 2023"
+    },
+    "pdf": {
+     "value": "https://ieeexplore.ieee.org/iel7/10230311/10230322/10230655.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/conf/ISBI/2023"
+    },
+    "paperhash": {
+     "value": "tomasetti|selfsupervised_fewshot_learning_for_ischemic_stroke_lesion_segmentation"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Luca_Tomasetti:",
+      "https://dblp.org/search/pid/api?q=author:Stine_Hansen:",
+      "https://dblp.org/search/pid/api?q=author:Mahdieh_Khanmohammadi:",
+      "https://dblp.org/search/pid/api?q=author:Kjersti_Engan:",
+      "https://dblp.org/search/pid/api?q=author:Liv_Jorunn_Høllesli:",
+      "https://dblp.org/search/pid/api?q=author:Kathinka_Dæhli_Kurz:",
+      "~Michael_Kampffmeyer1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1109/ISBI53787.2023.10230655"
+    },
+    "_bibtex": {
+     "value": "@inproceedings{DBLP:conf/isbi/TomasettiHKEHKK23,\n  author={Luca Tomasetti and Stine Hansen and Mahdieh Khanmohammadi and Kjersti Engan and Liv Jorunn Høllesli and Kathinka Dæhli Kurz and Michael Kampffmeyer},\n  title={Self-Supervised Few-Shot Learning for Ischemic Stroke Lesion Segmentation},\n  year={2023},\n  cdate={1672531200000},\n  pages={1-5},\n  url={https://doi.org/10.1109/ISBI53787.2023.10230655},\n  booktitle={ISBI},\n  crossref={conf/isbi/2023}\n}\n"
+    },
+    "abstract": {
+     "value": "Precise ischemic lesion segmentation plays an essential role in improving diagnosis and treatment planning for ischemic stroke, one of the prevalent diseases with the highest mortality rate. While numerous deep neural network approaches have recently been proposed to tackle this problem, these methods require large amounts of annotated regions during training, which can be impractical in the medical domain where annotated data is scarce. As a remedy, we present a prototypical few-shot segmentation approach for ischemic lesion segmentation using only one annotated sample during training. The proposed approach leverages a novel self-supervised training mechanism that is tailored to the task of ischemic stroke lesion segmentation by exploiting color-coded parametric maps generated from Computed Tomography Perfusion scans. We illustrate the benefits of our proposed training mechanism, leading to considerable improvements in performance in the few-shot setting. Given a single annotated patient, an average Dice score of 0.58 is achieved for the segmentation of ischemic lesions."
+    },
+    "title": {
+     "value": "Self-Supervised Few-Shot Learning for Ischemic Stroke Lesion Segmentation"
+    },
+    "authors": {
+     "value": [
+      "Luca Tomasetti",
+      "Stine Hansen",
+      "Mahdieh Khanmohammadi",
+      "Kjersti Engan",
+      "Liv Jorunn Høllesli",
+      "Kathinka Dæhli Kurz",
+      "Michael Kampffmeyer"
+     ]
+    }
+   },
+   "tmdate": 1747367686168,
+   "pdate": 1672531200000,
+   "tcdate": 1747367625810,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Michael_Kampffmeyer1"
+   ],
+   "forum": "QFhS3qprRF",
+   "license": "CC BY-SA 4.0",
+   "number": 503859,
+   "cdate": 1672531200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1747367686168,
+   "domain": "DBLP.org",
+   "id": "QFhS3qprRF",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Int. J. Comput. Assist. Radiol. Surg. 2023"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11548-022-02826-6.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CARS/2023"
+    },
+    "paperhash": {
+     "value": "aktar|deep_learning_for_collateral_evaluation_in_ischemic_stroke_with_imbalanced_data"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Mumu_Aktar:",
+      "https://dblp.org/search/pid/api?q=author:Jonatan_Reyes:",
+      "https://dblp.org/search/pid/api?q=author:Donatella_Tampieri:",
+      "~Hassan_Rivaz1",
+      "~Yiming_Xiao1",
+      "https://dblp.org/search/pid/api?q=author:Marta_Kersten-Oertel:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11548-022-02826-6"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/cars/AktarRTRXK23,\n  author={Mumu Aktar and Jonatan Reyes and Donatella Tampieri and Hassan Rivaz and Yiming Xiao and Marta Kersten-Oertel},\n  title={Deep learning for collateral evaluation in ischemic stroke with imbalanced data},\n  year={2023},\n  month={April},\n  cdate={1680307200000},\n  journal={Int. J. Comput. Assist. Radiol. Surg.},\n  volume={18},\n  number={4},\n  pages={733-740},\n  url={https://doi.org/10.1007/s11548-022-02826-6}\n}\n"
+    },
+    "abstract": {
+     "value": "Collateral evaluation is typically done using visual inspection of cerebral images and thus suffers from intra- and inter-rater variability. Large open databases of ischemic stroke patients are rare, limiting the use of deep learning methods in treatment decision-making."
+    },
+    "title": {
+     "value": "Deep learning for collateral evaluation in ischemic stroke with imbalanced data"
+    },
+    "authors": {
+     "value": [
+      "Mumu Aktar",
+      "Jonatan Reyes",
+      "Donatella Tampieri",
+      "Hassan Rivaz",
+      "Yiming Xiao",
+      "Marta Kersten-Oertel"
+     ]
+    }
+   },
+   "tmdate": 1762700415090,
+   "pdate": 1672531200000,
+   "tcdate": 1731508582688,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Hassan_Rivaz1"
+   ],
+   "forum": "xwIYGtrcCx",
+   "license": "CC BY-SA 4.0",
+   "number": 229877,
+   "cdate": 1680307200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit",
+    "DBLP.org/-/Author_Coreference"
+   ],
+   "mdate": 1762700415090,
+   "domain": "DBLP.org",
+   "id": "xwIYGtrcCx",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Multim. Tools Appl. 2019"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11042-018-6418-2.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/MTA/2019"
+    },
+    "paperhash": {
+     "value": "gautam|segmentation_of_ischemic_stroke_lesion_from_3d_mr_images_using_random_forest"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Anjali_Gautam:",
+      "~Balasubramanian_Raman2"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11042-018-6418-2"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/mta/GautamR19,\n  author={Anjali Gautam and Balasubramanian Raman},\n  title={Segmentation of ischemic stroke lesion from 3d mr images using random forest},\n  year={2019},\n  cdate={1546300800000},\n  journal={Multim. Tools Appl.},\n  volume={78},\n  number={6},\n  pages={6559-6579},\n  url={https://doi.org/10.1007/s11042-018-6418-2}\n}\n"
+    },
+    "abstract": {
+     "value": "This paper focuses on segmentation of ischemic stroke lesion from the dataset contributed by Ischemic Stroke Lesion Segmentation (ISLES)-2015 Sub-acute Ischemic Stroke lesion Segmentation (SISS) challenge. The dataset comprises 28 stroke cases of magnetic resonance (MR) images. This study considers fluid attenuation inversion recovery (FLAIR) MR images for the segmentation of lesions. MR images are affected by various artifacts and noise. Hence, we applied wavelet based data denoising technique by optimal parameter selection for stroke lesion enhancement followed by random forest (RF). RF classifier was trained for different part of the brain for segmenting the stroke lesion. The obtained results show best overall segmentation accuracy when compared with the other methods. To measure the image similarity between the ground truth and the segmented image, we used the evaluation method provided by the ISLES-2015. The average symmetric surface distance (ASSD) of the segmentation was measured to be 4.57 mm, while Dice’s coefficient ((DC) lies between 0 and 1) was used to measure the volume overlap accuracy with an average of 0.67. The maximum of all surface distance was given by Hausdorff distance (HD) with an average of 28.09 mm. The average precision and average recall observed was 0.70 and 0.71 respectively. The ISLES image data and ground truth images kept on being openly accessible through an online virtual skeleton database which is an ongoing benchmarking resource."
+    },
+    "title": {
+     "value": "Segmentation of ischemic stroke lesion from 3d mr images using random forest"
+    },
+    "authors": {
+     "value": [
+      "Anjali Gautam",
+      "Balasubramanian Raman"
+     ]
+    }
+   },
+   "tmdate": 1731462670146,
+   "pdate": 1546300800000,
+   "tcdate": 1731461688151,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Balasubramanian_Raman2"
+   ],
+   "forum": "H0t5NFdwgn",
+   "license": "CC BY-SA 4.0",
+   "number": 186052,
+   "cdate": 1546300800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1731462670146,
+   "domain": "DBLP.org",
+   "id": "H0t5NFdwgn",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Multim. Tools Appl. 2019"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11042-018-6418-2.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/MTA/2019"
+    },
+    "paperhash": {
+     "value": "gautam|segmentation_of_ischemic_stroke_lesion_from_3d_mr_images_using_random_forest"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Anjali_Gautam:",
+      "~Balasubramanian_Raman2"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11042-018-6418-2"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/mta/GautamR19,\n  author={Anjali Gautam and Balasubramanian Raman},\n  title={Segmentation of ischemic stroke lesion from 3d mr images using random forest},\n  year={2019},\n  cdate={1546300800000},\n  journal={Multim. Tools Appl.},\n  volume={78},\n  number={6},\n  pages={6559-6579},\n  url={https://doi.org/10.1007/s11042-018-6418-2}\n}\n"
+    },
+    "abstract": {
+     "value": "This paper focuses on segmentation of ischemic stroke lesion from the dataset contributed by Ischemic Stroke Lesion Segmentation (ISLES)-2015 Sub-acute Ischemic Stroke lesion Segmentation (SISS) challenge. The dataset comprises 28 stroke cases of magnetic resonance (MR) images. This study considers fluid attenuation inversion recovery (FLAIR) MR images for the segmentation of lesions. MR images are affected by various artifacts and noise. Hence, we applied wavelet based data denoising technique by optimal parameter selection for stroke lesion enhancement followed by random forest (RF). RF classifier was trained for different part of the brain for segmenting the stroke lesion. The obtained results show best overall segmentation accuracy when compared with the other methods. To measure the image similarity between the ground truth and the segmented image, we used the evaluation method provided by the ISLES-2015. The average symmetric surface distance (ASSD) of the segmentation was measured to be 4.57 mm, while Dice’s coefficient ((DC) lies between 0 and 1) was used to measure the volume overlap accuracy with an average of 0.67. The maximum of all surface distance was given by Hausdorff distance (HD) with an average of 28.09 mm. The average precision and average recall observed was 0.70 and 0.71 respectively. The ISLES image data and ground truth images kept on being openly accessible through an online virtual skeleton database which is an ongoing benchmarking resource."
+    },
+    "title": {
+     "value": "Segmentation of ischemic stroke lesion from 3d mr images using random forest"
+    },
+    "authors": {
+     "value": [
+      "Anjali Gautam",
+      "Balasubramanian Raman"
+     ]
+    }
+   },
+   "tmdate": 1731462488338,
+   "pdate": 1546300800000,
+   "tcdate": 1731461640686,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Balasubramanian_Raman2"
+   ],
+   "forum": "JepMxpM4CY",
+   "license": "CC BY-SA 4.0",
+   "number": 185786,
+   "cdate": 1546300800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1731462488338,
+   "domain": "DBLP.org",
+   "id": "JepMxpM4CY",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "MICCAI Meets Africa Workshop"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Archive"
+    },
+    "paperhash": {
+     "value": "musah|automated_segmentation_of_ischemic_stroke_lesions_in_noncontrast_computed_tomography_images_for_enhanced_treatment_and_prognosis"
+    },
+    "authorids": {
+     "value": [
+      "~Toufiq_Musah1"
+     ]
+    },
+    "html": {
+     "value": "https://arxiv.org/pdf/2411.09402"
+    },
+    "abstract": {
+     "value": "Stroke is the second leading cause of death worldwide, and is increasingly prevalent in low- and middle-income countries (LMICs). Timely interventions can significantly influence stroke survivability and the quality of life after treatment. However, the standard and most widely available imaging method for confirming strokes and their sub-types, the NCCT, is more challenging and time-consuming to employ in cases of ischemic stroke. For this reason, we developed an automated method for ischemic stroke lesion segmentation in NCCTs using the nnU-Net framework, aimed at enhancing early treatment and improving the prognosis of ischemic stroke patients. We achieved Dice scores of 0.596 and Intersection over Union (IoU) scores of 0.501 on the sampled dataset. After adjusting for outliers, these scores improved to 0.752 for the Dice score and 0.643 for the IoU."
+    },
+    "title": {
+     "value": "Automated Segmentation of Ischemic Stroke Lesions in Non-Contrast Computed Tomography Images for Enhanced Treatment and Prognosis"
+    },
+    "authors": {
+     "value": [
+      "Toufiq Musah"
+     ]
+    }
+   },
+   "tmdate": 1784570858212,
+   "pdate": 1751328000000,
+   "tcdate": 1784570858212,
+   "writers": [
+    "~Toufiq_Musah1"
+   ],
+   "signatures": [
+    "~Toufiq_Musah1"
+   ],
+   "forum": "PBRJuQwFva",
+   "license": "CC BY 4.0",
+   "number": 52379,
+   "cdate": 1784570858212,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Archive/-/Direct_Upload"
+   ],
+   "mdate": 1784570858212,
+   "domain": "OpenReview.net/Archive",
+   "id": "PBRJuQwFva",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "CoRR 2025"
+    },
+    "pdf": {
+     "value": "https://arxiv.org/pdf/2512.20436v1"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CORR/2025"
+    },
+    "paperhash": {
+     "value": "usman|dualencoder_transformerbased_multimodal_learning_for_ischemic_stroke_lesion_segmentation_using_diffusion_mri"
+    },
+    "authorids": {
+     "value": [
+      "",
+      "",
+      "",
+      "",
+      "~Muhammad_Umar_Farooq1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.48550/arXiv.2512.20436"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/corr/abs-2512-20436,\n  publtype={informal},\n  author={Muhammad Usman and Azka Rehman and Muhammad Mutti Ur Rehman and Abd Ur Rehman and Muhammad Umar Farooq},\n  title={Dual-Encoder Transformer-Based Multimodal Learning for Ischemic Stroke Lesion Segmentation Using Diffusion MRI},\n  year={2025},\n  month={December},\n  cdate={1764547200000},\n  journal={CoRR},\n  volume={abs/2512.20436},\n  url={https://doi.org/10.48550/arXiv.2512.20436}\n}\n"
+    },
+    "abstract": {
+     "value": "Accurate segmentation of ischemic stroke lesions from diffusion magnetic resonance imaging (MRI) is essential for clinical decision-making and outcome assessment. Diffusion-Weighted Imaging (DWI) and Apparent Diffusion Coefficient (ADC) scans provide complementary information on acute and sub-acute ischemic changes; however, automated lesion delineation remains challenging due to variability in lesion appearance. In this work, we study ischemic stroke lesion segmentation using multimodal diffusion MRI from the ISLES 2022 dataset. Several state-of-the-art convolutional and transformer-based architectures, including U-Net variants, Swin-UNet, and TransUNet, are benchmarked. Based on performance, a dual-encoder TransUNet architecture is proposed to learn modality-specific representations from DWI and ADC inputs. To incorporate spatial context, adjacent slice information is integrated using a three-slice input configuration. All models are trained under a unified framework and evaluated using the Dice Similarity Coefficient (DSC). Results show that transformer-based models outperform convolutional baselines, and the proposed dual-encoder TransUNet achieves the best performance, reaching a Dice score of 85.4% on the test set. The proposed framework offers a robust solution for automated ischemic stroke lesion segmentation from diffusion MRI."
+    },
+    "title": {
+     "value": "Dual-Encoder Transformer-Based Multimodal Learning for Ischemic Stroke Lesion Segmentation Using Diffusion MRI"
+    },
+    "authors": {
+     "value": [
+      "Muhammad Usman",
+      "Azka Rehman",
+      "Muhammad Mutti Ur Rehman",
+      "Abd Ur Rehman",
+      "Muhammad Umar Farooq"
+     ]
+    }
+   },
+   "tmdate": 1772297130842,
+   "pdate": 1767139200000,
+   "externalIds": [
+    "dblp:journals/corr/abs-2512-20436"
+   ],
+   "tcdate": 1772297128339,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Muhammad_Umar_Farooq1"
+   ],
+   "forum": "F03gF10GM7",
+   "license": "CC BY-SA 4.0",
+   "number": 839700,
+   "cdate": 1764547200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1772297130842,
+   "domain": "DBLP.org",
+   "id": "F03gF10GM7",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "ISBI 2019"
+    },
+    "pdf": {
+     "value": "https://ieeexplore.ieee.org/iel7/8754684/8759097/08759475.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/conf/ISBI/2019"
+    },
+    "paperhash": {
+     "value": "barman|determining_ischemic_stroke_from_ctangiography_imaging_using_symmetrysensitive_convolutional_networks"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Arko_Barman:",
+      "https://dblp.org/search/pid/api?q=author:Mehmet_Enes_Inam:",
+      "https://dblp.org/search/pid/api?q=author:Songmi_Lee:",
+      "https://dblp.org/search/pid/api?q=author:Sean_I._Savitz:",
+      "https://dblp.org/search/pid/api?q=author:Sunil_Sheth:",
+      "~Luca_Giancardo1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1109/ISBI.2019.8759475"
+    },
+    "_bibtex": {
+     "value": "@inproceedings{DBLP:conf/isbi/BarmanILSSG19,\n  author={Arko Barman and Mehmet Enes Inam and Songmi Lee and Sean I. Savitz and Sunil Sheth and Luca Giancardo},\n  title={Determining Ischemic Stroke From CT-Angiography Imaging Using Symmetry-Sensitive Convolutional Networks},\n  year={2019},\n  cdate={1546300800000},\n  pages={1873-1877},\n  url={https://doi.org/10.1109/ISBI.2019.8759475},\n  booktitle={ISBI},\n  crossref={conf/isbi/2019}\n}\n"
+    },
+    "abstract": {
+     "value": "Acute Ischemic Stroke (AIS) is the second leading cause of death worldwide in 2015, and 5th in the United States. Neuro-imaging is routinely used in the diagnosis and management of these patients. To create a decision support method for AIS, we propose a convolutional neural network for automated detection of ischemic stroke from CT Angiography (CTA), an imaging technique that is widely available and used routinely in stroke evaluations. The network has a novel design that makes it sensitive to changes in symmetry of vascular and brain tissue texture which allows it to detect ischemic stroke from CTA brain images. The proposed model is inspired from the paradigm of Siamese networks and applied to the two brain hemispheres in parallel. We tested the model on a clinical dataset of 217 subjects, 123 controls and 94 subjects imaged less than 24 hours after stroke onset. First, we tested the ability of the network in recognizing strokes with the original images, which contain asymmetries in both vascular structures and brain tissues. Then, we digitally removed the vasculature in order to evaluate the ability of the network to recognize strokes by analyzing brain tissue only. We achieved AUC 0.914 (CI 0.88-0.95) and AUC 0.899 (CI 0.86-0.94) on the two experiments respectively. The qualitative analysis of the network activation confirms that the model efficiently learns the vasculature and brain tissue structures in one hemisphere that does not appear in the opposite hemisphere."
+    },
+    "title": {
+     "value": "Determining Ischemic Stroke From CT-Angiography Imaging Using Symmetry-Sensitive Convolutional Networks"
+    },
+    "authors": {
+     "value": [
+      "Arko Barman",
+      "Mehmet Enes Inam",
+      "Songmi Lee",
+      "Sean I. Savitz",
+      "Sunil Sheth",
+      "Luca Giancardo"
+     ]
+    }
+   },
+   "tmdate": 1741359939502,
+   "pdate": 1546300800000,
+   "tcdate": 1741359886518,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Luca_Giancardo1"
+   ],
+   "forum": "NJqep5Y2Ep",
+   "license": "CC BY-SA 4.0",
+   "number": 365395,
+   "cdate": 1546300800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1741359939502,
+   "domain": "DBLP.org",
+   "id": "NJqep5Y2Ep",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Comput. Medical Imaging Graph. 2025"
+    },
+    "pdf": {
+     "value": "https://www.sciencedirect.com/science/article/pii/S089561112500059X/pdfft?md5=deb46a2b33d1bbda1a855b5db76c5014&pid=1-s2.0-S089561112500059X-main.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CMIG/2025"
+    },
+    "paperhash": {
+     "value": "aktar|cascadefsl_fewshot_learning_for_collateral_evaluation_in_ischemic_stroke"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Mumu_Aktar:",
+      "https://dblp.org/search/pid/api?q=author:Donatella_Tampieri:",
+      "~Yiming_Xiao1",
+      "https://dblp.org/search/pid/api?q=author:Hassan_Rivaz:",
+      "https://dblp.org/search/pid/api?q=author:Marta_Kersten-Oertel:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1016/j.compmedimag.2025.102550"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/cmig/AktarTXRK25,\n  author={Mumu Aktar and Donatella Tampieri and Yiming Xiao and Hassan Rivaz and Marta Kersten-Oertel},\n  title={CASCADE-FSL: Few-shot learning for collateral evaluation in ischemic stroke},\n  year={2025},\n  cdate={1735689600000},\n  journal={Comput. Medical Imaging Graph.},\n  volume={123},\n  pages={102550},\n  url={https://doi.org/10.1016/j.compmedimag.2025.102550}\n}\n"
+    },
+    "abstract": {
+     "value": "Highlights•Collateral assessment in ischemic stroke using few-shot learning.•Developed a deep learning method for stroke collateral analysis in small datasets.•Poor collateral cases detected as anomalies that can adversely affect the treatment without using them during training.•Proposed method reduces rater variability and support treatment planning in clinical settings."
+    },
+    "title": {
+     "value": "CASCADE-FSL: Few-shot learning for collateral evaluation in ischemic stroke"
+    },
+    "authors": {
+     "value": [
+      "Mumu Aktar",
+      "Donatella Tampieri",
+      "Yiming Xiao",
+      "Hassan Rivaz",
+      "Marta Kersten-Oertel"
+     ]
+    }
+   },
+   "tmdate": 1762700430120,
+   "pdate": 1735689600000,
+   "externalIds": [
+    "dblp:journals/cmig/AktarTXRK25"
+   ],
+   "tcdate": 1762700413861,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Yiming_Xiao1"
+   ],
+   "forum": "ygu0bNcacY",
+   "license": "CC BY-SA 4.0",
+   "number": 683066,
+   "cdate": 1735689600000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1762700430120,
+   "domain": "DBLP.org",
+   "id": "ygu0bNcacY",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "CoRR 2019"
+    },
+    "pdf": {
+     "value": "http://arxiv.org/pdf/1906.08059v1"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CORR/2019"
+    },
+    "paperhash": {
+     "value": "you|automated_computer_evaluation_of_acute_ischemic_stroke_and_large_vessel_occlusion"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Jia_You:",
+      "~Philip_L._H._Yu1",
+      "https://dblp.org/search/pid/api?q=author:Anderson_C._O._Tsang:",
+      "https://dblp.org/search/pid/api?q=author:Eva_L._H._Tsui:",
+      "https://dblp.org/search/pid/api?q=author:Pauline_P._S._Woo:",
+      "https://dblp.org/search/pid/api?q=author:Gilberto_K._K._Leung:"
+     ]
+    },
+    "html": {
+     "value": "http://arxiv.org/abs/1906.08059"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/corr/abs-1906-08059,\n  publtype={informal},\n  author={Jia You and Philip L. H. Yu and Anderson C. O. Tsang and Eva L. H. Tsui and Pauline P. S. Woo and Gilberto K. K. Leung},\n  title={Automated Computer Evaluation of Acute Ischemic Stroke and Large Vessel Occlusion},\n  year={2019},\n  cdate={1546300800000},\n  journal={CoRR},\n  volume={abs/1906.08059},\n  url={http://arxiv.org/abs/1906.08059}\n}\n"
+    },
+    "abstract": {
+     "value": "Large vessel occlusion (LVO) plays an important role in the diagnosis of acute ischemic stroke. Identifying LVO of patients in the early stage on admission would significantly lower the probabilities of suffering from severe effects due to stroke or even save their lives. In this paper, we utilized both structural and imaging data from all recorded acute ischemic stroke patients in Hong Kong. Total 300 patients (200 training and 100 testing) are used in this study. We established three hierarchical models based on demographic data, clinical data and features obtained from computerized tomography (CT) scans. The first two stages of modeling are merely based on demographic and clinical data. Besides, the third model utilized extra CT imaging features obtained from deep learning model. The optimal cutoff is determined at the maximal Youden index based on 10-fold cross-validation. With both clinical and imaging features, the Level-3 model achieved the best performance on testing data. The sensitivity, specificity, Youden index, accuracy and area under the curve (AUC) are 0.930, 0.684, 0.614, 0.790 and 0.850 respectively."
+    },
+    "title": {
+     "value": "Automated Computer Evaluation of Acute Ischemic Stroke and Large Vessel Occlusion"
+    },
+    "authors": {
+     "value": [
+      "Jia You",
+      "Philip L. H. Yu",
+      "Anderson C. O. Tsang",
+      "Eva L. H. Tsui",
+      "Pauline P. S. Woo",
+      "Gilberto K. K. Leung"
+     ]
+    }
+   },
+   "tmdate": 1753610314481,
+   "pdate": 1546300800000,
+   "tcdate": 1753610310396,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Philip_L.H._Yu1"
+   ],
+   "forum": "2wW5wO0yGx",
+   "license": "CC BY-SA 4.0",
+   "number": 594437,
+   "cdate": 1546300800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1753610314481,
+   "domain": "DBLP.org",
+   "id": "2wW5wO0yGx",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "ICCV (Workshops) 2023"
+    },
+    "pdf": {
+     "value": "https://ieeexplore.ieee.org/iel7/10350357/10350360/10350418.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/conf/ICCVW/2023"
+    },
+    "paperhash": {
+     "value": "pleasure|pathologybased_ischemic_stroke_etiology_classification_via_clot_composition_guided_multiple_instance_learning"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Mara_Pleasure:",
+      "~Ekaterina_Redekop1",
+      "https://dblp.org/search/pid/api?q=author:Jennifer_S._Polson:",
+      "https://dblp.org/search/pid/api?q=author:Haoyue_Zhang:",
+      "https://dblp.org/search/pid/api?q=author:Naoki_Kaneko:",
+      "https://dblp.org/search/pid/api?q=author:William_Speier:",
+      "https://dblp.org/search/pid/api?q=author:Corey_W._Arnold:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1109/ICCVW60793.2023.00282"
+    },
+    "_bibtex": {
+     "value": "@inproceedings{DBLP:conf/iccvw/PleasureRPZKSA23,\n  author={Mara Pleasure and Ekaterina Redekop and Jennifer S. Polson and Haoyue Zhang and Naoki Kaneko and William Speier and Corey W. Arnold},\n  title={Pathology-Based Ischemic Stroke Etiology Classification via Clot Composition Guided Multiple Instance Learning},\n  year={2023},\n  cdate={1672531200000},\n  pages={2666-2675},\n  url={https://doi.org/10.1109/ICCVW60793.2023.00282},\n  booktitle={ICCV (Workshops)},\n  crossref={conf/iccvw/2023}\n}\n"
+    },
+    "abstract": {
+     "value": "Accurate identification of the etiology of acute ischemic stroke is crucial to prevent secondary strokes. With the growing utilization of endovascular thrombectomy as a treatment for acute ischemic stroke, there has been an increased interest in analyzing the removed clot tissue, opening possibilities for developing histology-based automated diagnostic methods for clot etiology prediction. In this paper, we propose an automated pipeline for Pathology-Based Ischemic Stroke Etiology Classification via Clot Composition Guided Multiple Instance Learning, that leverages the heterogeneity of the main clot components, specifically red blood cells (RBCs) and fibrin, to predict clot etiology solely using digital pathology data. We combine a publicly available dataset from 11 different medical Centers with a private dataset from the University of California, Los Angeles (UCLA). We train the model using center-wise leave-one-out cross-validation to create a model that can generalize to all 12 Centers. Additionally, we compare three different self-supervised methods for embedding the histology data from whole slide images (WSIs) for a downstream task and found that combining two feature sets results in the best performance for our dataset. Our solution resulted in 0.762±0.141 AUC and 0.869±0.139 PRAUC for differentiation between large-artery atherosclerosis and cardioembolic clot etiology. These results hint at the potential to construct a generalizable model for clot etiology prediction. Such a model could assist in treatment planning, thereby helping reduce the likelihood of recurrent strokes."
+    },
+    "title": {
+     "value": "Pathology-Based Ischemic Stroke Etiology Classification via Clot Composition Guided Multiple Instance Learning"
+    },
+    "authors": {
+     "value": [
+      "Mara Pleasure",
+      "Ekaterina Redekop",
+      "Jennifer S. Polson",
+      "Haoyue Zhang",
+      "Naoki Kaneko",
+      "William Speier",
+      "Corey W. Arnold"
+     ]
+    }
+   },
+   "tmdate": 1762972968487,
+   "pdate": 1672531200000,
+   "externalIds": [
+    "dblp:conf/iccvw/PleasureRPZKSA23"
+   ],
+   "tcdate": 1762972964598,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Ekaterina_Redekop1"
+   ],
+   "forum": "XDvuvAsVGV",
+   "license": "CC BY-SA 4.0",
+   "number": 698263,
+   "cdate": 1672531200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1762972968487,
+   "domain": "DBLP.org",
+   "id": "XDvuvAsVGV",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Neural Comput. Appl. 2020"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s00521-019-04096-x.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/NCA/2020"
+    },
+    "paperhash": {
+     "value": "liu|deep_convolutional_neural_network_for_automatically_segmenting_acute_ischemic_stroke_lesion_in_multimodality_mri"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Liangliang_Liu_0001:",
+      "https://dblp.org/search/pid/api?q=author:Shaowu_Chen:",
+      "~Fuhao_Zhang1",
+      "~Fang-Xiang_Wu1",
+      "~Yi_Pan5",
+      "https://dblp.org/search/pid/api?q=author:Jianxin_Wang_0001:"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s00521-019-04096-x"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/nca/LiuCZWPW20,\n  author={Liangliang Liu and Shaowu Chen and Fuhao Zhang and Fang-Xiang Wu and Yi Pan and Jianxin Wang},\n  title={Deep convolutional neural network for automatically segmenting acute ischemic stroke lesion in multi-modality MRI},\n  year={2020},\n  cdate={1577836800000},\n  journal={Neural Comput. Appl.},\n  volume={32},\n  number={11},\n  pages={6545-6558},\n  url={https://doi.org/10.1007/s00521-019-04096-x}\n}\n"
+    },
+    "abstract": {
+     "value": "Correct segmentation of stroke lesions from magnetic resonance imaging (MRI) is crucial for neurologists and patients. However, manual segmentation relies on expert experience and is time-consuming. The complicated stroke evolution phase and the limited samples pose challenges for automatic segmentation. In this study, we propose a novel deep convolutional neural network (Res-CNN) to automatically segment acute ischemic stroke lesions from multi-modality MRIs. Our network draws on U-shape structure, and we embed residual unit into network. In Res-CNN, we use residual unit to alleviate the degradation problem and use multi-modality to exploit the complementary information in MRIs. Before training the model, we use data fusion and data augmentation methods to increase the number of training images. Seven neural networks are extensively evaluated on two acute ischemic stroke datasets. Res-CNN shows good performance compared with other six networks both in single modality and multi-modality. Furthermore, compared with the gold standard segmentation manually labeled by two neurologists on a local test dataset, our network achieves the best results in seven neural networks. The average Dice coefficient and Hausdorff distance of our method are 74.20% and 2.33 mm, respectively. Our proposed network may provide a useful tool for segmentation lesion of acute ischemic stroke."
+    },
+    "title": {
+     "value": "Deep convolutional neural network for automatically segmenting acute ischemic stroke lesion in multi-modality MRI"
+    },
+    "authors": {
+     "value": [
+      "Liangliang Liu",
+      "Shaowu Chen",
+      "Fuhao Zhang",
+      "Fang-Xiang Wu",
+      "Yi Pan",
+      "Jianxin Wang"
+     ]
+    }
+   },
+   "tmdate": 1772229396483,
+   "pdate": 1577836800000,
+   "tcdate": 1731470331502,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Yi_Pan5"
+   ],
+   "forum": "U69fnpIWve",
+   "license": "CC BY-SA 4.0",
+   "number": 195356,
+   "cdate": 1577836800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit",
+    "DBLP.org/-/Author_Coreference"
+   ],
+   "mdate": 1772229396483,
+   "domain": "DBLP.org",
+   "id": "U69fnpIWve",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Physics in Medicine & Biology"
+    },
+    "pdf": {
+     "value": "https://iopscience.iop.org/article/10.1088/1361-6560/ae4167/pdf"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Public_Article"
+    },
+    "paperhash": {
+     "value": "viswanathan|a_rapid_and_accurate_guanidine_cest_imaging_in_ischemic_stroke_using_a_machine_learning_approach"
+    },
+    "html": {
+     "value": "https://doi.org/10.1088/1361-6560/ae4167"
+    },
+    "abstract": {
+     "value": "A rapid and accurate guanidine CEST imaging in ischemic stroke using a machine learning approach, Viswanathan, Malvika, Yin, Leqi, Kurmi, Yashwant, Chen, You, Jiang, Xiaoyu, Xu, Junzhong, Afzal, Aqeela, Zu, Zhongliang"
+    },
+    "title": {
+     "value": "A rapid and accurate guanidine CEST imaging in ischemic stroke using a machine learning approach"
+    },
+    "authors": {
+     "value": [
+      {
+       "fullname": "Malvika Viswanathan",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Malvika%20Viswanathan"
+      },
+      {
+       "fullname": "Leqi Yin",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Leqi%20Yin"
+      },
+      {
+       "fullname": "Yashwant Kurmi",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Yashwant%20Kurmi"
+      },
+      {
+       "fullname": "You Chen",
+       "username": "~You_Chen3"
+      },
+      {
+       "fullname": "Xiaoyu Jiang",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Xiaoyu%20Jiang"
+      },
+      {
+       "fullname": "Junzhong Xu",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Junzhong%20Xu"
+      },
+      {
+       "fullname": "Aqeela Afzal",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Aqeela%20Afzal"
+      },
+      {
+       "fullname": "Zhongliang Zu",
+       "username": "https://orcid.org/orcid-search/search?searchQuery=Zhongliang%20Zu"
+      }
+     ]
+    }
+   },
+   "tmdate": 1785195016618,
+   "pdate": 1772236800000,
+   "externalIds": [
+    "doi:10.1088/1361-6560/ae4167"
+   ],
+   "tcdate": 1785195008388,
+   "writers": [
+    "~",
+    "OpenReview.net/Public_Article/ORCID.org",
+    "OpenReview.net/Support"
+   ],
+   "signatures": [
+    "~You_Chen3"
+   ],
+   "forum": "TBkJhyA1aw",
+   "license": "CC BY-SA 4.0",
+   "number": 89705,
+   "cdate": 1771416012890,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Public_Article/ORCID.org/-/Record",
+    "OpenReview.net/Public_Article/-/Edit"
+   ],
+   "mdate": 1785195016618,
+   "domain": "OpenReview.net/Public_Article",
+   "id": "TBkJhyA1aw",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "International Journal of Computer Assisted Radiology and Surgery"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11548-022-02570-x.pdf"
+    },
+    "venueid": {
+     "value": "OpenReview.net/Public_Article"
+    },
+    "paperhash": {
+     "value": "lin|toward_automated_segmentation_for_acute_ischemic_stroke_using_noncontrast_computed_tomography"
+    },
+    "authorids": {
+     "value": [
+      "https://orcid.org/orcid-search/search?searchQuery=Shih-Yen Lin",
+      "https://orcid.org/orcid-search/search?searchQuery=Pi-Ling Chiang",
+      "https://orcid.org/orcid-search/search?searchQuery=Peng-Wen Chen",
+      "https://orcid.org/orcid-search/search?searchQuery=Li-Hsin Cheng",
+      "https://orcid.org/orcid-search/search?searchQuery=Meng-Hsiang Chen",
+      "https://orcid.org/orcid-search/search?searchQuery=Pei-Chun Chang",
+      "https://orcid.org/orcid-search/search?searchQuery=Wei-Che Lin",
+      "~Yong-Sheng_Chen1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11548-022-02570-x"
+    },
+    "_bibtex": {
+     "value": "@article{Lin_2022,\n\tdoi = {10.1007/s11548-022-02570-x},\n\turl = {https://doi.org/10.1007%2Fs11548-022-02570-x},\n\tyear = 2022,\n\tmonth = {mar},\n\tpublisher = {Springer Science and Business Media {LLC}},\n\tvolume = {17},\n\tnumber = {4},\n\tpages = {661--671},\n\tauthor = {Shih-Yen Lin and Pi-Ling Chiang and Peng-Wen Chen and Li-Hsin Cheng and Meng-Hsiang Chen and Pei-Chun Chang and Wei-Che Lin and Yong-Sheng Chen},\n\ttitle = {Toward automated segmentation for acute ischemic stroke using non-contrast computed tomography},\n\tjournal = {International Journal of Computer Assisted Radiology and Surgery}\n}"
+    },
+    "abstract": {
+     "value": "Non-contrast computed tomography (NCCT) is a first-line imaging technique for determining treatment options for acute ischemic stroke (AIS). However, its poor contrast and signal-to-noise ratio limit the diagnosis accuracy for radiologists, and automated AIS lesion segmentation using NCCT also remains a challenge. In this paper, we propose R2U-RNet, a novel model for AIS lesion segmentation using NCCT."
+    },
+    "title": {
+     "value": "Toward automated segmentation for acute ischemic stroke using non-contrast computed tomography"
+    },
+    "authors": {
+     "value": [
+      "Shih-Yen Lin",
+      "Pi-Ling Chiang",
+      "Peng-Wen Chen",
+      "Li-Hsin Cheng",
+      "Meng-Hsiang Chen",
+      "Pei-Chun Chang",
+      "Wei-Che Lin",
+      "Yong-Sheng Chen"
+     ]
+    }
+   },
+   "tmdate": 1762256062493,
+   "pdate": 1648771200000,
+   "externalIds": [
+    "doi:10.1007/s11548-022-02570-x"
+   ],
+   "tcdate": 1762256057857,
+   "writers": [
+    "~",
+    "OpenReview.net/Public_Article/ORCID.org",
+    "OpenReview.net/Support"
+   ],
+   "signatures": [
+    "~Yong-Sheng_Chen1"
+   ],
+   "forum": "NBWxoDvB0E",
+   "license": "CC BY-SA 4.0",
+   "number": 4242,
+   "cdate": 1646708089776,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "OpenReview.net/Public_Article/ORCID.org/-/Record",
+    "OpenReview.net/Public_Article/-/Edit"
+   ],
+   "mdate": 1762256062493,
+   "domain": "OpenReview.net/Public_Article",
+   "id": "NBWxoDvB0E",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "Int. J. Comput. Assist. Radiol. Surg. 2022"
+    },
+    "pdf": {
+     "value": "https://link.springer.com/content/pdf/10.1007/s11548-022-02570-x.pdf"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CARS/2022"
+    },
+    "paperhash": {
+     "value": "lin|toward_automated_segmentation_for_acute_ischemic_stroke_using_noncontrast_computed_tomography"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Shih-Yen_Lin:",
+      "https://dblp.org/search/pid/api?q=author:Pi-Ling_Chiang:",
+      "https://dblp.org/search/pid/api?q=author:Peng-Wen_Chen:",
+      "https://dblp.org/search/pid/api?q=author:Li-Hsin_Cheng:",
+      "https://dblp.org/search/pid/api?q=author:Meng-Hsiang_Chen:",
+      "https://dblp.org/search/pid/api?q=author:Pei-Chun_Chang:",
+      "https://dblp.org/search/pid/api?q=author:Wei-Che_Lin:",
+      "~Yong-Sheng_Chen1"
+     ]
+    },
+    "html": {
+     "value": "https://doi.org/10.1007/s11548-022-02570-x"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/cars/LinCCCCCLC22,\n  author={Shih-Yen Lin and Pi-Ling Chiang and Peng-Wen Chen and Li-Hsin Cheng and Meng-Hsiang Chen and Pei-Chun Chang and Wei-Che Lin and Yong-Sheng Chen},\n  title={Toward automated segmentation for acute ischemic stroke using non-contrast computed tomography},\n  year={2022},\n  cdate={1640995200000},\n  journal={Int. J. Comput. Assist. Radiol. Surg.},\n  volume={17},\n  number={4},\n  pages={661-671},\n  url={https://doi.org/10.1007/s11548-022-02570-x}\n}\n"
+    },
+    "abstract": {
+     "value": "Non-contrast computed tomography (NCCT) is a first-line imaging technique for determining treatment options for acute ischemic stroke (AIS). However, its poor contrast and signal-to-noise ratio limit the diagnosis accuracy for radiologists, and automated AIS lesion segmentation using NCCT also remains a challenge. In this paper, we propose R2U-RNet, a novel model for AIS lesion segmentation using NCCT."
+    },
+    "title": {
+     "value": "Toward automated segmentation for acute ischemic stroke using non-contrast computed tomography"
+    },
+    "authors": {
+     "value": [
+      "Shih-Yen Lin",
+      "Pi-Ling Chiang",
+      "Peng-Wen Chen",
+      "Li-Hsin Cheng",
+      "Meng-Hsiang Chen",
+      "Pei-Chun Chang",
+      "Wei-Che Lin",
+      "Yong-Sheng Chen"
+     ]
+    }
+   },
+   "tmdate": 1762255791699,
+   "pdate": 1640995200000,
+   "externalIds": [
+    "dblp:journals/cars/LinCCCCCLC22"
+   ],
+   "tcdate": 1762255771268,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Yong-Sheng_Chen1"
+   ],
+   "forum": "YGZAUKmwBW",
+   "license": "CC BY-SA 4.0",
+   "number": 653134,
+   "cdate": 1640995200000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1762255791699,
+   "domain": "DBLP.org",
+   "id": "YGZAUKmwBW",
+   "version": 2
+  },
+  {
+   "content": {
+    "venue": {
+     "value": "CoRR 2019"
+    },
+    "pdf": {
+     "value": "http://arxiv.org/pdf/1905.09049v1"
+    },
+    "venueid": {
+     "value": "dblp.org/journals/CORR/2019"
+    },
+    "paperhash": {
+     "value": "you|automated_segmentation_for_hyperdense_middle_cerebral_artery_sign_of_acute_ischemic_stroke_on_noncontrast_ct_images"
+    },
+    "authorids": {
+     "value": [
+      "https://dblp.org/search/pid/api?q=author:Jia_You:",
+      "~Philip_L._H._Yu1",
+      "https://dblp.org/search/pid/api?q=author:Anderson_C._O._Tsang:",
+      "https://dblp.org/search/pid/api?q=author:Eva_L._H._Tsui:",
+      "https://dblp.org/search/pid/api?q=author:Pauline_P._S._Woo:",
+      "https://dblp.org/search/pid/api?q=author:Gilberto_K._K._Leung:"
+     ]
+    },
+    "html": {
+     "value": "http://arxiv.org/abs/1905.09049"
+    },
+    "_bibtex": {
+     "value": "@article{DBLP:journals/corr/abs-1905-09049,\n  publtype={informal},\n  author={Jia You and Philip L. H. Yu and Anderson C. O. Tsang and Eva L. H. Tsui and Pauline P. S. Woo and Gilberto K. K. Leung},\n  title={Automated Segmentation for Hyperdense Middle Cerebral Artery Sign of Acute Ischemic Stroke on Non-Contrast CT Images},\n  year={2019},\n  cdate={1546300800000},\n  journal={CoRR},\n  volume={abs/1905.09049},\n  url={http://arxiv.org/abs/1905.09049}\n}\n"
+    },
+    "abstract": {
+     "value": "The hyperdense middle cerebral artery (MCA) dot sign has been reported as an important factor in the diagnosis of acute ischemic stroke due to large vessel occlusion. Interpreting the initial CT brain scan in these patients requires high level of expertise, and has high inter-observer variability. An automated computerized interpretation of the urgent CT brain image, with an emphasis to pick up early signs of ischemic stroke will facilitate early patient diagnosis, triage, and shorten the door-to-revascularization time for these group of patients. In this paper, we present an automated detection method of segmenting the MCA dot sign on non-contrast CT brain image scans based on powerful deep learning technique."
+    },
+    "title": {
+     "value": "Automated Segmentation for Hyperdense Middle Cerebral Artery Sign of Acute Ischemic Stroke on Non-Contrast CT Images"
+    },
+    "authors": {
+     "value": [
+      "Jia You",
+      "Philip L. H. Yu",
+      "Anderson C. O. Tsang",
+      "Eva L. H. Tsui",
+      "Pauline P. S. Woo",
+      "Gilberto K. K. Leung"
+     ]
+    }
+   },
+   "tmdate": 1753610339673,
+   "pdate": 1546300800000,
+   "tcdate": 1753610310148,
+   "writers": [
+    "~"
+   ],
+   "signatures": [
+    "~Philip_L.H._Yu1"
+   ],
+   "forum": "ruAqCJAPW3",
+   "license": "CC BY-SA 4.0",
+   "number": 594443,
+   "cdate": 1546300800000,
+   "readers": [
+    "everyone"
+   ],
+   "invitations": [
+    "DBLP.org/-/Record",
+    "DBLP.org/-/Edit"
+   ],
+   "mdate": 1753610339673,
+   "domain": "DBLP.org",
+   "id": "ruAqCJAPW3",
+   "version": 2
+  }
+ ],
+ "count": 210
+}

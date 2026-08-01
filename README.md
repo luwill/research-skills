@@ -10,12 +10,18 @@ A collection of Claude Code skills for academic research workflows.
 | [paper-slide-deck](./paper-slide-deck/) | Stylized slide **images** (17 T2I aesthetic styles) for reading & sharing — any content | `/paper-slide-deck content.md --style watercolor` |
 | [research-proposal](./research-proposal/) | Generate PhD research proposals with Nature Reviews-style academic writing | `/research-proposal`, "research proposal", "PhD proposal", "研究计划" |
 | [scholar-slides](./scholar-slides/) | Fidelity-first academic decks for a live talk — vector equations, extracted figures, grounded citations, editable PPTX | "make slides", "组会 PPT", "答辩幻灯片", a paper PDF / arXiv / DOI |
+| [lit-search](./lit-search/) | Exhaustive time-windowed literature retrieval with **measurable recall** — quality-tiered DOI list + formatted references | `/lit-search`, "systematic review", "开题", "把某方向近 N 年文献检索全" |
 
 > **Slides from a paper? Two different tools, on purpose.** Use **scholar-slides** for a faithful,
 > editable *live talk* — equations, numbers, tables, and citations stay exact and projector-ready.
 > Use **paper-slide-deck** for *stylized visual images* to read or share, where look-and-feel
 > matters more than editable precision (its slides are AI-generated images, so math and data are
 > not editable and can be garbled — don't use it for a defense or a results-heavy talk).
+
+> **Doing a review? Two stages, two skills.** **lit-search** builds the *corpus* — it finds the
+> papers and proves how complete the search was. **medical-imaging-review** writes the *review* from
+> papers you already have. Running a systematic review end to end means lit-search first, then
+> medical-imaging-review over its `dois.md`.
 
 ## Installation
 
@@ -26,12 +32,14 @@ cp -r medical-imaging-review ~/.claude/skills/
 cp -r paper-slide-deck       ~/.claude/skills/
 cp -r research-proposal      ~/.claude/skills/
 cp -r scholar-slides         ~/.claude/skills/
+cp -r lit-search             ~/.claude/skills/
 ```
 
-`scholar-slides` carries Python + Node toolchains; after copying, provision them once:
+`scholar-slides` and `lit-search` carry their own toolchains; after copying, provision them once:
 
 ```bash
 cd ~/.claude/skills/scholar-slides && ./install.sh
+cd ~/.claude/skills/lit-search     && ./install.sh   # needs uv + Python 3.11+
 ```
 
 ---
@@ -194,6 +202,40 @@ Prereqs: **Python 3.11+, Node 18+.** For Chinese decks on Linux: `sudo apt-get i
 ### Known limitation
 
 Figure localization is layout-dependent — ~95–100% on single-column / arXiv / Nature-style papers, ~75% on dense IEEE/TPAMI two-column pages. Low-confidence crops are **flagged for you to confirm**, never silently wrong. Stress-tested over 9 cross-layout papers: 0 crashes, 98% of figures localized. See [scholar-slides/README.md](./scholar-slides/README.md) for the full story.
+
+---
+
+## Lit Search Skill
+
+Retrieve **everything** published on a topic inside a time window, and be able to say *how much you missed*. Chat-style search returns "the top few by relevance" — not reproducible, and silent about its own gaps. This skill turns retrieval into a deterministic pipeline: **multi-source × full pagination × citation closure × a measurable saturation criterion**, then delivers the corpus.
+
+### Features
+
+- **Recall is measured, not claimed** — gold-set recall, out-of-window leakage controls, per-source unique contribution, snowball saturation curve, PRISMA counts that *refuse to render* when they don't add up
+- **Says what it did NOT do** — sources declared but never contacted, unimplemented sources, skipped citation closure: each appears in `coverage_report.md` with a computed reason. "No gaps" is written out as a conclusion, never implied by a blank section
+- **Annotates quality, never filters** — CCF grade / journal metric / citation percentile decide *order*, not inclusion. A threshold would conflate "not evaluated" with "low quality" (measured: cutting at 4.0 dropped 340 papers that had *no metric at all*)
+- **Reaches closed publishers' metadata** — Elsevier 95.6% / Springer 80.4% / IEEE 98.7% abstract coverage via OpenAlex + PubMed. It does **not** bypass paywalls
+- **Human adjudication flows back in** — screening disagreements and boundary dates re-import with reviewer, timestamp, reason, and the prior verdict preserved
+- **Three depth tiers** with cost and wall-clock stated *before* you run (`lit depths`)
+
+### Outputs
+
+`dois.md` (full DOI list, sectioned by quality tier, evidence per entry) · `references.md` (same order, GB/T 7714 / APA / IEEE / Nature / AMA) · `references.bib` · `PRISMA.md` · `coverage_report.md` · `human_queue.csv`
+
+### Install & run
+
+```bash
+cd ~/.claude/skills/lit-search && ./install.sh   # uv sync + CLI smoke check
+uv run lit depths                                # scale, time and cost per tier
+```
+
+Prereqs: **[uv](https://docs.astral.sh/uv/) + Python 3.11+.** **No API key needed to start** — screening can run on the host Claude Code (`lit screen --model host`). For 10k+ record runs, point it at any OpenAI-compatible endpoint instead.
+
+Keep run artifacts out of the skill folder — always pass `--runs-root /your/project/runs`; a systematic run reaches hundreds of MB.
+
+### Not bundled, on purpose
+
+Journal ranking data (JCR quartiles, 中科院分区) is commercially licensed and the CCF catalogue is copyrighted — supply your own via `--ccf`. Without a catalogue the tool marks conferences "unrated" rather than guessing a grade: **a fabricated CCF-A looks exactly like a real one.**
 
 ---
 
