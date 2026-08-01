@@ -1,0 +1,21 @@
+# 凭据绝不入库
+.env
+.env.*
+!.env.example
+
+# 采集产物：raw/ 动辄数百 MB，且可由 manifest 复现
+runs/
+
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# 排行榜目录由用户自备，不随仓库分发。
+# CCF 目录是公开文档但有版权；JCR / 中科院分区是商业授权数据，更不能打包。
+CCF.pdf
+*.ccf.json
+
+.DS_Store

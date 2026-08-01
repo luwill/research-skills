@@ -1,0 +1,2035 @@
+{
+ "status": "ok",
+ "message-type": "work-list",
+ "message-version": "1.0.0",
+ "message": {
+  "facets": {},
+  "next-cursor": "DnF1ZXJ5VGhlbkZldGNoJAAAAAATq6LQFk5nSWJEREVRUzhPSmhOR2tEOC0yNWcAAAAAE6ANERZNT3ZTXy1hVVRtbXF1OUN2WnVoLTd3AAAAAYwtrVkWT1piSnhCcUZTZ1MtbGdqSndHd0xzdwAAAAAThG4YFkRYTjcyODdMVF9XdzlVa1BXeXBPb0EAAAAAE63QShZ2a21MQWZKalFwS0RhQ2dMSGNiS0tnAAAAABOpbFEWalEzRHppZEFRaUtrVmY5dnJ2VkpTZwAAAAATWe3-FllfZmVCYnVpUWF1anJsT1hVNkpNVUEAAAAAE63QSRZ2a21MQWZKalFwS0RhQ2dMSGNiS0tnAAAAABPfAzsWZmNzUUNyUG1SYjZTdXFNLUxpOThhdwAAAAAT2sEPFmlqTFl5M3V0UzhxVU9DSXZTVWNwTVEAAAAAE6ui0RZOZ0liRERFUVM4T0poTkdrRDgtMjVnAAAAABOgDRIWTU92U18tYVVUbW1xdTlDdlp1aC03dwAAAAGCLU_CFk5FNlBBQTkxU3IyeVNTN1pDOW9tUFEAAAAAVBOPkBYyS0VtNUJ1clRMS0hsQVpqcW8zUWF3AAAAABOrz5cWekhvLWR0SGNRdXlxWk9oMkl6R0tsQQAAAAAT9eRJFmVIZ3hkVDM2UnNhbF9XYnJzLUtsbVEAAAAAE4RuGRZEWE43Mjg3TFRfV3c5VWtQV3lwT29BAAAAAYFcIycWdXZSSjM5a0VTajI2bnA2N0tJVGdZZwAAAAGCLU_DFk5FNlBBQTkxU3IyeVNTN1pDOW9tUFEAAAAAE9vACBZkMWZxQXRRTVJVT1JVRFhjWWFhaGp3AAAAAYfDUZEWRTVFSzRuOEZTNmVvMF8yOXVKVlJvQQAAAAGLRkZHFmVFaGZqREs1VFhpRDVrNjhxWmxXZGcAAAABh8NRkBZFNUVLNG44RlM2ZW8wXzI5dUpWUm9BAAAAAATpQagWb0FYVXlYV0hUbzJqdy1ua2pYM2VyUQAAAAGHZupkFkNTcEFMQXBqUlotS2NVR2U1ZnBpeWcAAAAAE6lsUhZqUTNEemlkQVFpS2tWZjl2cnZWSlNnAAAAABOrz5gWekhvLWR0SGNRdXlxWk9oMkl6R0tsQQAAAAGMLa1aFk9aYkp4QnFGU2dTLWxnakp3R3dMc3cAAAABjN79IxYyem9obE83aFRMNnZLRjlTbXFNWkh3AAAAABNHTPEWX093LV9WSjVTQ2E3UmE3MndWLWhsQQAAAAF-DtB4FlV1U25DZFJ2U2JLRVVuNjdsaVhxWkEAAAABjN79IhYyem9obE83aFRMNnZLRjlTbXFNWkh3AAAAAY1_OeYWWi1aZUdJN1NRQUdVczNBcGF6X2RaUQAAAAGLRkZIFmVFaGZqREs1VFhpRDVrNjhxWmxXZGcAAAABjX855xZaLVplR0k3U1FBR1VzM0FwYXpfZFpRAAAAAZ5mqlIWUlMtZjR5aVZROGlxUThvMURHandkUQ==",
+  "total-results": 70,
+  "items": [
+   {
+    "DOI": "10.1007/978-3-031-16443-9_4",
+    "type": "book-chapter",
+    "page": "34-43",
+    "title": [
+     "Exploring Smoothness and Class-Separation for Semi-supervised Medical Image Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Yicheng",
+      "family": "Wu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Zhonghua",
+      "family": "Wu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Qianyi",
+      "family": "Wu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Zongyuan",
+      "family": "Ge",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Jianfei",
+      "family": "Cai",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_4",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_20",
+    "type": "book-chapter",
+    "page": "203-213",
+    "title": [
+     "Attentive Symmetric Autoencoder for Brain MRI Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Junjia",
+      "family": "Huang",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Haofeng",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Guanbin",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Xiang",
+      "family": "Wan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_20",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9",
+    "title": [
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science"
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    },
+    "type": "book",
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9.pdf",
+      "content-type": "application/pdf",
+      "content-version": "vor",
+      "intended-application": "text-mining"
+     },
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ]
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_47",
+    "type": "book-chapter",
+    "page": "485-495",
+    "title": [
+     "TransFusion: Multi-view Divergent Fusion for Medical Image Segmentation with Transformers"
+    ],
+    "author": [
+     {
+      "given": "Di",
+      "family": "Liu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yunhe",
+      "family": "Gao",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Qilong",
+      "family": "Zhangli",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Ligong",
+      "family": "Han",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Xiaoxiao",
+      "family": "He",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Zhaoyang",
+      "family": "Xia",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Song",
+      "family": "Wen",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Qi",
+      "family": "Chang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Zhennan",
+      "family": "Yan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Mu",
+      "family": "Zhou",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Dimitris",
+      "family": "Metaxas",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_47",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_24",
+    "type": "book-chapter",
+    "page": "245-255",
+    "title": [
+     "Learning Tumor-Induced Deformations to Improve Tumor-Bearing Brain MR Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Meng",
+      "family": "Jia",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Matthew",
+      "family": "Kyan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_24",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_6",
+    "type": "book-chapter",
+    "page": "55-65",
+    "title": [
+     "Thoracic Lymph Node Segmentation in CT Imaging via Lymph Node Station Stratification and Size Encoding"
+    ],
+    "author": [
+     {
+      "given": "Dazhou",
+      "family": "Guo",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Jia",
+      "family": "Ge",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Ke",
+      "family": "Yan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Puyang",
+      "family": "Wang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Zhuotun",
+      "family": "Zhu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Dandan",
+      "family": "Zheng",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Xian-Sheng",
+      "family": "Hua",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Le",
+      "family": "Lu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Tsung-Ying",
+      "family": "Ho",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Xianghua",
+      "family": "Ye",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Dakai",
+      "family": "Jin",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_6",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_60",
+    "type": "book-chapter",
+    "page": "626-635",
+    "title": [
+     "Survival Prediction of Brain Cancer with Incomplete Radiology, Pathology, Genomic, and Demographic Data"
+    ],
+    "author": [
+     {
+      "given": "Can",
+      "family": "Cui",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Han",
+      "family": "Liu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Quan",
+      "family": "Liu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Ruining",
+      "family": "Deng",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Zuhayr",
+      "family": "Asad",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yaohong",
+      "family": "Wang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Shilin",
+      "family": "Zhao",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Haichun",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Bennett A.",
+      "family": "Landman",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yuankai",
+      "family": "Huo",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_60",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_12",
+    "type": "book-chapter",
+    "page": "118-127",
+    "title": [
+     "Multimodal Brain Tumor Segmentation Using Contrastive Learning Based Feature Comparison with Monomodal Normal Brain Images"
+    ],
+    "author": [
+     {
+      "given": "Huabing",
+      "family": "Liu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Dong",
+      "family": "Nie",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Dinggang",
+      "family": "Shen",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Jinda",
+      "family": "Wang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Zhenyu",
+      "family": "Tang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_12",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_65",
+    "type": "book-chapter",
+    "page": "679-689",
+    "title": [
+     "Multi-modal Masked Autoencoders for Medical Vision-and-Language Pre-training"
+    ],
+    "author": [
+     {
+      "given": "Zhihong",
+      "family": "Chen",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yuhao",
+      "family": "Du",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Jinpeng",
+      "family": "Hu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yang",
+      "family": "Liu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Guanbin",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Xiang",
+      "family": "Wan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Tsung-Hui",
+      "family": "Chang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_65",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_25",
+    "type": "book-chapter",
+    "page": "256-265",
+    "title": [
+     "Contrastive Re-localization and History Distillation in Federated CMR Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Xiaoming",
+      "family": "Qi",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Guanyu",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yuting",
+      "family": "He",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Wangyan",
+      "family": "Liu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Ali",
+      "family": "Islam",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Shuo",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_25",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_41",
+    "type": "book-chapter",
+    "page": "422-432",
+    "title": [
+     "Weakly Supervised Volumetric Image Segmentation with Deformed Templates"
+    ],
+    "author": [
+     {
+      "given": "Udaranga",
+      "family": "Wickramasinghe",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Patrick",
+      "family": "Jensen",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Mian",
+      "family": "Shah",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Jiancheng",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Pascal",
+      "family": "Fua",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_41",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_45",
+    "type": "book-chapter",
+    "page": "464-474",
+    "title": [
+     "iSegFormer: Interactive Segmentation via Transformers with Application to 3D Knee MR Images"
+    ],
+    "author": [
+     {
+      "given": "Qin",
+      "family": "Liu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Zhenlin",
+      "family": "Xu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yining",
+      "family": "Jiao",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Marc",
+      "family": "Niethammer",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_45",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_18",
+    "type": "book-chapter",
+    "page": "183-192",
+    "title": [
+     "Modality-Adaptive Feature Interaction for Brain Tumor Segmentation with Missing Modalities"
+    ],
+    "author": [
+     {
+      "given": "Zechen",
+      "family": "Zhao",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Heran",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Jian",
+      "family": "Sun",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_18",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_11",
+    "type": "book-chapter",
+    "page": "107-117",
+    "title": [
+     "mmFormer: Multimodal Medical Transformer for Incomplete Multimodal Learning of Brain Tumor Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Yao",
+      "family": "Zhang",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Nanjun",
+      "family": "He",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Jiawei",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yuexiang",
+      "family": "Li",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Dong",
+      "family": "Wei",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yawen",
+      "family": "Huang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yang",
+      "family": "Zhang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Zhiqiang",
+      "family": "He",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Yefeng",
+      "family": "Zheng",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_11",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_8",
+    "type": "book-chapter",
+    "page": "77-86",
+    "title": [
+     "A Sense of Direction in Biomedical Neural Networks"
+    ],
+    "author": [
+     {
+      "given": "Zewen",
+      "family": "Liu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Timothy F.",
+      "family": "Cootes",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_8",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_58",
+    "type": "book-chapter",
+    "page": "602-612",
+    "title": [
+     "RT-DNAS: Real-Time Constrained Differentiable Neural Architecture Search for 3D Cardiac Cine MRI Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Qing",
+      "family": "Lu",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Xiaowei",
+      "family": "Xu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Shunjie",
+      "family": "Dong",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Cong",
+      "family": "Hao",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Lei",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Cheng",
+      "family": "Zhuo",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yiyu",
+      "family": "Shi",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_58",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_37",
+    "type": "book-chapter",
+    "page": "380-390",
+    "title": [
+     "Learning Towards Synchronous Network Memorizability and Generalizability for Continual Segmentation Across Multiple Sites"
+    ],
+    "author": [
+     {
+      "given": "Jingyang",
+      "family": "Zhang",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Peng",
+      "family": "Xue",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Ran",
+      "family": "Gu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yuning",
+      "family": "Gu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Mianxin",
+      "family": "Liu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Yongsheng",
+      "family": "Pan",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Zhiming",
+      "family": "Cui",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Jiawei",
+      "family": "Huang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Lei",
+      "family": "Ma",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Dinggang",
+      "family": "Shen",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_37",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_49",
+    "type": "book-chapter",
+    "page": "506-516",
+    "title": [
+     "Carbon Footprint of Selecting and Training Deep Learning Models for Medical Image Analysis"
+    ],
+    "author": [
+     {
+      "given": "Raghavendra",
+      "family": "Selvan",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Nikhil",
+      "family": "Bhagwat",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Lasse F.",
+      "family": "Wolff Anthony",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Benjamin",
+      "family": "Kanding",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Erik B.",
+      "family": "Dam",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_49",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_54",
+    "type": "book-chapter",
+    "page": "560-569",
+    "title": [
+     "Efficient Population Based Hyperparameter Scheduling for Medical Image Segmentation"
+    ],
+    "author": [
+     {
+      "given": "Yufan",
+      "family": "He",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Dong",
+      "family": "Yang",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Andriy",
+      "family": "Myronenko",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Daguang",
+      "family": "Xu",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_54",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   },
+   {
+    "DOI": "10.1007/978-3-031-16443-9_2",
+    "type": "book-chapter",
+    "page": "13-22",
+    "title": [
+     "CIRDataset: A Large-Scale Dataset for Clinically-Interpretable Lung Nodule Radiomics and Malignancy Prediction"
+    ],
+    "author": [
+     {
+      "given": "Wookjin",
+      "family": "Choi",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Navdeep",
+      "family": "Dahiya",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     },
+     {
+      "given": "Saad",
+      "family": "Nadeem",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+       {
+        "role": "author",
+        "vocabulary": "crossref"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Lecture Notes in Computer Science",
+     "Medical Image Computing and Computer Assisted Intervention – MICCAI 2022"
+    ],
+    "link": [
+     {
+      "URL": "https://link.springer.com/content/pdf/10.1007/978-3-031-16443-9_2",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+     }
+    ],
+    "ISBN": [
+     "9783031164422",
+     "9783031164439"
+    ],
+    "published": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    }
+   }
+  ],
+  "items-per-page": 20,
+  "query": {
+   "start-index": 0,
+   "search-terms": null
+  }
+ }
+}

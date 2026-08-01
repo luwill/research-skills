@@ -1,0 +1,232 @@
+id: isles-2026
+title: ISLES 2026 缺血性梗死病灶分割
+description: >-
+  面向 MICCAI ISLES 2026 挑战赛的高召回文献检索协议。覆盖急性/亚急性缺血性卒中的
+  梗死病灶分割方法、数据集与评测，含 MRI (DWI/ADC/FLAIR) 与 CT (NCCT/CTP/CTA) 模态。
+
+window:
+  # 严格窗口：最终纳入记录的 canonical_date 必须落在此闭区间内
+  start: 2021-07-01
+  end: 2026-07-27
+  # 宽进：采集时向两端各放宽的天数，抵消各源日期语义差异（online-first / 预印本 / 印刷版）
+  harvest_margin_days: 365
+  # canonical_date 取值优先级，取第一个可用者
+  date_priority:
+    - published_online
+    - published_print
+    - preprint_submitted
+    - source_reported
+  # 仅用于报告标注"贴近边界"，不决定是否进人工队列
+  near_edge_days: 180
+
+languages: [en, zh]
+
+publication_types:
+  include: [article, review, conference-paper, preprint, book-chapter, data-paper]
+  exclude: [editorial, letter, erratum, conference-abstract, dataset, dissertation, paratext]
+
+concepts:
+  condition:
+    required: true
+    terms:
+      - ischemic stroke
+      - ischaemic stroke
+      - acute ischemic stroke
+      - cerebral infarction
+      - brain infarction
+      - infarct core
+      - ischemic penumbra
+      - tissue at risk
+      - large vessel occlusion
+      - middle cerebral artery occlusion
+      - cerebral ischemia
+      - stroke lesion
+    mesh:
+      - Stroke
+      - Brain Ischemia
+      - Ischemic Stroke
+      - Infarction, Middle Cerebral Artery
+    wildcards:
+      - infarct*
+      - ischemi*
+
+  task:
+    required: true
+    terms:
+      - segmentation
+      - lesion segmentation
+      - lesion delineation
+      - lesion quantification
+      - core estimation
+      - volumetry
+      - infarct volume
+      - semantic segmentation
+      - voxelwise classification
+    mesh: []
+    wildcards:
+      - segment*
+
+  modality:
+    required: false
+    terms:
+      - diffusion weighted imaging
+      - DWI
+      - apparent diffusion coefficient
+      - ADC
+      - FLAIR
+      - non-contrast CT
+      - NCCT
+      - CT perfusion
+      - CTP
+      - CT angiography
+      - CTA
+      - perfusion imaging
+      - multimodal MRI
+      - magnetic resonance imaging
+    mesh:
+      - Diffusion Magnetic Resonance Imaging
+      - Tomography, X-Ray Computed
+    wildcards: []
+
+  method:
+    required: false
+    terms:
+      - deep learning
+      - neural network
+      - convolutional neural network
+      - nnU-Net
+      - U-Net
+      - transformer
+      - vision transformer
+      - foundation model
+      - segment anything
+      - diffusion model
+      - self-supervised
+      - semi-supervised
+      - domain adaptation
+      - domain generalization
+      - federated learning
+      - uncertainty quantification
+    mesh:
+      - Deep Learning
+      - Neural Networks, Computer
+    wildcards: []
+
+# E 块：已知项检索。不参与概念块交叉，各源直接按短语单独跑一轮。
+known_items:
+  - ISLES challenge
+  - ISLES 2015
+  - ISLES 2016
+  - ISLES 2017
+  - ISLES 2018
+  - ISLES 2022
+  - ISLES 2024
+  - ISLES 2025
+  - ISLES 2026
+  - ATLAS v2.0 stroke lesion
+  - AISD acute ischemic stroke dataset
+  - APIS paired CT-MRI stroke
+  - SISS SPES sub-acute stroke lesion
+  - DeepISLES
+
+query_plan:
+  # 每个组合渲染为 AND(OR-group_i)；required 块必须出现在每个组合中
+  combinations:
+    - [condition, task]
+    - [condition, task, modality]
+    - [condition, task, method]
+    - [condition, task, modality, method]
+  max_terms_per_block: 16
+
+criteria:
+  include:
+    - id: I1
+      text: 研究对象为人类缺血性卒中（急性、亚急性或慢性）的脑影像。
+    - id: I2
+      text: 存在病灶级别的分割/勾画/体积量化任务，或为该任务提供数据集、评测基准、标注协议。
+    - id: I3
+      text: 报告了可复现的方法描述或定量结果（Dice/HD95/AVD/lesion-wise F1 等任一）。
+  exclude:
+    - id: X1
+      text: 仅做出血性卒中、肿瘤、多发性硬化等非缺血性病变，且无缺血性卒中数据。
+    - id: X2
+      text: 仅做分类/检出/预后预测，不涉及任何分割或体积量化输出。
+    - id: X3
+      text: 纯动物实验或体模研究，无人体影像数据。
+    - id: X4
+      text: 会议摘要、勘误、社论、无方法细节的评论。
+    - id: X5
+      text: 非英文且无英文摘要，无法完成筛选。
+
+# 金标准种子：窗口内必须被检出的论文。DOI 均经 OpenAlex 实测确认存在。
+# 召回率低于 100% 即判定检索策略有缺陷，需修复后重跑。
+gold_set:
+  - doi: 10.1038/s41597-022-01875-5
+    note: ISLES 2022 multi-center MRI stroke lesion segmentation dataset (2022-12-10)
+  - doi: 10.48550/arxiv.2206.06694
+    note: ISLES 2022 数据集论文的 arXiv 预印本 (2022-06-14)，用于检验预印本-正式版配对去重
+  - doi: 10.1038/s41597-022-01401-7
+    note: ATLAS v2.0 open-source stroke neuroimaging dataset (2022-06-16)
+  - doi: 10.1038/s41467-025-62373-x
+    note: DeepISLES clinically validated ischemic stroke segmentation model (2025-08-09)
+  - doi: 10.1038/s41598-024-71273-x
+    note: APIS paired CT-MRI dataset for ischemic stroke segmentation (2024-09-04)
+  - doi: 10.48550/arxiv.2403.19425
+    note: Robust ensemble algorithm for ischemic stroke lesion segmentation (2024-03-28)
+  - doi: 10.1038/s43856-021-00062-8
+    note: DL detection/segmentation of diffusion abnormalities in acute stroke (2021-12-16)
+  - doi: 10.1109/tmi.2024.3362879
+    note: Hybrid CNN-Transformer with circular feature interaction (2024-02-06)
+  - doi: 10.1186/s12911-023-02289-y
+    note: CNN-Res framework for acute ischemic stroke segmentation (2023-09-26)
+
+# 窗口外对照：这些论文真实存在但发表于窗口之前，最终纳入集中不应出现。
+# 用于检验 canonical_date 过滤是否真的生效（而非只靠源端过滤）。
+out_of_window_controls:
+  - doi: 10.1016/j.media.2016.07.009
+    note: ISLES 2015 benchmark (2016-07-22)
+  - doi: 10.1038/s41592-020-01008-z
+    note: nnU-Net (2020-12-07)
+
+sources:
+  openalex:
+    enabled: true
+  pubmed:
+    enabled: true
+  europepmc:
+    enabled: true
+  arxiv:
+    enabled: true
+    categories: [eess.IV, cs.CV, cs.LG]
+  crossref:
+    enabled: true
+    role: enrich  # LNCS/MICCAI 按 ISBN 整卷定向，由 `lit proceedings` 驱动
+  semantic_scholar:
+    enabled: false  # 需 API key，见 README
+  openreview:
+    enabled: true
+    # 检索式取自 condition 块（锚点）的逐条加引号短语，任务块在本地 AND。
+    # venues 仅作记录：/notes/search 是**全站**检索，按会场过滤的
+    # /notes?content.venueid= 返回 403，且过滤会丢掉 MIDL、DBLP 镜像与
+    # 匿名预印本这些真实命中——召回优先，不做会场收窄。
+    venues: [ICLR, NeurIPS]
+  cvf:
+    enabled: true
+    # CVF 无检索接口，按会议年份整届枚举；不存在的年份（ICCV 只在奇数年办）按 404 忽略。
+    venues: [CVPR, ICCV, WACV]
+  grey:
+    enabled: true  # Zenodo：挑战赛赛题、评测协议、基线权重、数据集
+
+snowball:
+  enabled: true
+  directions: [backward, forward]
+  max_rounds: 6
+  # 饱和判据：连续 N 轮新纳入占比低于阈值即停止
+  saturation_consecutive_rounds: 2
+  saturation_new_inclusion_rate: 0.05
+
+screening:
+  channels: 2
+  # 双通道分歧、或任一通道置信度低于阈值 → 进人工队列
+  confidence_threshold: 0.7
+  batch_size: 25

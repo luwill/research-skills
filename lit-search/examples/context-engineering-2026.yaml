@@ -1,0 +1,152 @@
+id: context-engineering-2026
+title: Context Engineering for LLM/AI Agents — 2024.7–2026.7 进展
+description: >-
+  面向大语言模型（LLM）与 AI agent 的 "context engineering"（上下文工程）领域协议。
+  覆盖：上下文检索与生成、上下文处理（压缩/长上下文）、上下文管理（记忆系统、上下文窗口
+  管理）、以及在检索增强生成（RAG）、工具集成推理、多 agent 系统中的上下文编排实践。
+  不覆盖：仅涉及单轮静态提示词模板设计（传统 prompt engineering）而未触及记忆/检索/多轮
+  agent 场景的工作；"context" 指非 AI 语境（如软件工程需求上下文建模、业务/地理语境）的
+  工作。行业博客/推文热度本身不在检索范围内——只收录已产出可索引出版物（含预印本）的工作。
+
+window:
+  start: 2024-07-01
+  end: 2026-07-31
+  harvest_margin_days: 365
+  date_priority:
+    - published_online
+    - published_print
+    - preprint_submitted
+    - source_reported
+  near_edge_days: 180
+
+languages: [en, zh]
+
+publication_types:
+  include: [article, review, conference-paper, preprint, book-chapter, data-paper]
+  exclude: [editorial, letter, erratum, conference-abstract, dataset, dissertation, paratext]
+
+concepts:
+  context_engineering:
+    required: true
+    terms:
+      - context engineering
+      - context-engineering
+      - context management
+      - context window management
+      - context compression
+      - context curation
+      - context orchestration
+      - agent memory management
+      - LLM agent memory
+      - memory management for language model agents
+      - context rot
+    mesh: []
+    wildcards:
+      - context engineer*
+      - context-engineer*
+
+  llm_scope:
+    required: true
+    terms:
+      - large language model
+      - large language models
+      - LLM
+      - LLMs
+      - language model agent
+      - language model agents
+      - AI agent
+      - AI agents
+      - autonomous agent
+      - foundation model
+      - generative AI
+    mesh: []
+    wildcards:
+      - LLM*
+      - language model*
+
+known_items:
+  - Model Context Protocol
+  - MCP server
+  - MemGPT
+  - LangGraph
+  - LlamaIndex
+  - Agentic Context Engineering
+  - Cognitive Architectures for Language Agents
+  - CoALA
+
+query_plan:
+  combinations:
+    - [context_engineering, llm_scope]
+  max_terms_per_block: 16
+
+criteria:
+  include:
+    - id: I1
+      text: >-
+        研究内容明确涉及 LLM/AI agent 的上下文构建、组织、管理或优化实践（不仅是
+        ad-hoc 提示词模板设计），包括上下文检索与生成、上下文处理、上下文管理、
+        agent 记忆系统、工具集成推理、或多 agent 系统中的上下文协调。
+    - id: I2
+      text: >-
+        提出新方法/框架、给出实证评测、或作为系统综述/行业实践总结，聚焦于上述
+        上下文工程实践的进展。
+  exclude:
+    - id: X1
+      text: >-
+        仅涉及传统 prompt engineering（单轮静态提示词模板设计），未触及上下文管理、
+        记忆、检索或多轮/agent 场景。
+    - id: X2
+      text: >-
+        "context" 仅指非 AI 语境（如软件工程需求上下文分析、业务/地理/临床语境
+        建模等），与 LLM/AI agent 无关。
+    - id: X3
+      text: 会议摘要、勘误、社论、无方法细节的评论、纯教程或博客转载性质的非原创内容。
+
+gold_set:
+  - doi: 10.48550/arxiv.2507.13334
+    note: A Survey of Context Engineering for Large Language Models (2025-07-17)
+  - doi: 10.48550/arxiv.2510.04618
+    note: Agentic Context Engineering — Evolving Contexts for Self-Improving Language Models, ICLR 2026 (2025-10-06)
+  - doi: 10.48550/arxiv.2603.09619
+    note: Context Engineering — From Prompts to Corporate Multi-Agent Architecture (2026-03-09)
+
+out_of_window_controls:
+  - doi: 10.48550/arxiv.2404.13501
+    note: A Survey on the Memory Mechanism of Large Language Model based Agents (2024-04-19，早于窗口起点 2024-07-01)
+  - doi: 10.48550/arxiv.2309.02427
+    note: Cognitive Architectures for Language Agents / CoALA (2023-09-05，远早于窗口)
+
+sources:
+  openalex:
+    enabled: true
+  pubmed:
+    enabled: false  # 非生物医学主题：PubMed 覆盖不到 CS/AI 预印本与会议文献
+  europepmc:
+    enabled: false  # 同上，以生命科学文献为主
+  arxiv:
+    enabled: true
+    categories: [cs.CL, cs.AI, cs.LG, cs.MA, cs.IR]
+  crossref:
+    enabled: true
+    role: enrich
+  semantic_scholar:
+    enabled: false  # 需 S2_API_KEY，当前 .env 未配置——见对用户的提示
+  openreview:
+    enabled: true
+    venues: [ICLR, NeurIPS, COLM, TMLR]
+  cvf:
+    enabled: false  # CVF 是 CVPR/ICCV/WACV 计算机视觉会议，与本主题不相关
+  grey:
+    enabled: true  # Zenodo：技术报告、workshop 论文、基线实现
+
+snowball:
+  enabled: true
+  directions: [backward, forward]
+  max_rounds: 6
+  saturation_consecutive_rounds: 2
+  saturation_new_inclusion_rate: 0.05
+
+screening:
+  channels: 2
+  confidence_threshold: 0.7
+  batch_size: 25

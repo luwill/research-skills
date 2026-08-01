@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/GC37HgChik5h/vS+O1LCgD1MFfY</id>
+  <title>arXiv Query: search_query=(abs:"stroke lesion segmentation") AND submittedDate:"202007010000 TO 202707272359"&amp;id_list=&amp;start=0&amp;max_results=2</title>
+  <updated>2026-07-27T08:36:16Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22stroke+lesion+segmentation%22+AND+submittedDate:%22202007010000+TO+202707272359%22&amp;start=0&amp;max_results=2&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>2</opensearch:itemsPerPage>
+  <opensearch:totalResults>33</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2007.03294v1</id>
+    <title>Automatic Ischemic Stroke Lesion Segmentation from Computed Tomography Perfusion Images by Image Synthesis and Attention-Based Deep Neural Networks</title>
+    <updated>2020-07-07T09:19:23Z</updated>
+    <link href="https://arxiv.org/abs/2007.03294v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.03294v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Ischemic stroke lesion segmentation from Computed Tomography Perfusion (CTP) images is important for accurate diagnosis of stroke in acute care units. However, it is challenged by low image contrast and resolution of the perfusion parameter maps, in addition to the complex appearance of the lesion. To deal with this problem, we propose a novel framework based on synthesized pseudo Diffusion-Weighted Imaging (DWI) from perfusion parameter maps to obtain better image quality for more accurate segmentation. Our framework consists of three components based on Convolutional Neural Networks (CNNs) and is trained end-to-end. First, a feature extractor is used to obtain both a low-level and high-level compact representation of the raw spatiotemporal Computed Tomography Angiography (CTA) images. Second, a pseudo DWI generator takes as input the concatenation of CTP perfusion parameter maps and our extracted features to obtain the synthesized pseudo DWI. To achieve better synthesis quality, we propose a hybrid loss function that pays more attention to lesion regions and encourages high-level contextual consistency. Finally, we segment the lesion region from the synthesized pseudo DWI, where the segmentation network is based on switchable normalization and channel calibration for better performance. Experimental results showed that our framework achieved the top performance on ISLES 2018 challenge and: 1) our method using synthesized pseudo DWI outperformed methods segmenting the lesion from perfusion parameter maps directly; 2) the feature extractor exploiting additional spatiotemporal CTA images led to better synthesized pseudo DWI quality and higher segmentation accuracy; and 3) the proposed loss functions and network structure improved the pseudo DWI synthesis and lesion segmentation performance.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-07T09:19:23Z</published>
+    <arxiv:comment>14 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.IV"/>
+    <author>
+      <name>Guotai Wang</name>
+    </author>
+    <author>
+      <name>Tao Song</name>
+    </author>
+    <author>
+      <name>Qiang Dong</name>
+    </author>
+    <author>
+      <name>Mei Cui</name>
+    </author>
+    <author>
+      <name>Ning Huang</name>
+    </author>
+    <author>
+      <name>Shaoting Zhang</name>
+    </author>
+    <arxiv:doi>10.1016/j.media.2020.101787</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.media.2020.101787" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2008.13109v2</id>
+    <title>Brain Stroke Lesion Segmentation Using Consistent Perception Generative Adversarial Network</title>
+    <updated>2021-12-03T12:24:00Z</updated>
+    <link href="https://arxiv.org/abs/2008.13109v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2008.13109v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The state-of-the-art deep learning methods have demonstrated impressive performance in segmentation tasks. However, the success of these methods depends on a large amount of manually labeled masks, which are expensive and time-consuming to be collected. In this work, a novel Consistent PerceptionGenerative Adversarial Network (CPGAN) is proposed for semi-supervised stroke lesion segmentation. The proposed CPGAN can reduce the reliance on fully labeled samples. Specifically, A similarity connection module (SCM) is designed to capture the information of multi-scale features. The proposed SCM can selectively aggregate the features at each position by a weighted sum. Moreover, a consistent perception strategy is introduced into the proposed model to enhance the effect of brain stroke lesion prediction for the unlabeled data. Furthermore, an assistant network is constructed to encourage the discriminator to learn meaningful feature representations which are often forgotten during training stage. The assistant network and the discriminator are employed to jointly decide whether the segmentation results are real or fake. The CPGAN was evaluated on the Anatomical Tracings of Lesions After Stroke (ATLAS). The experimental results demonstrate that the proposed network achieves superior segmentation performance. In semi-supervised segmentation task, the proposed CPGAN using only two-fifths of labeled samples outperforms some approaches using full labeled samples.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-08-30T07:42:47Z</published>
+    <arxiv:comment>11 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.IV"/>
+    <author>
+      <name>Shuqiang Wang</name>
+    </author>
+    <author>
+      <name>Zhuo Chen</name>
+    </author>
+    <author>
+      <name>Wen Yu</name>
+    </author>
+    <author>
+      <name>Baiying Lei</name>
+    </author>
+  </entry>
+</feed>

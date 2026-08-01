@@ -1,0 +1,130 @@
+# 课题协议模板。复制到 topics/<id>.yaml 后逐段替换。
+#
+# 这份文件决定一切：检索式、时间窗、纳排标准、召回率如何验证。
+# **先写死再检索**——事后调参会制造选择偏倚（"改到能命中我想要的论文为止"）。
+# 校验后的语义指纹写进 run 目录，改术语会作废整轮采集。
+
+id: <短横线小写标识，如 medical-foundation-models>
+title: <一句话课题名>
+description: >-
+  <两三行：覆盖什么、不覆盖什么。写给三个月后的自己看。>
+
+window:
+  start: <YYYY-MM-DD>          # 严格窗口：canonical_date 必须落在闭区间内
+  end: <YYYY-MM-DD>
+  harvest_margin_days: 365     # 宽进：采集时向两端放宽，抵消各源日期语义差异
+  date_priority:               # canonical_date 取第一个可用者
+    - published_online
+    - published_print
+    - preprint_submitted
+    - source_reported
+  near_edge_days: 180          # 仅用于报告标注"贴近边界"
+
+languages: [en, zh]
+
+publication_types:
+  include: [article, review, conference-paper, preprint, book-chapter, data-paper]
+  exclude: [editorial, letter, erratum, conference-abstract, dataset, dissertation, paratext]
+
+# 概念块。3–5 块，每块 8–16 个同义词。
+#
+# ⚠️ 第一个 required 块会成为**无布尔检索能力源**（CVF/OpenReview/Zenodo）的锚点短语。
+#    把区分度最高的概念放第一位——通常是疾病/对象/材料，
+#    绝不能是 segmentation / deep learning 这类泛词，否则会把整届会议拉回本地过滤。
+concepts:
+  <对象>:
+    required: true
+    terms: [<同义词>, <英美拼写变体>, <缩写全称>, <缩写>]
+    mesh: [<PubMed 受控词，仅 PubMed 使用；本地过滤故意不用它>]
+    wildcards: [<词干*>]
+  <任务>:
+    required: true
+    terms: []
+    mesh: []
+    wildcards: []
+  <模态/方法>:
+    required: false
+    terms: []
+    mesh: []
+    wildcards: []
+
+# 已知项：不参与概念交叉，各源按短语单独跑一轮。
+# 放数据集名、挑战赛名、基准名、代表性方法名。
+known_items:
+  - <已知名称>
+
+query_plan:
+  combinations:                # 每个组合渲染为 AND(OR-block_i)
+    - [<对象>, <任务>]          # required 块必须出现在每个组合里
+    - [<对象>, <任务>, <模态>]
+  max_terms_per_block: 16
+
+# 纳排标准。LLM 逐条判定，所以每条必须**在只看标题摘要时可判**。
+# 需要全文才能判的标准（如"报告了 Dice/HD95"）会让模型大量输出 unclear，
+# 把人工队列撑爆——那种标准属于全文阶段。
+criteria:
+  include:
+    - id: I1
+      text: <对象与场景>
+    - id: I2
+      text: <任务类型>
+  exclude:
+    - id: X1
+      text: <相邻但不算的对象>
+    - id: X2
+      text: <相邻但不算的任务>
+    - id: X3
+      text: 会议摘要、勘误、社论、无方法细节的评论。
+
+# 金标准种子：窗口内**必须被检出**的论文。这是唯一能证伪检索策略的东西。
+#
+# ⚠️ 提 5-10 条。少于 5 条时报告会自己标注"证据偏弱"——3/3 和 9/9 印出来一样，
+#    但前者能证伪的检索缺陷少得多。
+#
+# ⚠️ 每个 DOI 必须先解析确认存在，再写进来。
+#    编造的 DOI 会让你看到 8/9 的召回，然后花半天去查一个根本不存在的漏检。
+#    验证：curl -sI -o /dev/null -w "%{http_code}\n" -L "https://doi.org/<doi>"
+#    **不要用 api.crossref.org 验证**：arXiv 的 10.48550/arXiv.* 注册在 DataCite，
+#    Crossref 一律 404，会把真实存在的预印本当成编造的拒掉。
+#
+# 没有 DOI 的论文（部分 OpenReview / workshop 稿）用 arxiv / pmid / openalex 任一标识符：
+#   - arxiv: 2303.08774
+#   - pmid: 36549554
+gold_set:
+  - doi: <10.xxxx/xxxx>
+    note: <标题 (发表日期)>
+
+# 窗口外对照：真实存在但发表于窗口之外，最终纳入集里不应出现。
+# 用来检验日期过滤真的生效，而不只是源端过滤碰巧对了。
+out_of_window_controls:
+  - doi: <10.xxxx/xxxx>
+    note: <标题 (发表日期)>
+
+sources:
+  openalex: {enabled: true}
+  pubmed: {enabled: true}       # 非生物医学主题设 false；注意此时捕获-再捕获不可得
+  europepmc: {enabled: true}
+  arxiv:
+    enabled: true
+    categories: [<cs.CV>, <cs.LG>]
+  crossref: {enabled: true, role: enrich}
+  semantic_scholar: {enabled: false}   # ⚠️ 尚未实现；设 true 也会被丢弃，别指望它补覆盖面
+  openreview:
+    enabled: true
+    venues: [ICLR, NeurIPS]     # 仅作记录：search 端点是全站检索，不按会场收窄
+  cvf:
+    enabled: true
+    venues: [CVPR, ICCV, WACV]  # 整届枚举；不存在的年份按 404 忽略
+  grey: {enabled: true}         # Zenodo
+
+snowball:
+  enabled: true
+  directions: [backward, forward]
+  max_rounds: 6
+  saturation_consecutive_rounds: 2
+  saturation_new_inclusion_rate: 0.05
+
+screening:
+  channels: 2
+  confidence_threshold: 0.7
+  batch_size: 25
