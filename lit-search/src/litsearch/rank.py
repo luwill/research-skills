@@ -515,7 +515,7 @@ def _parse_source(payload: Mapping) -> JournalMetrics | None:
 
 
 async def fetch_works(
-    client, dois: Sequence[str], *, mailto: str | None = None
+    client, dois: Sequence[str], *, mailto: str | None = None, api_key: str | None = None
 ) -> dict[str, WorkMetrics]:
     """按 DOI 批量取 OpenAlex 记录。返回 ``doi -> WorkMetrics``。
 
@@ -524,16 +524,15 @@ async def fetch_works(
     """
     found: dict[str, WorkMetrics] = {}
     for batch in _batched(list(dois)):
-        payload = await client.get_json(
-            OPENALEX_WORKS,
-            {
-                "filter": "doi:" + "|".join(batch),
-                "select": _WORK_SELECT,
-                "per-page": len(batch),
-                "mailto": mailto,
-            },
-            source="openalex",
-        )
+        params: dict[str, str | int] = {
+            "filter": "doi:" + "|".join(batch),
+            "select": _WORK_SELECT,
+            "per-page": len(batch),
+            "mailto": mailto,
+        }
+        if api_key:
+            params["api_key"] = api_key
+        payload = await client.get_json(OPENALEX_WORKS, params, source="openalex")
         for row in payload.get("results") or []:
             work = _parse_work(row)
             if work:
@@ -542,7 +541,7 @@ async def fetch_works(
 
 
 async def fetch_journals(
-    client, issns: Sequence[str], *, mailto: str | None = None
+    client, issns: Sequence[str], *, mailto: str | None = None, api_key: str | None = None
 ) -> dict[str, JournalMetrics]:
     """按 ISSN 批量取期刊级指标。返回 ``issn_l -> JournalMetrics``。
 
@@ -551,16 +550,15 @@ async def fetch_journals(
     """
     found: dict[str, JournalMetrics] = {}
     for batch in _batched(list(issns)):
-        payload = await client.get_json(
-            OPENALEX_SOURCES,
-            {
-                "filter": "issn:" + "|".join(batch),
-                "select": _SOURCE_SELECT,
-                "per-page": len(batch),
-                "mailto": mailto,
-            },
-            source="openalex",
-        )
+        params: dict[str, str | int] = {
+            "filter": "issn:" + "|".join(batch),
+            "select": _SOURCE_SELECT,
+            "per-page": len(batch),
+            "mailto": mailto,
+        }
+        if api_key:
+            params["api_key"] = api_key
+        payload = await client.get_json(OPENALEX_SOURCES, params, source="openalex")
         for row in payload.get("results") or []:
             journal = _parse_source(row)
             if not journal:

@@ -1,0 +1,19 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "I1": {"type": "noul", "noul": 0.99},
+    "I2": {"type": "noul", "noul": 0.11},
+    "pub_type": {
+      "type": "choice",
+      "choice": "original_research",
+      "confidence": 0.94,
+      "probabilities": {
+        "original_research": 0.94,
+        "review": 0.05,
+        "abstract_or_letter": 0.01,
+        "other": 0.0
+      }
+    }
+  },
+  "usage": {"input_tokens": 1149, "output_tokens": 67}
+}

@@ -195,6 +195,25 @@ def _gaps_section(gaps: Sequence[Gap]) -> list[str]:
     ]
 
 
+def _degraded_section(degraded: Sequence[str]) -> list[str]:
+    """跑了但失败的源必须在贡献表**之后**点名。
+
+    贡献表是按语料统计的：一个整源失败的检索式不产生记录，于是它在表里
+    干脆不出现——而"不在表里"会被读成"这个源没有独有贡献"，恰好与事实相反。
+    「压根没跑」由 ``find_gaps`` 写进「未执行的部分」，「跑了没成功」由这里管，
+    两者不能互相顶替：本次 arXiv 属于后者，而前者报告的是"无"。
+    """
+    if not degraded:
+        return []
+    names = "、".join(sorted(degraded))
+    return [
+        "> ⚠️ **上表缺少 " + names + "**：这些源存在 partial/failed 的检索式，",
+        "> 失败的检索式不产生记录，因此它们在表中的缺席**不代表没有独有贡献**。",
+        "> 本次运行的识别数与独有贡献都是**下界**，不是实际值。",
+        "",
+    ]
+
+
 def coverage_markdown(
     *,
     title: str,
@@ -203,6 +222,7 @@ def coverage_markdown(
     controls: Sequence,
     gaps: Sequence[Gap],
     snowball_rounds: Sequence[dict],
+    degraded: Sequence[str] = (),
 ) -> str:
     """召回率证据。每一项都是测出来的，没有一项是声称的。"""
     leak = out_of_window_leakage(controls, corpus)
@@ -234,6 +254,7 @@ def coverage_markdown(
             for row in source_contribution(strict)
         ),
         "",
+        *_degraded_section(degraded),
         *_capture_section(strict),
     ]
 

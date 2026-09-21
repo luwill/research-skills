@@ -8,7 +8,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from litsearch.protocol import ProtocolError, Topic, freeze_topic, load_topic
+from litsearch.protocol import (
+    ProtocolError,
+    Topic,
+    freeze_topic,
+    load_topic,
+    protocol_fingerprint,
+)
 from tests.conftest import sample_topic
 
 ISLES_TOPIC = sample_topic("isles-2026.yaml")
@@ -158,3 +164,48 @@ class TestRealTopic:
         assert topic.out_of_window_controls
         for control in topic.out_of_window_controls:
             assert control.doi
+
+
+class TestFingerprintStability:
+    """协议指纹钉桩。
+
+    ``protocol_fingerprint`` 哈希的是 ``model_dump(mode="json")``——**含默认值**。
+    给 ``Topic`` 或其任一子模型加一个可选字段，哪怕默认是 ``None``，也会让所有
+    历史 run 的指纹对不上，被 ``assert_topic_compatible`` 挡死，
+    ``screen``/``adjudicate``/``report``/``validate``/``snowball`` 全部失效。
+
+    这个测试让那类改动**响亮地失败**，而不是等到用户的 run 跑不动才发现。
+    真要改协议语义时，同步更新下面的哈希，并明确告知已有 run 需要重新采集。
+    """
+
+    #: 2026-09-20 实测值。改动协议 schema 会让这些值全部变化。
+    PINNED = {
+        "context-engineering-2026.yaml": (
+            "47695e453be1caeb2bd048284326ef55df28b2d18ae27452987373fa5f20ee0f"
+        ),
+        "isles-2026.yaml": (
+            "a9a2e221c80ba406479687712754497adef779deda11e43968edcaec136e5a82"
+        ),
+        "pediatric-intestinal-obstruction-ai.yaml": (
+            "9ce217c335d7dd5c99bec85fd7e48da235a6cf996c362b87bcb3503d387dc3c0"
+        ),
+        "pulmonary-fibrosis-ai.yaml": (
+            "63c159311204b9414c2c9b3116fa358d4571e5715482e837ff2ab0fd82fe2d6e"
+        ),
+    }
+
+    @pytest.mark.parametrize("name", sorted(PINNED))
+    def test_sample_topic_fingerprints_are_pinned(self, name: str):
+        # 打包成 skill 时只随附部分样例协议。没随附的跳过；
+        # **随附了的一个都不能漏检**——否则这层护栏在副本里就是空的。
+        try:
+            path = sample_topic(name)
+        except FileNotFoundError:
+            pytest.skip(f"{name} 不在本布局中（skill 包只随附部分样例协议）")
+        topic = load_topic(path)
+
+        assert protocol_fingerprint(topic) == self.PINNED[name], (
+            f"{name} 的协议指纹变了。若这是有意的协议语义变更，请更新钉桩值，"
+            f"并告知已有 run 需要重新采集；若只是给 schema 加了字段，请撤销——"
+            f"加字段会让所有历史 run 被兼容性检查挡死。"
+        )

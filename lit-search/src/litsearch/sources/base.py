@@ -152,12 +152,17 @@ class HttpClient:
         max_attempts: int = DEFAULT_MAX_ATTEMPTS,
         max_bytes: int = DEFAULT_MAX_BYTES,
         backoff_base: float = 2.0,
+        retry_status: frozenset[int] = RETRY_STATUS,
     ) -> None:
         self._client = client
         self._rate_limiter = rate_limiter
         self._max_attempts = max_attempts
         self._max_bytes = max_bytes
         self._backoff_base = backoff_base
+        #: 哪些状态码值得重试。**按源覆盖**而不是加进全局 RETRY_STATUS——
+        #: 同一个码在不同语境下含义相反：406 对 arXiv 是瞬时故障，
+        #: 对 doi.org 的内容协商却是"这个引文样式不存在"这种永远不会变的答案。
+        self._retry_status = retry_status
 
     async def get_text(
         self,
@@ -168,20 +173,47 @@ class HttpClient:
         pages_fetched: int = 0,
         headers: Mapping[str, str] | None = None,
     ) -> str:
+        cleaned = {key: value for key, value in params.items() if value is not None}
+        return await self._request(
+            "GET",
+            url,
+            source=source,
+            params=cleaned,
+            pages_fetched=pages_fetched,
+            headers=headers,
+        )
+
+    async def _request(
+        self,
+        method: str,
+        url: str,
+        *,
+        source: str,
+        params: Mapping[str, Any] | None = None,
+        json_body: Any = None,
+        pages_fetched: int = 0,
+        headers: Mapping[str, str] | None = None,
+    ) -> str:
+        """限速、重试、配额与体积上限——GET 和 POST 共用这一份。
+
+        这里每一条规则都是被实测逼出来的（见 Retry-After 那段）。POST 另起一套
+        就会漏掉其中某一条，而漏掉的那条通常要等到线上跑了几小时才发现。
+        """
         if not url.startswith("https://"):
             raise SourceError(source, f"仅允许 HTTPS 端点：{url}")
 
-        cleaned = {key: value for key, value in params.items() if value is not None}
         last_error: str = "未知错误"
 
         for attempt in range(1, self._max_attempts + 1):
             await self._rate_limiter.wait()
             try:
-                response = await self._client.get(url, params=cleaned, headers=headers)
+                response = await self._client.request(
+                    method, url, params=params, json=json_body, headers=headers
+                )
             except httpx.HTTPError as error:
                 last_error = f"请求失败：{error!r}"
             else:
-                if response.status_code in RETRY_STATUS:
+                if response.status_code in self._retry_status:
                     last_error = f"HTTP {response.status_code}"
                     retry_after = _retry_after_seconds(response)
                     # Retry-After 超过上限说明这是配额耗尽而非瞬时限流。
@@ -226,6 +258,31 @@ class HttpClient:
         body = await self.get_text(url, params, source=source, pages_fetched=pages_fetched)
         try:
             return json.loads(body)
+        except json.JSONDecodeError as error:
+            raise SourceError(
+                source, f"响应不是合法 JSON：{error}", pages_fetched=pages_fetched
+            ) from error
+
+    async def post_json(
+        self,
+        url: str,
+        body: Any,
+        *,
+        source: str,
+        pages_fetched: int = 0,
+        headers: Mapping[str, str] | None = None,
+    ) -> Any:
+        """POST 一个 JSON 体并解析 JSON 应答。判定类 API 需要它；检索源都是 GET。"""
+        text = await self._request(
+            "POST",
+            url,
+            source=source,
+            json_body=body,
+            pages_fetched=pages_fetched,
+            headers=headers,
+        )
+        try:
+            return json.loads(text)
         except json.JSONDecodeError as error:
             raise SourceError(
                 source, f"响应不是合法 JSON：{error}", pages_fetched=pages_fetched

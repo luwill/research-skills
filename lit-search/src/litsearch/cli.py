@@ -19,6 +19,17 @@ from litsearch.adjudicate import (
     load_rows,
 )
 from litsearch.ccf import CcfError, CcfMatcher, load_catalog
+from litsearch.cli_facets import facets_command
+from litsearch.cli_judge import run_jev_screening, screen_eval_command, triage_command
+from litsearch.cli_support import (
+    DEFAULT_RUNS_ROOT,
+    finish_screening_round,
+    load_latest_decisions,
+    load_topic_or_exit,
+    open_compatible_run_or_exit,
+    open_run_or_exit,
+    refuse_cross_backend_resume,
+)
 from litsearch.coverage import coverage_markdown, find_gaps
 from litsearch.dedupe import CanonicalRecord, deduplicate
 from litsearch.deliver import (
@@ -47,7 +58,7 @@ from litsearch.metrics import (
 from litsearch.normalize import Record, WindowStatus
 from litsearch.order import group_by_tier
 from litsearch.profiles import DEFAULT_DEPTH, profile_for, sources_for, summary_table
-from litsearch.protocol import ProtocolError, freeze_topic, load_topic, protocol_fingerprint
+from litsearch.protocol import freeze_topic, protocol_fingerprint
 from litsearch.providers import (
     ENV_API_KEY,
     HOST_MODEL,
@@ -87,13 +98,13 @@ from litsearch.run import (
 )
 from litsearch.screen import (
     Decision,
-    MergedDecision,
     ScreeningRound,
     build_channel_prompt,
     merge_verdicts,
     render_human_queue,
     summarize,
 )
+from litsearch.screen_commit import BackendResult
 from litsearch.screen_host import (
     HOST_BATCH_SIZE,
     HOST_DEFAULT_MODEL,
@@ -124,15 +135,11 @@ from litsearch.verify import verify_run
 
 app = typer.Typer(add_completion=False, help="时间窗受限的高召回文献检索")
 
-DEFAULT_RUNS_ROOT = Path("runs")
-
-
-def _load(topic_path: Path):
-    try:
-        return load_topic(topic_path)
-    except ProtocolError as error:
-        typer.secho(str(error), fg=typer.colors.RED, err=True)
-        raise typer.Exit(code=2) from error
+#: 这些助手与 cli_judge.py 共用一份实现，避免"同一个错误在不同命令里表现不一样"。
+_load = load_topic_or_exit
+_open_run = open_run_or_exit
+_open_compatible_run = open_compatible_run_or_exit
+_load_decisions = load_latest_decisions
 
 
 def _today():
@@ -150,25 +157,6 @@ def _split(value: str | None) -> list[str] | None:
 #: ``records_<阶段>.jsonl`` 是后续补全（整卷、滚雪球）。每个文件只写一次，
 #: 语料由它们合并去重而来——这样"哪一条是哪一阶段拿到的"永远可回答。
 RECORD_FILES = "records*.jsonl"
-
-
-def _open_run(runs_root: Path, reference: str) -> Run:
-    try:
-        return Run.open(resolve_run(runs_root, reference))
-    except FileNotFoundError as error:
-        typer.secho(str(error), fg=typer.colors.RED, err=True)
-        raise typer.Exit(code=2) from error
-
-
-def _open_compatible_run(runs_root: Path, reference: str, topic, topic_path: Path) -> Run:
-    """Open a run and reject commands that supply an unrelated protocol."""
-    run = _open_run(runs_root, reference)
-    try:
-        assert_topic_compatible(run, topic, topic_path)
-    except ValueError as error:
-        typer.secho(str(error), fg=typer.colors.RED, err=True)
-        raise typer.Exit(code=2) from error
-    return run
 
 
 def _read_all_records(run_dir: Run) -> list[Record]:
@@ -654,25 +642,6 @@ def _known_dois(records: list[CanonicalRecord]) -> set[str]:
     return {doi for item in records if (doi := item.identifiers.get("doi"))}
 
 
-def _load_decisions(run_dir: Run) -> dict[str, MergedDecision] | None:
-    """读回**最近一轮**筛选判定；没有就返回 None。
-
-    判定按轮次不可变追加（`screening_round_N.json`），改判开新一轮。
-    这里取轮次号最大的那一轮——它才是当前结论。
-    """
-    rounds = sorted(
-        run_dir.root.glob("screening_round_*.json"),
-        key=lambda item: int(item.stem.rsplit("_", 1)[-1]),
-    )
-    if not rounds:
-        return None
-    payload = json.loads(rounds[-1].read_text(encoding="utf-8"))
-    return {
-        key: MergedDecision.model_validate(value)
-        for key, value in (payload.get("decisions") or {}).items()
-    }
-
-
 @app.command("validate")
 def validate_command(
     run: str = typer.Argument(..., help="run 目录、<topic>/<run_id>，或 <topic> 取最新"),
@@ -885,6 +854,14 @@ def screen_command(
     resume: bool = typer.Option(
         False, "--resume", help="只补上一轮中各通道缺判定的记录，结果并成新一轮"
     ),
+    allow_regression: bool = typer.Option(
+        False,
+        "--allow-regression",
+        help="允许写入一轮比上一轮丢失已有结论的判定（会记进轮次 parameters）",
+    ),
+    jev_profile: Path = typer.Option(
+        None, "--jev-profile", help="判定 API 的阈值配置；--model jev 时必填"
+    ),
 ) -> None:
     """双通道标题摘要初筛。分歧与低置信度进人工队列，不让模型单方面拍板。
 
@@ -902,8 +879,10 @@ def screen_command(
         typer.secho(str(error), fg=typer.colors.RED, err=True)
         raise typer.Exit(code=2) from error
     host = provider.model == HOST_MODEL
+    jev = provider.kind == "jev"
     if concurrency is None:
-        concurrency = 3 if host else 6
+        # Jev 有自己的 16 req/s 限速器兜底，并发高一点只是让排队更满。
+        concurrency = 3 if host else (16 if jev else 6)
     loaded = _load(topic)
     run_dir = _open_compatible_run(runs_root, run, loaded, topic)
     records = [CanonicalRecord.model_validate(row) for row in run_dir.read_jsonl("corpus.jsonl")]
@@ -915,7 +894,30 @@ def screen_command(
         raise typer.Exit(code=2)
 
     by_key = {item.key: item for item in records}
-    previous = _load_decisions(run_dir) if resume else None
+    # 无论是否续跑都要读上一轮：下游只认轮次号最大的那一轮，普通重跑同样会遮蔽它，
+    # 所以退步守卫和人工裁决保留在两条路径上都得生效。
+    previous = _load_decisions(run_dir)
+    if resume and previous:
+        refuse_cross_backend_resume(run_dir, judge="jev" if jev else None)
+
+    if jev:
+        run_jev_screening(
+            run_dir=run_dir,
+            topic_path=topic,
+            topic=loaded,
+            records=records,
+            provider=provider,
+            profile_path=jev_profile,
+            previous=previous,
+            resume=resume,
+            limit=limit,
+            dry_run=dry_run,
+            concurrency=concurrency,
+            allow_regression=allow_regression,
+            api_key=(Credentials.from_env().api_keys or {}).get("typesafe"),
+        )
+        return
+
     if resume and not previous:
         typer.secho("该 run 还没有筛选轮次，无从续跑。", fg=typer.colors.RED, err=True)
         raise typer.Exit(code=2)
@@ -1063,107 +1065,46 @@ def screen_command(
     while len(channels) < loaded.screening.channels:
         channels.append([])
 
-    if previous:
+    if resume and previous:
         # 把上一轮已有的判定按通道并回来，再统一合并——
-        # 续跑补的是"缺的那个通道"，不是重判整条记录
+        # 续跑补的是"缺的那个通道"，不是重判整条记录。
+        # 只在续跑时并回：普通重跑是重判，把旧判定混进来就不是重判了。
         for channel, verdicts in enumerate(regroup_by_channel(previous, loaded.screening.channels)):
             channels[channel].extend(verdicts)
 
     decisions = merge_verdicts(channels, loaded.screening, expected_keys=by_key)
-    counts = summarize(decisions)
 
     system_prompts = "\n--- channel ---\n".join(
         build_channel_prompt(loaded.criteria, channel)
         for channel in range(loaded.screening.channels)
     )
     endpoint_host = urlsplit(provider.base_url).hostname if provider.base_url else None
-    round_metadata = {
-        "topic_fingerprint": protocol_fingerprint(loaded),
-        "provider": "host" if host else endpoint_host,
-        "model": host_model if host else provider.model,
-        "endpoint_host": endpoint_host,
-        "parameters": {
+    outcome = BackendResult(
+        decisions=decisions,
+        usage=asdict(host_usage if host else usage),
+        failures=failures,
+        provider="host" if host else endpoint_host,
+        model=host_model if host else provider.model,
+        endpoint_host=endpoint_host,
+        parameters={
             "channels": loaded.screening.channels,
             "batch_size": batch_size,
             "concurrency": concurrency,
             "thinking": False if host else not provider.disable_thinking,
+            # 只在真的用了才记：让审计时「这一轮是明知退步仍然写的」一眼看得见。
+            **({"allow_regression": True} if allow_regression else {}),
         },
-        "system_prompt_sha256": hashlib.sha256(system_prompts.encode()).hexdigest(),
-        "expected_records": len(by_key),
-        "failures": failures,
-        "usage": asdict(host_usage if host else usage),
-    }
-
-    # 一轮判定比上一轮还少，说明这次跑砸了（配额耗尽、网络中断……）。
-    # 写下去会遮蔽上一轮——下游只认轮次号最大的那一轮，等于把好结果弄丢。
-    if previous and len(decisions) < len(previous):
-        typer.secho(
-            f"\n本次只得到 {len(decisions):,} 条判定，少于上一轮的 {len(previous):,} 条——"
-            f"判定退步说明这次跑砸了，**不写入新轮次**，上一轮结果保持不变。",
-            fg=typer.colors.RED,
-            err=True,
-        )
-        if failures:
-            typer.secho(f"失败样例：{failures[0]}", fg=typer.colors.RED, err=True)
-        raise typer.Exit(code=1)
-
-    typer.echo(f"\n{'判定':<16}{'数量':>10}")
-    typer.echo("-" * 26)
-    for label, key in (("纳入", "include"), ("排除", "exclude"), ("待人工裁定", "human_queue")):
-        typer.echo(f"{label:<16}{counts[key]:>10,}")
-
-    missing = sum(1 for item in decisions.values() if item.needs_human and "缺少" in item.reason)
-    if missing:
-        typer.secho(
-            f"其中 {missing:,} 条是**某个通道漏判**（模型没把这条写进返回），"
-            f"占 {missing / len(decisions):.1%}",
-            fg=typer.colors.YELLOW,
-        )
-
-    if limit:
-        # 试跑不占轮次：否则一次 --limit 100 的试跑会盖住正式全量结果，
-        # 而下游只认轮次号最大的那一轮。
-        run_dir.write_text(
-            "screening_trial.json",
-            ScreeningRound(
-                number=1,
-                topic_sha256=freeze_topic(topic),
-                decisions=decisions,
-                **round_metadata,
-            ).model_dump_json(indent=2),
-        )
-        run_dir.write_text("human_queue_trial.csv", render_human_queue(decisions, by_key))
-        typer.secho(
-            f"\n试跑结果 → {run_dir.root / 'screening_trial.json'}（不计入轮次，下游读不到它）",
-            fg=typer.colors.YELLOW,
-        )
-        return
-
-    existing = [
-        int(item.stem.rsplit("_", 1)[-1]) for item in run_dir.root.glob("screening_round_*.json")
-    ]
-    screened = ScreeningRound(
-        number=max(existing, default=0) + 1,
-        topic_sha256=freeze_topic(topic),
-        decisions=decisions,
-        **round_metadata,
+        prompt_sha256=hashlib.sha256(system_prompts.encode()).hexdigest(),
     )
-    run_dir.write_text(
-        f"screening_round_{screened.number}.json", screened.model_dump_json(indent=2)
-    )
-    run_dir.write_text("human_queue.csv", render_human_queue(decisions, by_key))
-    run_dir.write_jsonl(
-        "included.jsonl",
-        [
-            by_key[key].model_dump(mode="json")
-            for key, item in decisions.items()
-            if not item.needs_human and item.decision.value == "include"
-        ],
-    )
-    typer.echo(f"\n判定 → {run_dir.root / f'screening_round_{screened.number}.json'}")
-    typer.secho(
-        f"待人工裁定 {counts['human_queue']:,} 条 → {run_dir.root / 'human_queue.csv'}",
-        fg=typer.colors.YELLOW,
+    finish_screening_round(
+        run_dir=run_dir,
+        topic_path=topic,
+        topic=loaded,
+        result=outcome,
+        records=by_key,
+        previous=previous,
+        trial=bool(limit),
+        allow_regression=allow_regression,
     )
 
 
@@ -1414,10 +1355,20 @@ def rank_command(
     async def go():
         try:
             typer.echo(f"取 {len(dois):,} 条 DOI 的 OpenAlex 记录…")
-            works = await fetch_works(client, dois, mailto=credentials.contact_email)
+            works = await fetch_works(
+                client,
+                dois,
+                mailto=credentials.contact_email,
+                api_key=(credentials.api_keys or {}).get("openalex"),
+            )
             issns = sorted({normalize_issn(item.issn_l) for item in works.values()} - {None})
             typer.echo(f"取 {len(issns):,} 本刊的期刊级指标…")
-            journals = await fetch_journals(client, issns, mailto=credentials.contact_email)
+            journals = await fetch_journals(
+                client,
+                issns,
+                mailto=credentials.contact_email,
+                api_key=(credentials.api_keys or {}).get("openalex"),
+            )
             return works, journals
         finally:
             await raw_client.aclose()
@@ -1555,11 +1506,19 @@ def deliver_command(
         async def collect_metadata():
             try:
                 typer.echo(f"取 {len(dois):,} 条 DOI 的 OpenAlex 记录…")
-                works = await fetch_works(meta_client, dois, mailto=credentials.contact_email)
+                works = await fetch_works(
+                    meta_client,
+                    dois,
+                    mailto=credentials.contact_email,
+                    api_key=(credentials.api_keys or {}).get("openalex"),
+                )
                 issns = sorted({normalize_issn(item.issn_l) for item in works.values()} - {None})
                 typer.echo(f"取 {len(issns):,} 本刊的期刊级指标…")
                 return works, await fetch_journals(
-                    meta_client, issns, mailto=credentials.contact_email
+                    meta_client,
+                    issns,
+                    mailto=credentials.contact_email,
+                    api_key=(credentials.api_keys or {}).get("openalex"),
                 )
             finally:
                 await meta_raw.aclose()
@@ -1720,6 +1679,7 @@ def report_command(
             controls=loaded.out_of_window_controls,
             gaps=gaps,
             snowball_rounds=rounds,
+            degraded=degraded,
         ),
         inputs=report_inputs,
     )
@@ -1816,6 +1776,14 @@ def show_command(
     typer.echo(f"计数      : {manifest['counts']}")
     for note in manifest.get("notes", []):
         typer.secho(f"注意      : {note}", fg=typer.colors.YELLOW)
+
+
+#: 判定器命令定义在 cli_judge.py，在这里注册——它不 import cli.py，所以没有循环依赖。
+#: 放在所有 @app.command 之后，让 --help 里流水线命令保持原顺序，分析类命令排在最后；
+#: 但必须在 `app()` 之前，否则 `python -m litsearch.cli` 会在注册前就把命令跑掉。
+app.command("screen-eval")(screen_eval_command)
+app.command("triage")(triage_command)
+app.command("facets")(facets_command)
 
 
 if __name__ == "__main__":

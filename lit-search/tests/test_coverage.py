@@ -32,7 +32,7 @@ def corpus(records):
     return deduplicate(records, WINDOW, PRIORITY)
 
 
-def render(gaps=(), records=None, gold=(), controls=(), rounds=()):
+def render(gaps=(), records=None, gold=(), controls=(), rounds=(), degraded=()):
     return coverage_markdown(
         title="Demo",
         corpus=records if records is not None else corpus([make("openalex", "a")]),
@@ -40,7 +40,37 @@ def render(gaps=(), records=None, gold=(), controls=(), rounds=()):
         controls=list(controls),
         gaps=list(gaps),
         snowball_rounds=list(rounds),
+        degraded=list(degraded),
     )
+
+
+class TestDegradedSources:
+    """跑了但失败的源，必须在覆盖率证据里点名。
+
+    实测事故：一次运行里 arXiv 的 11 条检索式全部 failed，PRISMA.md 点了名，
+    但 coverage_report.md 的来源贡献表里 arxiv 干脆不出现——而那一节的说明写着
+    「没跑过的源不在此表——见上面的『未执行的部分』」，「未执行的部分」又说"无"。
+    只看这份报告的人永远不会知道少了一个源。
+
+    「压根没跑」由 find_gaps 管，「跑了没成功」必须由这里管，两者不能互相顶替。
+    """
+
+    def test_a_failed_source_is_named_in_the_coverage_report(self) -> None:
+        text = render(degraded=["arxiv"])
+
+        assert "arxiv" in text
+        assert "下界" in text
+
+    def test_the_contribution_table_does_not_silently_omit_it(self) -> None:
+        """贡献表按语料统计，失败的源没有记录就不会出现在表里——
+        所以告警必须紧挨着表，否则读者会把"不在表里"读成"这个源没贡献"。"""
+        text = render(degraded=["arxiv"])
+        table_at = text.index("## 来源独有贡献")
+
+        assert text.index("arxiv") > table_at, "告警要在贡献表之后，不能在文档开头被读者略过"
+
+    def test_a_clean_run_says_nothing_about_degraded_sources(self) -> None:
+        assert "下界" not in render()
 
 
 class TestFindGaps:

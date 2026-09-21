@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from litsearch.jev_client import JEV_PINNED
 from litsearch.profiles import (
     DEFAULT_DEPTH,
     TRUNK_SOURCES,
@@ -203,3 +204,68 @@ class TestSourcesFor:
 def test_builtin_models_are_all_priced() -> None:
     """内置的必须有实测价目；不确定的就别写进 BUILTIN。"""
     assert all(provider.priced for provider in BUILTIN.values())
+
+
+class TestJevProvider:
+    """Jev 是第三类后端：不是 OpenAI 兼容端点，也不是宿主模型。
+
+    它必须能被 ``resolve_provider`` 认出来（``kind``），价目按实测写死
+    （每百万输入 token $0.042，输出免费），且默认解析到**带版本**的模型 id——
+    别名会随新版漂移，而阈值是在某个具体版本上调出来的。
+    """
+
+    def test_the_bare_name_resolves_to_the_pinned_version(self):
+        provider = resolve_provider("jev", env={})
+
+        assert provider.kind == "jev"
+        assert provider.model == JEV_PINNED
+
+    def test_an_explicit_version_is_kept_as_written(self):
+        provider = resolve_provider("jev-1.13.0", env={})
+
+        assert provider.kind == "jev"
+        assert provider.model == "jev-1.13.0"
+
+    def test_the_moving_alias_is_allowed_but_still_typed_as_jev(self):
+        provider = resolve_provider("jev-latest", env={})
+
+        assert provider.kind == "jev"
+        assert provider.model == "jev-latest"
+
+    def test_pricing_is_input_only_and_measured(self):
+        provider = resolve_provider("jev", env={})
+
+        assert provider.pricing is not None
+        assert provider.pricing.input_miss == 0.042
+        assert provider.pricing.output == 0.0
+
+    def test_there_is_no_prefix_cache_so_every_input_token_is_a_miss(self):
+        """Jev 每次都吃完整 state，没有前缀缓存，命中价与未命中价必须相同。"""
+        provider = resolve_provider("jev", env={})
+
+        assert provider.pricing.input_hit == provider.pricing.input_miss
+        assert provider.prefix_cache is False
+
+    def test_it_needs_no_base_url_unlike_an_unknown_openai_model(self):
+        """未知的 OpenAI 兼容模型必须配 base_url；jev 端点是固定的。"""
+        with pytest.raises(ProviderError):
+            resolve_provider("some-unknown-model", env={})
+
+        assert resolve_provider("jev", env={}).base_url.startswith("https://")
+
+    def test_a_user_price_table_still_wins(self):
+        table = {"jev-1.13.0": Pricing(input_hit=1.0, input_miss=1.0, output=0.0)}
+
+        provider = resolve_provider("jev", env={}, pricing=table)
+
+        assert provider.pricing.input_miss == 1.0
+
+    def test_the_default_and_host_models_keep_their_own_kind(self):
+        assert resolve_provider(env={}).kind == "openai"
+        assert resolve_provider(HOST_MODEL, env={}).kind == "host"
+
+    def test_describe_names_the_endpoint_and_the_input_only_price(self):
+        text = describe(resolve_provider("jev", env={}))
+
+        assert JEV_PINNED in text
+        assert "0.042" in text

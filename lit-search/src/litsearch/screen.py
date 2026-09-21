@@ -103,13 +103,27 @@ class ScreeningRound(BaseModel):
 #: 错误纳入只是多读一篇全文。所以"这条标准要读全文才能确认"绝不能触发 unclear——
 #: 否则每一篇正经论文都会进人工队列（实测：不写这段时，13% 的记录被送去人工，
 #: 其中绝大多数是模型在等摘要给出 Dice/HD95，而那本来就只在全文里）。
+#:
+#: 第 3 条针对的是另一个来源：``lit proceedings`` 整卷补齐拿回来的会议录条目
+#: 在 Crossref 上**没有摘要**，而 Springer 也没把它们存进 OpenAlex / PubMed /
+#: Europe PMC（实测 12 条抽样，三个源全部取不到）。不写这条，模型会对每一条
+#: 无摘要记录回「信息不足」：实测一次代表性抽样（100 条，无摘要占比 71%，与
+#: 全语料的 75.7% 相当）队列率 18%，其中 15/18 是无摘要记录。
+#:
+#: 这一条**不削弱**不可逆一侧的保护：排除的依据必须是标题里的正面反证
+#: （标题明写了另一种方法、另一个任务），而不是摘要的缺席。标题本身判不出
+#: 主题时仍然判 unclear——那才是"信息不足"的本义。
 _STAGE_RULE = (
-    "这是**标题摘要初筛**，不是全文评估。两条纪律：\n"
+    "这是**标题摘要初筛**，不是全文评估。三条纪律：\n"
     "1. 错误排除不可逆，错误纳入只是多读一篇全文——拿不准就倾向 include。\n"
     "2. 只有当**主题本身**判不清（这项研究到底做没做该疾病、该任务）才判 unclear。\n"
     "   若某条标准按其性质只能读全文确认（如具体评价指标、样本量、实现细节），\n"
     "   而其余标准已明确满足，就判 include 并在 reason 里注明「待全文确认」，\n"
-    "   **不要**因此判 unclear。"
+    "   **不要**因此判 unclear。\n"
+    "3. 记录标注「（无摘要）」时就按标题判，**没有摘要本身不是判 unclear 的理由**。\n"
+    "   标题已明确表明它做的是另一种方法或另一个任务，就判 exclude；\n"
+    "   只有标题本身不足以判断主题时才判 unclear。\n"
+    "   依据必须是标题里的**正面反证**，而不是「摘要没写所以不知道」。"
 )
 
 CHANNEL_PROMPTS = (
@@ -229,7 +243,10 @@ def merge_verdicts(
 
         decisions = {item.decision for item in verdicts}
         if len(decisions) > 1:
-            merged[key] = _flag(key, f"通道间分歧：{sorted(decisions)}", verdicts)
+            # 用协议字面量而非枚举 repr：这行字会写进审计文件，
+            # 而 3.11 起 Enum.__format__ 改用 __str__，绑死实现细节会让同一份代码换版本就变。
+            spread = sorted(item.value for item in decisions)
+            merged[key] = _flag(key, f"通道间分歧：{spread}", verdicts)
             continue
 
         merged[key] = MergedDecision(
@@ -241,6 +258,47 @@ def merge_verdicts(
         )
 
     return merged
+
+
+#: 人工裁决在 ``MergedDecision`` 上的四个字段。任一非空即视为已裁定。
+_ADJUDICATION_FIELDS = (
+    "adjudicated_by",
+    "adjudicated_at",
+    "adjudication_reason",
+    "previous_decision",
+)
+
+
+def carry_adjudications(
+    merged: dict[str, MergedDecision], previous: dict[str, MergedDecision]
+) -> dict[str, MergedDecision]:
+    """把上一轮的人工裁决盖回重新合并的结果上。
+
+    续跑会把旧判定按通道拆回去重新 ``merge_verdicts``，而合并函数构造的是全新的
+    ``MergedDecision``——不盖回来，人工花时间定谳过的记录就会静默退回模型判定。
+
+    人工裁决是终审：结论、理由、裁决人一律以上一轮为准；
+    **本轮的通道判定照样留着**，因为"模型后来怎么看"本身是审计信息。
+    裁决过的记录若这轮不见了，说明语料变了，抛错而不是丢掉。
+    """
+    carried = dict(merged)
+    for key, decision in previous.items():
+        if not any(getattr(decision, field) is not None for field in _ADJUDICATION_FIELDS):
+            continue
+        if key not in carried:
+            raise KeyError(
+                f"上一轮裁决过的记录 {key} 不在本轮判定里——语料变了，"
+                f"不能静默丢弃已定谳的结论"
+            )
+        carried[key] = carried[key].model_copy(
+            update={
+                "decision": decision.decision,
+                "needs_human": decision.needs_human,
+                "reason": decision.reason,
+                **{field: getattr(decision, field) for field in _ADJUDICATION_FIELDS},
+            }
+        )
+    return carried
 
 
 def render_human_queue(
@@ -255,7 +313,8 @@ def render_human_queue(
         title = (record.title if record else "").replace('"', "'")
         doi = record.identifiers.get("doi", "") if record else ""
         channels = "|".join(
-            f"{item.decision}@{item.confidence:.2f}" for item in decision.channel_verdicts
+            f"{item.decision.value}@{item.confidence:.2f}"
+            for item in decision.channel_verdicts
         )
         lines.append(f'{key},,,,"{decision.reason}",{doi},{channels},"{title}"')
     return "\n".join(lines) + "\n"

@@ -326,6 +326,33 @@ class TestFetchLayer:
         with pytest.raises(SourceError):
             await fetch_works(client, ["10.1/a"])
 
+    @pytest.mark.asyncio
+    async def test_sends_api_key_when_configured(self, respx_mock, client) -> None:
+        """配置了 OPENALEX_API 时必须带在请求里——否则静默掉进匿名池，撞日配额。"""
+        import httpx
+
+        from litsearch.rank import OPENALEX_WORKS, fetch_works
+
+        route = respx_mock.get(OPENALEX_WORKS).mock(
+            return_value=httpx.Response(200, json={"results": []})
+        )
+        await fetch_works(client, ["10.1/a"], mailto="a@b.c", api_key="secret-key")
+        params = route.calls[0].request.url.params
+        assert params.get("api_key") == "secret-key"
+
+    @pytest.mark.asyncio
+    async def test_omits_api_key_when_absent(self, respx_mock, client) -> None:
+        """没有配置 key 时不要发空 api_key 参数——空值同样会被服务端当成请求。"""
+        import httpx
+
+        from litsearch.rank import OPENALEX_WORKS, fetch_works
+
+        route = respx_mock.get(OPENALEX_WORKS).mock(
+            return_value=httpx.Response(200, json={"results": []})
+        )
+        await fetch_works(client, ["10.1/a"], mailto="a@b.c")
+        assert "api_key" not in route.calls[0].request.url.params
+
 
 class TestPersistence:
     def test_round_trip_preserves_every_field(self) -> None:

@@ -211,7 +211,22 @@ uv run lit harvest --topic ... --into <run> --phase stage3 --sources cvf,openrev
   在裁定导回之前，这些记录不进 `included`，也不进交付物。
 - **放量。**
 
+判定 API 后端同样三级：`--limit 4`（约 $0.0002）验服务端约束，`--limit 100`
+（约 $0.005）验任务设计，再放量。这一步不能省——**假客户端测得了你的代码，
+测不了服务端，也测不了运行时**：十项 CLI 测试用 respx 全绿，真跑第一次就抛了
+`Event loop is closed`（httpx 的连接池绑在创建它的事件循环上，而 respx 在传输层
+拦截、根本不建真实连接）。
+
 `--limit` 的结果写 `screening_trial.json`，**不占正式轮次**——否则一次校准会盖掉全量结果。
+
+> ⚠️ **`--limit N` 取的是语料前 N 条，不是随机抽样。** 前缀里几乎全是最先被采集、
+> 也最典型的记录，而撑爆人工队列的永远是后面那些边缘记录。实测一次：前缀样本
+> 100/100 含锚点关键词、仅 12% 无摘要，报出队列率 9%；而全语料是 22.9% 和 75.7%，
+> 换同分布随机样本重测真实值 **18%**，超红线。
+>
+> 跑过 `lit proceedings` 或滚过雪球之后差距最大——那两步追加的记录全排在语料尾部。
+> **校准前先核样本构成**（关键词命中率、无摘要占比与全语料是否相当）；
+> 不相当就把 run 复制到临时目录、把 `corpus.jsonl` 换成随机 N 条再跑，别改原 run。
 
 ## 不能跳过的顺序
 
@@ -275,7 +290,7 @@ uv run lit harvest --topic ... --into <run> --phase stage3 --sources cvf,openrev
 | `OPENALEX_API` | 采集中途 `QuotaExhausted`；捕获-再捕获算不出，召回证据只剩金标准一个点 |
 | `CONTACT_EMAIL` | `lit fulltext` 直接拒绝跑——Unpaywall 与 Crossref 都要求声明身份 |
 
-### 筛选后端：两条路
+### 筛选后端：三条路
 
 **API 后端**（默认）：任何 OpenAI 兼容端点。三个环境变量
 `LITSEARCH_LLM_MODEL` / `_BASE_URL` / `_API_KEY`。内置 DeepSeek 的实测价目，
@@ -289,6 +304,30 @@ clone 完就能跑，这是给社区用户的零配置入口。三件事要说�
 - 它**不是免费的**：实测 60 条记录约 $0.30 API 等价成本（haiku；用 opus 是 $1.44）。
   订阅用户不额外付费，但会消耗额度——**别说成 "$0"**
 - `--host-model` 默认 haiku。上万条规模请改用 API 后端
+
+**判定 API 后端**（`--model jev`）：TypeSafe Jev 不生成文本，对每条纳排标准
+返回校准过的概率。$0.042/百万输入 token、输出免费，比生成式 LLM 便宜一个量级。
+
+**但它没有通用默认阈值，配置文件必填。** 实测同一套阈值在 pediatric 课题上把
+人工队列从 18.3% 压到 11.2%（AUC 0.987），在 ISLES 课题上反而比现有 LLM 更差
+（8.5% vs 基线 7.2%）。失效原因查得到：`X1`「仅做出血性卒中……**且无**缺血性
+卒中数据」这类多跳间接 + 隐含否定的标准，单看 AUC 只有 0.675。
+
+所以放量前必须先过准入，三条门槛缺一不可：
+
+1. 金标种子 100% 保留（被自动排除会直接退 1，不用你判断）
+2. 人工队列 ≤15%
+3. **不劣于该课题现有 LLM 基线**——这条最容易被忽略，也是 ISLES 栽的那条
+
+```bash
+lit screen-eval <run> --topic ... --reference-round <人工裁决过的轮次> \
+    --candidate-scores jev_scores.jsonl --score-keys I1,I2
+```
+
+报告会分开给金标（真人裁决）与银标（模型判定）的数字，并把银标标注为天花板——
+实测某课题银标纳入约 21% 被真人推翻。每个比率带 Wilson 区间。
+
+打分落在 `jev_scores.jsonl`，改阈值只是重新路由，不重新花钱。
 
 **OpenAlex 有日配额。** `lit deliver` 默认复用 `ranked.jsonl`，不重取元数据；
 要刷新加 `--refresh`。配额耗尽时 `QuotaExhausted` 会带上重置秒数——降速无效，别重试。
@@ -367,7 +406,10 @@ clone 完就能跑，这是给社区用户的零配置入口。三件事要说�
 | `corpus.jsonl` | 去重后的规范语料（派生产物，可随时重算） |
 | `manifest.json` | 协议指纹 + 每条检索式的结局与状态 |
 | `boundary_cases.csv` | 日期精度不足，需人工裁定 |
-| `human_queue.csv` | 双通道分歧或低置信度，需人工裁定 |
+| `human_queue.csv` | 双通道分歧或低置信度，需人工裁定；`lit triage` 会把它按最可能纳入重排并附上判定器线索 |
+| `jev_scores.jsonl` | 判定 API 的逐条打分（`--model jev` / `lit triage`）。改阈值只需重新路由，不重打 |
+| `screen_eval_*.md` / `*_disagreements.csv` | `lit screen-eval` 的评估报告与分歧清单（填好可直接 `lit adjudicate`） |
+| `facets.jsonl` / `facets.csv` | `lit facets` 的标注：外部验证、多中心、公开数据集等。只有 stated/not_stated，**没有 no** |
 | `PRISMA.md` | 各环节计数（不自洽会拒绝生成） |
 | `coverage_report.md` | **本次未执行的部分**、严格窗口金标准召回、窗口外泄漏、独有贡献、两源重叠诊断、饱和曲线 |
 | `artifacts.json` | 派生产物内容哈希与输入依赖哈希；由 `lit verify` 检查过期 |

@@ -22,6 +22,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from litsearch.jev_client import JEV_PINNED
+
 #: 兼容旧配置：这些键名仍然认，但新配置一律用 LITSEARCH_LLM_API_KEY
 LEGACY_KEY_ENV = ("DEEPSEEK_API_KEY",)
 
@@ -50,6 +52,9 @@ class Provider:
 
     model: str
     base_url: str
+    #: 端点类别：``openai``（OpenAI 兼容）、``host``（宿主模型）、``jev``（判定 API）。
+    #: 三者的请求形状、成本模型和续跑语义都不同，靠模型名前缀判断迟早会错。
+    kind: str = "openai"
     #: ``None`` 表示价目未知——估算必须如实报"未知"，不能当成 0
     pricing: Pricing | None = None
     #: v4 系列默认开思考，而思考模式与强制工具调用互斥，必须显式关掉
@@ -84,6 +89,14 @@ DEFAULT_MODEL = "deepseek-v4-flash"
 
 #: 宿主模型：不走 API，由 Claude Code 本身判定。零配置，不需要任何 key。
 HOST_MODEL = "host"
+
+#: 判定 API。不是 OpenAI 兼容端点，请求形状完全不同，所以单列一类。
+JEV_MODEL = "jev"
+JEV_BASE_URL = "https://api.typesafe.ai"
+
+#: 实测价目：每百万**输入** token $0.042，输出免费。
+#: 没有前缀缓存，所以命中价与未命中价相同——把 input_hit 写低会让 dry-run 低估。
+JEV_PRICING = Pricing(input_hit=0.042, input_miss=0.042, output=0.0)
 
 
 def load_pricing(path: Path) -> dict[str, Pricing]:
@@ -134,12 +147,26 @@ def resolve_provider(
     env = os.environ if env is None else env
     name = model or env.get(ENV_MODEL) or DEFAULT_MODEL
     if name == HOST_MODEL:
-        return Provider(model=HOST_MODEL, base_url="", pricing=None, prefix_cache=False)
+        return Provider(
+            model=HOST_MODEL, base_url="", kind="host", pricing=None, prefix_cache=False
+        )
 
     base_url = env.get(ENV_BASE_URL)
     extra = dict(pricing or {})
     if path := env.get(ENV_PRICING):
         extra = {**load_pricing(Path(path)), **extra}
+
+    if name == JEV_MODEL or name.startswith(f"{JEV_MODEL}-"):
+        # 裸名 "jev" 解析到带版本 id：阈值是在某个具体版本上调出来的，
+        # 让别名随新版漂移等于悄悄换掉判定标准。
+        resolved = JEV_PINNED if name == JEV_MODEL else name
+        return Provider(
+            model=resolved,
+            base_url=base_url or JEV_BASE_URL,
+            kind="jev",
+            pricing=extra.get(resolved, JEV_PRICING),
+            prefix_cache=False,
+        )
 
     if builtin := BUILTIN.get(name):
         return Provider(
@@ -164,6 +191,13 @@ def describe(provider: Provider) -> str:
     """一行说明，用在 --dry-run 抬头。"""
     if provider.model == HOST_MODEL:
         return "宿主模型（Claude Code 本身判定，无需 API key）"
+    if provider.kind == "jev":
+        price = (
+            f"输入 ${provider.pricing.input_miss}/M · 输出免费"
+            if provider.pricing
+            else "**价目未知**"
+        )
+        return f"{provider.model} @ {provider.base_url} ｜ {price}"
     price = (
         f"未命中 ${provider.pricing.input_miss}/M · 输出 ${provider.pricing.output}/M"
         if provider.pricing

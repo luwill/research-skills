@@ -16,6 +16,7 @@ from litsearch.sources.arxiv import ArxivSource
 from litsearch.sources.base import (
     DEFAULT_MAX_ATTEMPTS,
     DEFAULT_TIMEOUT_SECONDS,
+    RETRY_STATUS,
     HttpClient,
     RateLimiter,
     Source,
@@ -54,6 +55,17 @@ RATE_LIMITS: dict[str, float] = {
 #: 各源的重试次数。arXiv 会间歇性 429，多试几次比中途放弃少召回划算。
 MAX_ATTEMPTS: dict[str, int] = {"arxiv": 6}
 
+#: 在全局 RETRY_STATUS 之外，某些源还需要把特定状态码当作瞬时故障。
+#:
+#: arXiv 源站会对**缓存未命中**的请求间歇性返回 406：实测故障窗口内 20/20 全 406，
+#: 同一时刻一条 age=1039 的 Varnish 缓存命中却照常 200；换 curl、绕过本机代理、
+#: 改 UA/Accept/Accept-Encoding 都无效，几分钟后自行恢复。
+#: 不重试的后果是静默少召回——CS/AI 主题的文献大半首发在 arXiv。
+#:
+#: **只对 arXiv 生效**，不进全局集合：doi.org 的内容协商用 406 表示
+#: "这个引文样式不存在"，那是个永远不会变的答案，重试只是白白拖慢。
+EXTRA_RETRY_STATUS: dict[str, frozenset[int]] = {"arxiv": frozenset({406})}
+
 _FACTORIES: dict[str, type] = {
     "openalex": OpenAlexSource,
     "pubmed": PubMedSource,
@@ -77,6 +89,8 @@ KEY_ALIASES: dict[str, tuple[str, ...]] = {
     "openalex": ("LITSEARCH_OPENALEX_API_KEY", "OPENALEX_API_KEY", "OPENALEX_API"),
     "semantic_scholar": ("LITSEARCH_S2_API_KEY", "S2_API_KEY", "SEMANTIC_SCHOLAR_API_KEY"),
     "deepseek": ("LITSEARCH_DEEPSEEK_API_KEY", "DEEPSEEK_API_KEY", "DEEPSEEK_API"),
+    # 判定 API。认不出来的后果比检索源更硬：直接 401，整轮中止。
+    "typesafe": ("LITSEARCH_TYPESAFE_API_KEY", "TYPESAFE_API_KEY"),
 }
 EMAIL_ALIASES = ("LITSEARCH_CONTACT_EMAIL", "CONTACT_EMAIL")
 DEFAULT_ENV_FILE = ".env"
@@ -139,6 +153,7 @@ def build_client(name: str, credentials: Credentials) -> tuple[HttpClient, httpx
         raw,
         rate_limiter=limiter,
         max_attempts=MAX_ATTEMPTS.get(name, DEFAULT_MAX_ATTEMPTS),
+        retry_status=RETRY_STATUS | EXTRA_RETRY_STATUS.get(name, frozenset()),
     )
     return client, raw
 

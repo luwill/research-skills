@@ -19,7 +19,15 @@ from litsearch.normalize import Record, WindowStatus
 from litsearch.protocol import Topic
 from litsearch.query import SourceQuery
 from litsearch.sources.arxiv import ArxivSource
-from litsearch.sources.base import HttpClient, PageStore, RateLimiter, SourceContext, collect
+from litsearch.sources.base import (
+    HttpClient,
+    PageStore,
+    QuotaExhausted,
+    RateLimiter,
+    SourceContext,
+    SourceError,
+    collect,
+)
 from litsearch.sources.europepmc import EuropePMCSource
 from litsearch.sources.openalex import OpenAlexSource, restore_abstract
 from litsearch.sources.pubmed import PubMedSource
@@ -483,3 +491,142 @@ class TestWindowIntegration:
         assert inside.needs_human_review is False
 
         assert outside.window_status is WindowStatus.OUT_OF_WINDOW
+
+
+class TestPostJson:
+    """POST 走和 GET 完全相同的重试、配额与 HTTPS 纪律。
+
+    判定 API 是这个项目里第一个需要 POST 的端点。为它另起一套 HTTP 逻辑，
+    等于把"Retry-After 超过 120 秒判配额耗尽而不是老实照睡"这类被实测逼出来的
+    经验漏掉一份——所以共用同一个重试循环，只换动词。
+    """
+
+    @staticmethod
+    def _client(**kwargs) -> HttpClient:
+        return HttpClient(
+            httpx.AsyncClient(timeout=5.0),
+            rate_limiter=RateLimiter(min_interval=0.0),
+            backoff_base=0.0,
+            **kwargs,
+        )
+
+    @respx.mock
+    async def test_sends_the_body_as_json_and_parses_the_reply(self):
+        route = respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(200, json={"answers": {"q": 1}})
+        )
+
+        payload = await self._client().post_json(
+            "https://api.example.com/v1/judge", {"state": "x"}, source="judge"
+        )
+
+        assert payload == {"answers": {"q": 1}}
+        assert json.loads(route.calls[0].request.content) == {"state": "x"}
+        assert route.calls[0].request.headers["content-type"] == "application/json"
+
+    @respx.mock
+    async def test_custom_headers_reach_the_server(self):
+        route = respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(200, json={})
+        )
+
+        await self._client().post_json(
+            "https://api.example.com/v1/judge",
+            {},
+            source="judge",
+            headers={"Authorization": "Bearer secret"},
+        )
+
+        assert route.calls[0].request.headers["authorization"] == "Bearer secret"
+
+    @respx.mock
+    async def test_an_unretryable_status_is_not_retried_by_default(self):
+        """406 默认**不**重试：doi.org 的内容协商用它表示"这个样式不存在"，
+        对着一个永远不会变的答案退避重试只是白白拖慢流水线。"""
+        route = respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(406)
+        )
+
+        with pytest.raises(SourceError):
+            await self._client().post_json(
+                "https://api.example.com/v1/judge", {}, source="judge"
+            )
+
+        assert len(route.calls) == 1
+
+    @respx.mock
+    async def test_an_extra_retry_status_is_retried_for_the_sources_that_need_it(self):
+        """arXiv 源站会间歇性地对**缓存未命中**的请求返回 406。
+
+        实测：故障窗口内 20/20 全 406，而同一时刻一条 age=1039 的缓存命中照常 200；
+        换 curl、绕过本机代理、改请求头都无效，几分钟后又自行恢复。
+        这是瞬时故障不是永久拒绝，直接抛错会让本该召回的预印本静默消失——
+        而 arXiv 恰恰是 CS/AI 主题里最不能丢的那个源。
+        """
+        route = respx.post("https://api.example.com/v1/judge").mock(
+            side_effect=[httpx.Response(406), httpx.Response(200, json={"ok": True})]
+        )
+
+        payload = await self._client(retry_status=frozenset({406})).post_json(
+            "https://api.example.com/v1/judge", {}, source="judge"
+        )
+
+        assert payload == {"ok": True}
+        assert len(route.calls) == 2
+
+    @respx.mock
+    async def test_a_transient_429_is_retried(self):
+        respx.post("https://api.example.com/v1/judge").mock(
+            side_effect=[
+                httpx.Response(429),
+                httpx.Response(200, json={"ok": True}),
+            ]
+        )
+
+        payload = await self._client().post_json(
+            "https://api.example.com/v1/judge", {}, source="judge"
+        )
+
+        assert payload == {"ok": True}
+
+    @respx.mock
+    async def test_a_long_retry_after_is_quota_exhaustion_not_a_nap(self):
+        respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(429, headers={"retry-after": "53780"})
+        )
+
+        with pytest.raises(QuotaExhausted) as caught:
+            await self._client().post_json(
+                "https://api.example.com/v1/judge", {}, source="judge", pages_fetched=7
+            )
+
+        assert caught.value.pages_fetched == 7
+
+    @respx.mock
+    async def test_an_auth_failure_is_not_retried_and_keeps_its_status(self):
+        route = respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(401, text="bad key")
+        )
+
+        with pytest.raises(SourceError) as caught:
+            await self._client().post_json(
+                "https://api.example.com/v1/judge", {}, source="judge"
+            )
+
+        assert caught.value.status == 401
+        assert route.call_count == 1
+
+    async def test_plain_http_is_refused_before_any_request(self):
+        with pytest.raises(SourceError):
+            await self._client().post_json("http://api.example.com/v1", {}, source="judge")
+
+    @respx.mock
+    async def test_a_non_json_reply_says_so(self):
+        respx.post("https://api.example.com/v1/judge").mock(
+            return_value=httpx.Response(200, text="<html>gateway</html>")
+        )
+
+        with pytest.raises(SourceError, match="JSON"):
+            await self._client().post_json(
+                "https://api.example.com/v1/judge", {}, source="judge"
+            )

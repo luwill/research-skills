@@ -1,0 +1,46 @@
+# 判定 API 配置模板（lit screen --model jev / lit triage / lit facets）
+#
+# 放在 topics/<id>.jev.yaml。为什么不写进 topic.yaml：protocol_fingerprint 哈希的是
+# 含默认值的 model_dump，给协议加任何字段都会让所有历史 run 的指纹对不上、被
+# assert_topic_compatible 挡死。而阈值要反复调，每调一次废掉一次 run 不可接受。
+#
+# ⚠️ 没有通用默认阈值。实测同一套阈值在一个课题上把人工队列从 18.3% 压到 11.2%，
+#    在另一个课题上反而比现有 LLM 更差（8.5% vs 基线 7.2%）。放量前必须先过准入：
+#
+#      lit screen-eval <run> --topic <协议> --reference-round <人工裁决过的轮次> \
+#          --candidate-scores jev_scores.jsonl --score-keys I1,I2
+#
+#    三条门槛缺一不可：
+#      1. 金标种子 100% 保留（被自动排除会直接退 1）
+#      2. 人工队列 ≤15%
+#      3. 不劣于该课题现有 LLM 基线 —— 这条最容易被忽略
+
+topic_id: <与协议的 id 完全一致>
+
+# 钉带版本的模型 id。别名（jev-latest）会随新版漂移，等于悄悄换掉判定标准。
+model: jev-1.13.0
+
+# 打分 ≥ include_at 自动纳入，< exclude_below 自动排除，中间进人工队列。
+# 分数 = 生效纳入标准的**最小值**（它们要同时满足，合取取最小）。
+include_at: 0.7
+exclude_below: 0.1
+
+# 只有读全文才判得了的标准。不跳的话它会把每一篇正经论文的分数都压下去——
+# 初筛阶段这是系统性偏差，不是信号。典型是「报告了 Dice/AUC 等定量结果」。
+skip: []
+
+# 排除标准怎么用：
+#   annotate（默认）——只写进 reason 供人看，**不参与打分**
+#   ignore          ——连问都不问，省 token
+# 默认不参与打分是实测结论：乘上 (1 - max 排除概率) 让 AUC 从 0.989 掉到 0.981。
+# 官方文档也说，一个问题与其否定式的概率不满足互补关系。
+exclusions: annotate
+
+# 摘要截断长度。state 越大判别力越差（官方称之为 context rot）。
+max_abstract_chars: 6000
+
+# lit facets 的标注维度。留空则用随附的五个通用维度（外部验证、多中心、
+# 公开数据集、代码公开、前瞻性）。措辞必须是「摘要是否**明确**陈述了 X」——
+# 问「这项研究是否做了 X」摘要答不了，只会把「没说」变成「没有」。
+facets: []
+facet_at: 0.7

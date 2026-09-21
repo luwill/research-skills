@@ -89,6 +89,63 @@ def apply_screening(
     return updated, audit
 
 
+#: 机器裁决只允许往这个方向。错误纳入只是多读一篇全文（可逆），
+#: 错误排除那篇论文再也不会被看到（不可逆）。
+MACHINE_DIRECTION = Decision.INCLUDE
+
+
+def apply_machine(
+    decisions: dict[str, MergedDecision], rows: list[dict[str, str]], *, judge: str
+) -> tuple[dict[str, MergedDecision], list[dict[str, str]]]:
+    """用第三个判定器解开人工队列里的分歧。
+
+    走和人工裁决一样的审计轨迹，但 ``adjudicated_by`` 记的是判定器名字而不是人名——
+    把它记成人工裁定等于让审计链说谎，事后没人分得清哪些结论有人真的看过。
+
+    两条硬约束：只能往 ``include`` 方向（另一个方向不可逆），
+    且不能覆盖任何人工裁决（人工是终审）。
+    """
+    updated = dict(decisions)
+    audit: list[dict[str, str]] = []
+    timestamp = datetime.now(UTC).isoformat()
+    for row in rows:
+        key = row["record_key"]
+        if key not in decisions:
+            raise AdjudicationError(f"筛选轮次中不存在 record_key：{key}")
+        decision = Decision(row["decision"])
+        if decision is not MACHINE_DIRECTION:
+            raise AdjudicationError(
+                f"{key}：机器裁决只允许判 {MACHINE_DIRECTION.value}，收到 {decision.value}。"
+                f"错误纳入只是多读一篇全文，错误排除不可逆——后者必须由人来做。"
+            )
+        previous = decisions[key]
+        if previous.adjudicated_by and not previous.adjudicated_by.startswith(f"{judge}:"):
+            raise AdjudicationError(
+                f"{key} 已由 {previous.adjudicated_by} 裁定过，机器不能覆盖人工结论"
+            )
+        updated[key] = previous.model_copy(
+            update={
+                "decision": decision,
+                "needs_human": False,
+                "reason": f"机器裁定（{judge}）：{row['reason']}",
+                "adjudicated_by": judge,
+                "adjudicated_at": timestamp,
+                "adjudication_reason": row["reason"],
+                "previous_decision": previous.decision,
+            }
+        )
+        audit.append(
+            {
+                **row,
+                "reviewer": judge,
+                "kind": "screening",
+                "previous_decision": previous.decision.value,
+                "adjudicated_at": timestamp,
+            }
+        )
+    return updated, audit
+
+
 def apply_dates(
     records: list[CanonicalRecord], rows: list[dict[str, str]]
 ) -> tuple[list[CanonicalRecord], list[dict[str, str]]]:

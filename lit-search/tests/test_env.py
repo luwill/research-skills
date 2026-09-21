@@ -85,3 +85,46 @@ class TestCredentials:
         credentials = Credentials.from_env(env_file=tmp_path / "nope.env")
 
         assert "openalex" not in credentials.api_keys
+
+
+class TestTypesafeKey:
+    """判定 API 的密钥走和各检索源一样的别名机制。
+
+    认不出 key 的后果在这里比在检索源更糟：检索源会静默降级成匿名限速，
+    而判定 API 直接 401——整轮中止，白跑一次 dry-run。
+    """
+
+    def test_the_project_prefixed_name_wins(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("LITSEARCH_TYPESAFE_API_KEY", "project")
+        monkeypatch.setenv("TYPESAFE_API_KEY", "vendor")
+
+        creds = Credentials.from_env(tmp_path / "missing.env")
+
+        assert creds.api_keys["typesafe"] == "project"
+
+    def test_the_vendor_name_is_accepted_too(self, tmp_path, monkeypatch):
+        """TypeSafe 官方文档教的就是 TYPESAFE_API_KEY，用户多半已经这么配了。"""
+        monkeypatch.delenv("LITSEARCH_TYPESAFE_API_KEY", raising=False)
+        monkeypatch.setenv("TYPESAFE_API_KEY", "vendor")
+
+        creds = Credentials.from_env(tmp_path / "missing.env")
+
+        assert creds.api_keys["typesafe"] == "vendor"
+
+    def test_it_can_come_from_the_env_file(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("LITSEARCH_TYPESAFE_API_KEY", raising=False)
+        monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
+        path = tmp_path / ".env"
+        path.write_text("TYPESAFE_API_KEY=from-file\n", encoding="utf-8")
+
+        creds = Credentials.from_env(path)
+
+        assert creds.api_keys["typesafe"] == "from-file"
+
+    def test_absent_key_is_simply_absent_not_an_empty_string(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("LITSEARCH_TYPESAFE_API_KEY", raising=False)
+        monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
+
+        creds = Credentials.from_env(tmp_path / "missing.env")
+
+        assert "typesafe" not in (creds.api_keys or {})
