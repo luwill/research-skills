@@ -167,12 +167,20 @@ class CheckProposalTest(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertRegex(out, r"FAIL \[scaffold-bracket\] .*Opening sentence")
 
-    def test_exempt_personalization_fields_are_not_flagged(self):
+    def test_personalization_fields_warn_but_do_not_fail(self):
         for text in (APA_CLEAN, NUMERIC_CLEAN):
             with self.subTest(style="apa" if text is APA_CLEAN else "numeric"):
                 code, out = self.run_gate(text)
                 self.assertNotIn("scaffold-bracket", out)
                 self.assertEqual(code, 0, out)
+                self.assertRegex(out, r"WARN \[personalization-field\] .*fill it from what they said, or delete the line")
+
+    def test_filled_personalization_fields_leave_no_warning(self):
+        text = (NUMERIC_CLEAN.replace("[所属学科]", "生物医学工程").replace("[大学/研究机构名称]", "某大学")
+                .replace("[年月]", "2026年11月"))
+        code, out = self.run_gate(text)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("personalization-field", out)
 
     # --- regressions: stage-2 adversary findings ------------------------------------------
 

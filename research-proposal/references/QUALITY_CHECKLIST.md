@@ -251,7 +251,7 @@ Use this checklist to verify the quality of generated research proposals.
 ### Completeness
 - [ ] All sections address their purpose
 - [ ] No placeholder text remaining
-- [ ] All [brackets] filled in — except applicant-specific scaffold fields (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`) and `[Figure N Suggestion]` labels, which are intentionally left for the user
+- [ ] All [brackets] filled in — applicant-specific scaffold fields (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`) are filled from what the user said or their line is deleted and listed in the delivery message; only `[Figure N Suggestion]` labels may remain
 - [ ] No "TBD" or similar markers
 - [ ] No missing references
 
