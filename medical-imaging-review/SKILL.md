@@ -20,6 +20,8 @@ Support exactly four route tokens across three methodological families:
 
 Do not perform a meta-analysis, network meta-analysis, individual-participant-data meta-analysis, or umbrella review with this skill. If the request requires pooled estimates, heterogeneity statistics, forest or funnel plots, review-overlap analysis, or review-level appraisal, stop and tell the user plainly that these need a specialized evidence-synthesis methods workflow which this environment does not provide — do not name a workflow you cannot see, and do not approximate those methods with prose or simple averaging.
 
+Stopping the pooling does not end the task. Name the study-level reasons the supplied data cannot be pooled as requested (for example mixed units of analysis, overlapping cohorts or reused datasets, differing thresholds, missing 2×2 or specificity data), not only this scope boundary. If the user asked for a file and said not to ask questions, write a qualitative synthesis to that file, stating that no pooled estimate or heterogeneity statistic is reported and why; otherwise explain and offer that synthesis.
+
 **Corpus hand-off with lit-search.** The retrieval half of any route (exhaustive,
 recall-evidenced searching) belongs to the **lit-search** skill: run it first, then consume
 its `dois.md` / `references.md` (and `references.bib` with `--bibtex`) as the candidate

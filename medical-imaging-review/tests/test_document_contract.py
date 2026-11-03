@@ -126,6 +126,14 @@ class DocumentContractTests(unittest.TestCase):
         self.assertRegex(skill, r"(?s)Deliver where the user asked.{0,400}write it there")
         self.assertIn("ask before replacing it", skill)
 
+    def test_pooling_refusal_still_delivers_and_names_data_reasons(self):
+        # Evaluation found 2/5 runs refused a pooling request without writing the requested
+        # file, citing only the scope boundary.
+        skill = self.read("SKILL.md")
+        self.assertIn("Stopping the pooling does not end the task", skill)
+        self.assertRegex(skill, r"(?s)study-level reasons.{0,200}units of analysis.{0,80}overlapping cohorts")
+        self.assertRegex(skill, r"(?s)said not to ask questions, write a qualitative synthesis to that file")
+
 
 if __name__ == "__main__":
     unittest.main()
