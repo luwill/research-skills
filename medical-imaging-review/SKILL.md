@@ -1,6 +1,6 @@
 ---
 name: medical-imaging-review
-description: Use when the user asks to plan, conduct, document, synthesize, or draft a medical imaging AI narrative review or method survey, scoping review, or systematic review with qualitative synthesis, including protocol design, literature search, screening, extraction, risk-of-bias appraisal, or evidence synthesis. Do not use this skill to perform a meta-analysis or umbrella review; stop and tell the user these need a specialized evidence-synthesis workflow this environment does not provide.
+description: Use when the user asks to plan, conduct, document, synthesize, or draft any part of a medical imaging AI literature review (narrative review or method survey, scoping review, or systematic review with qualitative synthesis), including a single section or introduction, protocol design, literature search, screening, extraction, risk-of-bias appraisal, evidence synthesis, or the methods and results write-up; Chinese requests such as 综述, 文献综述, 综述章节, 系统综述 or 范围综述 count. Do not use this skill to perform a meta-analysis or umbrella review. When a review asks to pool results, still load it: stop, explain that pooling needs a specialized evidence-synthesis workflow this environment does not provide, and offer a qualitative synthesis instead.
 ---
 
 # Medical Imaging AI Review
@@ -77,6 +77,8 @@ Core generated artifacts include:
 Use REVIEW_CONTEXT.md as the portable project brief and review_config.yaml as the source of truth for route, scope, standards, human roles, AI use, evidence cutoff, and status. Re-read both at the start of each work session. Do not depend on a tool-specific instruction filename.
 
 Before changing an artifact, inspect <project_dir>. Never overwrite, truncate, reset, or replace existing content. Preserve unrelated content and apply a narrow patch or merge. Ask before resolving a material conflict. A bounded advisory answer can remain inline; do not initialize a project unless the task needs persistent artifacts.
+
+**Deliver where the user asked.** When the user names an output file or location (for example "save it as protocol.md"), that file is the deliverable: write it there, in addition to any project artifact it mirrors (for example copy `<project_dir>/protocol/PROTOCOL.md` to the requested path), and state both paths in the reply. If the requested file already exists, ask before replacing it. A bounded one-off request, such as one section, an introduction or a results paragraph built from material the user supplied, does not need a project: write the requested file directly.
 
 When a first-stage plan requires persistent artifacts, the response must explicitly show the initializer command that was run, the collision-safe <project_dir> printed by the initializer, and the current project status; do not imply that a project exists before the initializer succeeds.
 
