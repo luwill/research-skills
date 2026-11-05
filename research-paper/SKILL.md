@@ -1,14 +1,17 @@
 ---
 name: research-paper
 description: >
-  Use when the user asks to write or draft an ORIGINAL RESEARCH ARTICLE —
-  IMRaD paper, conference paper, short/workshop paper, 研究论文/期刊论文/会议论文 —
-  reporting their own completed experiments, in English or Chinese. Triggers:
-  "write the paper", "draft our manuscript", "把我们这篇工作写成论文", "论文写作".
+  Use when the user asks to write, draft or revise an ORIGINAL RESEARCH ARTICLE
+  or any single section of one — abstract, introduction, methods, results,
+  discussion or conclusion — for an IMRaD paper, conference paper or
+  short/workshop paper reporting their own experiments, in English or Chinese
+  (研究论文/期刊论文/会议论文, or one part such as 摘要, 引言, 方法, 结果, 讨论部分).
+  Triggers: "write the paper", "draft our manuscript", "write the Discussion
+  of our paper", "把我们这篇工作写成论文", "帮我写论文的讨论部分", "论文写作".
   Results-first: the user's actual results (tables, metrics, figures) are the
   raw material; this skill never invents an experiment or a number. NOT for
-  literature reviews/surveys (use medical-imaging-review), NOT for proposals
-  (use research-proposal), NOT for grant applications.
+  literature reviews/surveys or their sections (use medical-imaging-review),
+  NOT for proposals (use research-proposal), NOT for grant applications.
 ---
 
 # Research Paper Writer
@@ -42,6 +45,19 @@ everything:
 Read [references/STRUCTURE_GUIDE.md](references/STRUCTURE_GUIDE.md) for
 section-by-section construction and [references/REPORTING_CHECKLISTS.md](references/REPORTING_CHECKLISTS.md)
 for what the binding checklist actually requires.
+
+## Single-section requests
+
+A request for one or two sections (for example only the Discussion, or Results +
+Abstract) built from material the user supplied is bounded work: skip the
+project files (`paper_plan.md`, outline approval, `paper_draft.md`) unless the
+user wants them, and **write the file the user named**. The disciplines still
+apply in full: every number traces to the supplied results or is
+`[PENDING: …]`; every reference is verified or `[UNVERIFIED: …]`; a Discussion
+claims no more than the results show (no "significantly" without a reported
+test, no "every"/"all" where a baseline wins). Run the Phase 5 placeholder and
+AI-tell greps on the requested file; `check_paper.py` applies once a
+`results_ledger.csv` and `references.bib` exist.
 
 ## Phase 1: Intake (record, don't improvise)
 

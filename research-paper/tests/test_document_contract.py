@@ -116,5 +116,20 @@ class CitationIntegrityContract(unittest.TestCase):
         self.assertIn("`[UNVERIFIED: …]`", text)
 
 
+class TriggerContract(unittest.TestCase):
+    def test_description_triggers_on_single_sections(self):
+        # 评测（haiku，5 次）：只请它写「讨论」部分时 0/5 加载本 skill；锁住这些触发词。
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        description = re.search(r"(?ms)^description: >\n(.*?)^---", skill).group(1)
+        self.assertLessEqual(len(" ".join(description.split())), 1024)
+        for term in ("single section", "discussion", "introduction", "讨论部分", "引言", "摘要"):
+            with self.subTest(term=term):
+                self.assertIn(term, description)
+
+    def test_single_section_request_writes_the_named_file(self):
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertRegex(skill, r"(?s)## Single-section requests.{0,400}write the file the user named")
+
+
 if __name__ == "__main__":
     unittest.main()
