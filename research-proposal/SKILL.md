@@ -180,7 +180,7 @@ It reconciles in-text citations ↔ References both directions (APA `(Smith, 202
 - Every in-text citation reconciles with the References list (no orphans either direction).
 - At least 20% of references, and every quantitative/directional claim, spot-checked against sources.
 - **AI-tell gate**: `grep -nEi "over the past ((few|several|two|three) )?(decades?|years)|in recent years,|it is worth noting|plays a (crucial|pivotal|vital) role|sheds light on|paves the way|ever-evolving|has garnered significant attention|delves into|a testament to|众所周知|近年来，?随着|日益受到(广泛)?关注"` returns 0 hits in the body (see Core Principles; the same patterns are banned in every reference file and scaffold).
-- No placeholder `[brackets]` or "TBD" left in the body — **except** applicant-specific scaffold fields the user must personalize (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`; 中文 scaffold 表头的 `[所属学科]`、`[大学/研究机构名称]`、`[年月]` 等同类字段) and `[Figure N Suggestion]` labels, which are intentional and may remain.
+- No placeholder `[brackets]` or "TBD" left in the body. `[Figure N Suggestion]` labels may remain. The applicant-specific scaffold fields (`[University/Institution Name]`, `[Your Field]`, `[Month Year]`; 中文 scaffold 表头的 `[所属学科]`、`[大学/研究机构名称]`、`[年月]`) are **not** left as brackets either: fill each from what the user said; if the user never said it, delete that header line and list it under "请你补充 / To add" in your delivery message — a deliverable with `[年月]` in it looks unfinished. The gate prints a WARN (not a FAIL) for any that remain. Also make the header match the scenario: a 硕士开题报告 never keeps the scaffold's 博士研究生 line.
 
 Offer format conversion:
 

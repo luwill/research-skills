@@ -10,8 +10,9 @@ Checks, each a FAIL line naming the offending item:
    keyed by first-author surname + year. `numeric` (GB/T 7714 顺序编码制): [1], [2-4] ↔ `[N]`
    entries. `auto` picks numeric when the References entries start with `[N]`.
 2. placeholder / ai-tell — the SKILL.md Phase 5 grep patterns, same regex (AI-tell: body only).
-3. scaffold-bracket — a leftover `[instruction]` from the scaffold. The applicant-specific
-   personalization fields and figure-suggestion labels SKILL.md exempts are allowed.
+3. scaffold-bracket — a leftover `[instruction]` from the scaffold. Figure-suggestion labels
+   are allowed. An applicant-specific personalization field SKILL.md lists (`[年月]` …) is a
+   WARN, not a FAIL: fill it from what the user said, or delete the line.
 
 Exit 0: no mechanical findings (not proof the proposal is right). 1: findings. 2: bad input.
 """
@@ -52,7 +53,7 @@ AI_TELL_PATTERN = (
     r"|has garnered significant attention|delves into|a testament to|众所周知|近年来，?随着|日益受到(广泛)?关注"
 )
 DISCLOSED_FLAG_RE = re.compile(r"^\[UNVERIFIED")
-#: SKILL.md Phase 5 豁免的申请人个性化字段与配图建议标签——用户自己填，允许留在交付稿里
+#: SKILL.md Phase 5 列出的申请人个性化字段——不判失败，但给 WARN：能填就填，不知道就删掉整行
 EXEMPT_BRACKETS = {
     "University/Institution Name", "Your Field", "Month Year",
     "所属学科", "大学/研究机构名称", "年月",
@@ -122,6 +123,16 @@ def _scaffold_hit(path: Path, number: int, content: str) -> Finding | None:
     return Finding("scaffold-bracket", f"{path.name}:{number}", f"leftover scaffold field '[{content[:60]}]'")
 
 
+def personalization_warnings(path: Path, body) -> list[Finding]:
+    return [
+        Finding("personalization-field", f"{path.name}:{number}",
+                f"'[{match.group(1).strip()}]' left for the user: fill it from what they said, or delete the line")
+        for number, line in body
+        for match in BRACKET_RE.finditer(line)
+        if match.group(1).strip() in EXEMPT_BRACKETS
+    ]
+
+
 def check_scaffold_brackets(path: Path, body, refs) -> list[Finding]:
     findings = [
         hit
@@ -157,6 +168,7 @@ def main(argv: list[str] | None = None) -> int:
     pattern_findings, warnings = check_patterns(args.proposal, text, body, args.allow_disclosed_flags)
     findings += pattern_findings
     findings += check_scaffold_brackets(args.proposal, body, refs)
+    warnings += personalization_warnings(args.proposal, body)
     return finish(findings, warnings, "check_proposal")
 
 
