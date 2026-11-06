@@ -110,5 +110,30 @@ class DocumentContractTests(unittest.TestCase):
                 )
 
 
+    def test_description_triggers_on_sections_chinese_requests_and_pooling(self):
+        # Evaluation found the skill loaded in 1/5 runs for "write the introduction of my
+        # narrative review" and 3/5 for a Chinese section request; keep these triggers.
+        description = re.search(r"(?m)^description: (.*)$", self.read("SKILL.md")).group(1)
+        self.assertLessEqual(len(description), 1024)
+        for term in ("section", "introduction", "综述", "系统综述", "范围综述", "pool"):
+            with self.subTest(term=term):
+                self.assertIn(term, description)
+
+    def test_skill_delivers_to_the_path_the_user_names(self):
+        # Evaluation found every scoping run wrote only <project_dir>/protocol/PROTOCOL.md
+        # and never the protocol.md the user asked for.
+        skill = self.read("SKILL.md")
+        self.assertRegex(skill, r"(?s)Deliver where the user asked.{0,400}write it there")
+        self.assertIn("ask before replacing it", skill)
+
+    def test_pooling_refusal_still_delivers_and_names_data_reasons(self):
+        # Evaluation found 2/5 runs refused a pooling request without writing the requested
+        # file, citing only the scope boundary.
+        skill = self.read("SKILL.md")
+        self.assertIn("Stopping the pooling does not end the task", skill)
+        self.assertRegex(skill, r"(?s)study-level reasons.{0,200}units of analysis.{0,80}overlapping cohorts")
+        self.assertRegex(skill, r"(?s)said not to ask questions, write a qualitative synthesis to that file")
+
+
 if __name__ == "__main__":
     unittest.main()
