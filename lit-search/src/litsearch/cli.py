@@ -118,6 +118,7 @@ from litsearch.screen_runner import (
     build_client as build_screen_client,
 )
 from litsearch.screen_runner import (
+    REASONING_EFFORTS,
     build_requests,
     estimate,
     pending_by_channel,
@@ -917,6 +918,11 @@ def screen_command(
     resume: bool = typer.Option(
         False, "--resume", help="只补上一轮中各通道缺判定的记录，结果并成新一轮"
     ),
+    reasoning_effort: str = typer.Option(
+        None,
+        "--reasoning-effort",
+        help="推理强度 low / medium / high；不传则由模型默认决定（记进轮次 parameters）",
+    ),
     allow_regression: bool = typer.Option(
         False,
         "--allow-regression",
@@ -936,6 +942,9 @@ def screen_command(
       每次调用有约 20,000 token 的框架开销，所以批次会自动放大到
       ``HOST_BATCH_SIZE``；适合 quick/standard 规模，上万条请用 API。
     """
+    if reasoning_effort is not None and reasoning_effort not in REASONING_EFFORTS:
+        allowed = " / ".join(REASONING_EFFORTS)
+        raise typer.BadParameter(f"只能是 {allowed}，收到 {reasoning_effort!r}")
     try:
         provider = resolve_provider(model)
     except ProviderError as error:
@@ -1109,6 +1118,7 @@ def screen_command(
                     per_channel=plan,
                     batch_size=batch_size,
                     thinking=not provider.disable_thinking,
+                    reasoning_effort=reasoning_effort,
                     progress=lambda line: typer.echo(line),
                     on_error=failures.append,
                 )
@@ -1165,6 +1175,8 @@ def screen_command(
             "batch_size": batch_size,
             "concurrency": concurrency,
             "thinking": False if host else not provider.disable_thinking,
+            # 只在显式指定时记录，与 allow_regression 相同的审计口径
+            **({"reasoning_effort": reasoning_effort} if reasoning_effort else {}),
             # 只在真的用了才记：让审计时「这一轮是明知退步仍然写的」一眼看得见。
             **({"allow_regression": True} if allow_regression else {}),
             **sampling,

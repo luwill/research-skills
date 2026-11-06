@@ -46,6 +46,8 @@ DEFAULT_MODEL = providers.DEFAULT_MODEL
 BASE_URL = providers.BUILTIN[providers.DEFAULT_MODEL].base_url
 DEFAULT_MAX_TOKENS = 8000
 TOOL_NAME = "record_verdicts"
+#: ``--reasoning-effort`` 允许的取值；与 gemini 等 OpenAI 兼容端点的 reasoning_effort 对齐
+REASONING_EFFORTS = ("low", "medium", "high")
 
 #: DeepSeek 官方经验值：1 个英文字符约 0.3 token。这是**近似**，
 #: 没有 count_tokens 端点可以校准，所以估算结果必须标注为粗估。
@@ -293,7 +295,13 @@ def estimate(
     )
 
 
-def _params(request: ScreeningRequest, model: str, *, thinking: bool = False) -> dict:
+def _params(
+    request: ScreeningRequest,
+    model: str,
+    *,
+    thinking: bool = False,
+    reasoning_effort: str | None = None,
+) -> dict:
     """构造一次请求。
 
     **思考模式与强制工具调用互斥。** v4 默认开思考，而思考模式同时拒绝
@@ -316,6 +324,9 @@ def _params(request: ScreeningRequest, model: str, *, thinking: bool = False) ->
         "tools": [build_tool()],
         "extra_body": {"thinking": {"type": "enabled" if thinking else "disabled"}},
     }
+    if reasoning_effort is not None:
+        # 推理强度只在调用方显式指定时发送，缺省时请求体与此前完全一致
+        params["reasoning_effort"] = reasoning_effort
     if not thinking:
         # 不强制的话，模型可以直接用散文作答，判定就无法解析
         params["tool_choice"] = {"type": "function", "function": {"name": TOOL_NAME}}
@@ -361,6 +372,7 @@ async def run_screening(
     model: str = DEFAULT_MODEL,
     concurrency: int = 8,
     thinking: bool = False,
+    reasoning_effort: str | None = None,
     per_channel: dict[int, list[CanonicalRecord]] | None = None,
     batch_size: int | None = None,
     progress: Callable[[str], None] | None = None,
@@ -382,7 +394,7 @@ async def run_screening(
         async with semaphore:
             try:
                 response = await client.chat.completions.create(
-                    **_params(request, model, thinking=thinking)
+                    **_params(request, model, thinking=thinking, reasoning_effort=reasoning_effort)
                 )
             except Exception as error:  # 网络/限流/服务端错误都不该中止整轮
                 if on_error:

@@ -460,6 +460,16 @@ class TestRunScreening:
         assert client.calls[0]["extra_body"]["thinking"] == {"type": "enabled"}
         assert "tool_choice" not in client.calls[0]
 
+    async def test_reasoning_effort_is_sent_only_when_given(self, topic, records):
+        client = FakeClient(lambda kwargs: tool_reply(_keys_from(kwargs)))
+
+        await run_screening(topic, records, client, reasoning_effort="low")
+        assert client.calls[0]["reasoning_effort"] == "low"
+
+        plain = FakeClient(lambda kwargs: tool_reply(_keys_from(kwargs)))
+        await run_screening(topic, records, plain)
+        assert "reasoning_effort" not in plain.calls[0]
+
     async def test_the_model_defaults_to_the_configured_one(self, topic, records):
         client = FakeClient(lambda kwargs: tool_reply(_keys_from(kwargs)))
 
