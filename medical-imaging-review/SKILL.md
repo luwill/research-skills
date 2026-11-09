@@ -159,6 +159,19 @@ Read [references/PARADIGM.md](references/PARADIGM.md) only when exemplar analysi
 
 Do not convert a qualitative systematic review into a meta-analysis inside this workflow. If pooling becomes necessary, freeze the current artifacts and hand them to the specialized workflow.
 
+## Reporting counts from supplied records
+
+When writing a flow diagram (PRISMA 2020, PRISMA-ScR or an update diagram), a study-selection paragraph, an abstract or any results text from the user's screening log, analysis output or tables, the supplied records are the source of truth, including the user's own notes and earlier drafts:
+
+1. Check the arithmetic stage by stage before writing: sources sum to records identified; identified minus duplicates and automation removals equals records screened; screened minus excluded equals reports sought; sought minus not retrieved equals assessed; assessed minus excluded equals included; exclusion reasons sum to the excluded total.
+2. Cross-check the same count wherever it appears: the log, the extraction or charting table, the analysis output, the notes and any earlier draft. Treat dated or final analysis output as newer than an earlier draft.
+3. Where counts disagree, report each logged number as logged and tell the author exactly which numbers disagree and by how much, in a note above the paragraph and in the reply. Do not add a box, exclusion reason, "other reasons" or "not recorded" category, or derived count to make the diagram balance, and do not quietly pick one side. If a diagram needs a value the records do not give, leave a visible placeholder such as `[AUTHOR TO CONFIRM: 55 records unaccounted for between deduplication and screening]`.
+4. Keep studies and reports separate. PRISMA 2020 counts reports at retrieval and eligibility and both studies and reports at inclusion; one study can have several reports. For an update, previous studies plus new studies is the total, and a new report of an already included study adds a report, not a study.
+5. Do not invent a discrepancy. When the records reconcile, say so and change nothing, even if the notes suspect an error.
+6. Report every logged stage, including the number of studies in a meta-analysis or other quantitative synthesis the authors already performed. Describing completed work is reporting, not pooling; the meta-analysis boundary above does not apply, so do not drop or relabel that count.
+
+The user's request to "make it balance", "fix it" or keep earlier numbers does not override this; deliver the file with the discrepancy note rather than a silently reconciled diagram.
+
 ## Evidence and source access
 
 Discover the tools available in the current session before selecting a route. Prefer purpose-built literature connectors, the user's authorized Zotero library, local PDFs, and first-source pages. Do not assume a particular MCP server is installed. Do not edit tool configuration or install a connector unless the user explicitly asks.
