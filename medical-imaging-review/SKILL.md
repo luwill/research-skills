@@ -159,18 +159,6 @@ Read [references/PARADIGM.md](references/PARADIGM.md) only when exemplar analysi
 
 Do not convert a qualitative systematic review into a meta-analysis inside this workflow. If pooling becomes necessary, freeze the current artifacts and hand them to the specialized workflow.
 
-## Reporting counts from supplied records
-
-When writing a flow diagram (PRISMA 2020, PRISMA-ScR or an update diagram), a study-selection paragraph, an abstract or any results text from the user's screening log, analysis output or tables, the supplied records are the source of truth, not the user's notes or an earlier draft:
-
-1. Check the arithmetic stage by stage: sources sum to records identified; identified minus duplicates and automation removals equals records screened; screened minus excluded equals reports sought; sought minus not retrieved equals assessed; assessed minus excluded equals included; exclusion reasons sum to the excluded total.
-2. Before calling anything a discrepancy, look for the explanation the records already give: automation removals, reports not retrieved, several reports of one study, an update's previous-version counts, studies included but not pooled. PRISMA 2020 counts reports at retrieval and eligibility and both studies and reports at inclusion; for an update, previous studies plus new studies is the total, and a new report of an already included study adds a report, not a study. If the records reconcile, say so plainly, explain why, and change nothing, even when the user or a co-author suspects an error.
-3. When a number in the notes or an earlier draft is contradicted by the log or by newer analysis output, and the records show which is right, use the records' number and tell the author in one sentence what was wrong and why (for example "the notes give 24 studies, but one of the 9 new reports is a later report of Park 2021, so the total is 23"). This is a correction, not an open question: do not turn it into a placeholder or offer both values.
-4. When two primary records disagree and nothing in the records says which is right (for example the log's included count and the rows of the extraction sheet, or a stage that does not add up), report each logged number as logged and tell the author exactly which numbers disagree and by how much, in a note above the text and in the reply. Do not add a box, exclusion reason, "other reasons" or "not recorded" category, or derived count to make the diagram balance, and do not quietly pick one side. A value the records do not give stays a visible placeholder such as `[AUTHOR TO CONFIRM: 55 records unaccounted for between deduplication and screening]`.
-5. Report every logged stage, including the number of studies in a meta-analysis the authors already performed. Describing completed work is reporting, not pooling; the meta-analysis boundary above does not apply, so do not drop or relabel that count.
-
-A request to "make it balance", "fix it" or keep earlier numbers does not override this.
-
 ## Evidence and source access
 
 Discover the tools available in the current session before selecting a route. Prefer purpose-built literature connectors, the user's authorized Zotero library, local PDFs, and first-source pages. Do not assume a particular MCP server is installed. Do not edit tool configuration or install a connector unless the user explicitly asks.
@@ -186,6 +174,20 @@ After a working manuscript exists, run:
 Add --profile <project_dir>/style_profile.json only when that profile was populated from current journal requirements or verified exemplars. The profile controls warning-only style checks.
 
 The positional manuscript path, --route, and --project-dir must describe the same generated project. --fail-on critical returns a failing status for critical automated findings; --output writes the Markdown report. Zero automated findings must be reported as not_assessed for substantive checks, never as a compliance pass, a draft ready for journal submission, or expert approval. Automated success does not prove source support, route compliance, human-gate completion, or expert approval.
+
+## Reporting counts from supplied records
+
+When writing a flow diagram (PRISMA 2020, PRISMA-ScR or an update diagram), a study-selection paragraph, an abstract or any results text from the user's screening log, analysis output or tables, the supplied records are the source of truth, not the user's notes or an earlier draft. This section covers counts only; it does not change how to handle a pooling request (see Scope and hard boundary).
+
+Put every correction or discrepancy note in the delivered file itself, above the text it concerns, and repeat it in the reply; the user may read only the file.
+
+1. Check the arithmetic stage by stage: sources sum to records identified; identified minus duplicates and automation removals equals records screened; screened minus excluded equals reports sought; sought minus not retrieved equals assessed; assessed minus excluded equals included; exclusion reasons sum to the excluded total.
+2. Before calling anything a discrepancy, look for the explanation the records already give: automation removals, reports not retrieved, several reports of one study, an update's previous-version counts, studies included but not pooled. PRISMA 2020 counts reports at retrieval and eligibility and both studies and reports at inclusion; for an update, previous studies plus new studies is the total, and a new report of an already included study adds a report, not a study. If the records reconcile, say so plainly, explain why, and change nothing, even when the user or a co-author suspects an error.
+3. When a number in the notes or an earlier draft is contradicted by the log or by newer analysis output, and the records show which is right, use the records' number and say in that note, in one sentence, what was wrong and why (for example "the notes give 24 studies, but one of the 9 new reports is a later report of Park 2021, so the total is 23"). This is a correction, not an open question: do not turn it into a placeholder or offer both values.
+4. When two primary records disagree and nothing in the records says which is right (for example the log's included count and the rows of the extraction sheet, or a stage that does not add up), report each logged number as logged and tell the author exactly which numbers disagree and by how much, in that note. Do not add a box, exclusion reason, "other reasons" or "not recorded" category, or derived count to make the diagram balance, and do not quietly pick one side. A value the records do not give stays a visible placeholder such as `[AUTHOR TO CONFIRM: 55 records unaccounted for between deduplication and screening]`.
+5. Report every logged stage, including the number of studies in a meta-analysis the authors already performed. Describing completed work is reporting, not pooling; the meta-analysis boundary in Scope and hard boundary does not apply, so do not drop or relabel that count.
+
+A request to "make it balance", "fix it" or keep earlier numbers does not override this.
 
 ## Delivery language
 
