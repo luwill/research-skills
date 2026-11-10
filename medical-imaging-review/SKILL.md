@@ -80,7 +80,7 @@ Use REVIEW_CONTEXT.md as the portable project brief and review_config.yaml as th
 
 Before changing an artifact, inspect <project_dir>. Never overwrite, truncate, reset, or replace existing content. Preserve unrelated content and apply a narrow patch or merge. Ask before resolving a material conflict. A bounded advisory answer can remain inline; do not initialize a project unless the task needs persistent artifacts.
 
-**Deliver where the user asked.** When the user names an output file or location (for example "save it as protocol.md"), that file is the deliverable: write it there, in addition to any project artifact it mirrors (for example copy `<project_dir>/protocol/PROTOCOL.md` to the requested path), and state both paths in the reply. If the requested file already exists, ask before replacing it. A bounded one-off request, such as one section, an introduction or a results paragraph built from material the user supplied, does not need a project: write the requested file directly.
+**Deliver where the user asked.** When the user names an output file or location (for example "save it as protocol.md"), that file is the deliverable: write it there, in addition to any project artifact it mirrors (for example copy `<project_dir>/protocol/PROTOCOL.md` to the requested path), and state both paths in the reply. If the requested file already exists, ask before replacing it. A bounded one-off request, such as one section, an introduction or a results paragraph built from material the user supplied, does not need a project: write the requested file directly. When that file reports counts or results numbers from a supplied screening log, analysis output or earlier draft (a flow diagram, study-selection paragraph, abstract or results paragraph), read [references/REPORTING_COUNTS.md](references/REPORTING_COUNTS.md) first.
 
 When a first-stage plan requires persistent artifacts, the response must explicitly show the initializer command that was run, the collision-safe <project_dir> printed by the initializer, and the current project status; do not imply that a project exists before the initializer succeeds.
 
@@ -201,6 +201,7 @@ or reference contracts; append a note after any rework-worthy surprise.
 |---|---|
 | [references/REVIEW_TYPES.md](references/REVIEW_TYPES.md) | Before starting or changing route |
 | [references/REPORTING_STANDARDS.md](references/REPORTING_STANDARDS.md) | Selecting conduct, reporting, primary-reporting, risk-of-bias, or certainty guidance |
+| [references/REPORTING_COUNTS.md](references/REPORTING_COUNTS.md) | Writing a flow diagram, study-selection paragraph, abstract or results numbers from a supplied screening log, analysis output or earlier draft |
 | [references/WORKFLOW.md](references/WORKFLOW.md) | Executing the selected route phase by phase |
 | [references/TEMPLATES.md](references/TEMPLATES.md) | Understanding the generated <project_dir> artifact contracts |
 | [references/CITATION_INTEGRITY.md](references/CITATION_INTEGRITY.md) | Registering sources and verifying claims |

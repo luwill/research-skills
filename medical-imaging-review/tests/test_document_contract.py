@@ -135,5 +135,26 @@ class DocumentContractTests(unittest.TestCase):
         self.assertRegex(skill, r"(?s)said not to ask questions, write a qualitative synthesis to that file")
 
 
+    def test_counts_guidance_lives_in_a_reference_loaded_for_counts_tasks(self):
+        # Evaluation: drafts balanced PRISMA diagrams with invented boxes and dropped the logged
+        # meta-analysis count; the same rules in the SKILL.md body lowered unrelated tasks by
+        # about 25 pp, so they stay in a reference behind a pointer.
+        skill = self.read("SKILL.md")
+        self.assertNotIn("## Reporting counts", skill)
+        self.assertRegex(skill, r"(?s)reports counts or results numbers.{0,200}read \[references/REPORTING_COUNTS\.md\]")
+        counts = self.read("references/REPORTING_COUNTS.md")
+        for phrase in (
+            "Do not add a box",
+            "do not turn it into a placeholder",
+            "If the records reconcile, say so plainly",
+            "adds a report, not a study",
+            "Describing completed work is reporting, not pooling",
+            "in the delivered file itself",
+            "does not replace methodological advice",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, counts)
+
+
 if __name__ == "__main__":
     unittest.main()
